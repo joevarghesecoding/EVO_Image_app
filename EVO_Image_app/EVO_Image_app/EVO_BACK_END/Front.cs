@@ -12,8 +12,40 @@ namespace EVO_Image_app.EVO_BACK_END
 
         public Front(string Image, string File) : base(Image, File) { }
        
+        public override string[] GetRegions()
+        {
+            string[] OnlyRegion = new string[16];
+            for (int i = 0; i < 16; i++)
+            {
+                OnlyRegion[i] = regions[i, 0];
+            }
 
-        public void ReadFile()
+            return OnlyRegion;
+        }
+
+        public override string[] GetHighestDefect()
+        {
+            string[] OnlyHighest = new string[16];
+           for(int i = 0; i < 16; i++)
+            {
+                OnlyHighest[i] = regions[i, 1];
+            }
+
+            return OnlyHighest;
+        }
+
+        public override string[] GetDefectCount()
+        {
+            string[] OnlyDefect = new string[16];
+
+            for(int i = 0; i < 16; i++)
+            {
+                OnlyDefect[i] = regions[i, 2];
+            }
+
+            return OnlyDefect;
+        }
+        public override void ReadFile()
         {
             try
             {

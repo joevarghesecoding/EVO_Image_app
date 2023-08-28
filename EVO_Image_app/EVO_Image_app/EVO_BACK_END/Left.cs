@@ -8,8 +8,46 @@ namespace EVO_Image_app.EVO_BACK_END
 {
     class Left : Sides
     {
-        private string[,] regions = new string[16, 3];
+        private string[,] regions = new string[7, 3];
 
         public Left(string Image, string File) : base(Image, File) { }
+
+        public override string[] GetDefectCount()
+        {
+            string[] result = new string[7];
+            for (int i = 0; i < 7; i++)
+            {
+                result[i] = regions[i, 2];
+            }
+
+            return result;
+        }
+
+        public override string[] GetHighestDefect()
+        {
+            string[] result = new string[7];
+            for (int i = 0; i < 7; i++)
+            {
+                result[i] = regions[i, 1];
+            }
+
+            return result;
+        }
+
+        public override string[] GetRegions()
+        {
+            string[] result = new string[7];
+            for (int i = 0; i < 7; i++)
+            {
+                result[i] = regions[i, 0];
+            }
+
+            return result;
+        }
+
+        public override void ReadFile()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace EVO_Image_app.EVO_BACK_END
     {
         public static List<ProgramObjs> programObjs; 
         string today = Common.GetDate();
-
+        static string currentDirectory = Environment.CurrentDirectory;
         /// <summary>
         /// Gets all the images for the serial numbers and creates a folder for it.
         /// </summary>
@@ -21,8 +21,8 @@ namespace EVO_Image_app.EVO_BACK_END
         /// </return>
         public static void GetLatestImages()
         {
-            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            //string dailyRunData = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources";
+            //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            string dailyRunData = currentDirectory + "\\Resources";
             programObjs = GetCurrentPrograms();
             GetLatestSerials(programObjs);
             string today = Common.GetDate();
@@ -33,7 +33,7 @@ namespace EVO_Image_app.EVO_BACK_END
             //    Console.WriteLine(obj.GetSerialNum());
             //    Console.WriteLine(obj.GetLastDate());
             //}
-            string currentDirectory = Environment.CurrentDirectory;
+            
             //Console.WriteLine(currentDirectory);
 
             foreach (ProgramObjs obj in programObjs)
@@ -63,8 +63,8 @@ namespace EVO_Image_app.EVO_BACK_END
         private static List<ProgramObjs> GetCurrentPrograms()
         {
             List<ProgramObjs> objs = new List<ProgramObjs>();
-            string cpPath = "c:\\EVO-3\\Parameters\\color_programs_evo_display_img.xml";
-            //string cpPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\color_programs.xml";
+            //string cpPath = "c:\\EVO-3\\Parameters\\color_programs_evo_display_img.xml";
+            string cpPath = currentDirectory + "\\Resources\\color_programs.xml";
             try
             {
                 using (XmlReader reader = XmlReader.Create(cpPath))
@@ -121,8 +121,8 @@ namespace EVO_Image_app.EVO_BACK_END
         private static List<FileInfo> GetAllFatSatFiles()
         {
            
-            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
-            //string path = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\FAT-SAT\\";
+            //string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
+            string path = currentDirectory + "\\Resources\\FAT-SAT\\";
 
             DirectoryInfo dir = new DirectoryInfo(path);
             FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
@@ -134,8 +134,8 @@ namespace EVO_Image_app.EVO_BACK_END
         private static void FindSerials(List<ProgramObjs> programObjs, FileInfo path)
         {
            
-            string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
-            //string fullPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\FAT-SAT\\" + path.Name;
+            //string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
+            string fullPath = currentDirectory + "\\Resources\\FAT-SAT\\" + path.Name;
             //Change Full Path when in prod
             foreach (ProgramObjs objs in programObjs)
             {

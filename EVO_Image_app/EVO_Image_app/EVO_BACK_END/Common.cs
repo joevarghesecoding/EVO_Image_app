@@ -9,6 +9,7 @@ namespace EVO_Image_app.EVO_BACK_END
 {
     class Common
     {
+
         ///<summary> 
         ///Get's today's date and formats it to M-D-YYYY
         ///</summary>
@@ -174,7 +175,23 @@ namespace EVO_Image_app.EVO_BACK_END
         ///<summary>
         ///Reads the CSV file and displays data to the correct
         /// </summary>
+        /// <param name="programDetails">Program Details generated</param>
+        /// <param name="side"># corresponding to side</param>
+        public static void DisplayData(ProgramDetails programDetails, Sides side, System.Windows.Forms.DataGridView dataGridView)
+        {
+          
+            side.ReadFile();
+            string[] regions = side.GetRegions();
+            string[] highest = side.GetHighestDefect();
+            string[] count = side.GetDefectCount();
 
+            dataGridView.Rows.Clear();
+            for (int i = 0; i < 16; i++)
+            {
+                string[] temp = { regions[i], highest[i], count[i] };
+                dataGridView.Rows.Add(temp);
+            }
+        }
     }
 
 }

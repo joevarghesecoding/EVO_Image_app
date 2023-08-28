@@ -28,3 +28,13 @@ C:\Users\Administrator\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\D
 C:\Users\Administrator\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.exe
 C:\Users\Administrator\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.pdb
 C:\Users\Administrator\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.EVO_Image_App.resources
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\EVO_Image_app.exe.config
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\EVO_Image_app.exe
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\EVO_Image_app.pdb
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.csproj.AssemblyReference.cache
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.EVO_Image_App.resources
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.Properties.Resources.resources
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.csproj.GenerateResource.cache
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.csproj.CoreCompileInputs.cache
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.exe
+C:\Users\Joe.Varghese\Documents\EVO_Image_app\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.pdb

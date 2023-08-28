@@ -27,10 +27,14 @@ namespace EVO_Image_app
             this.Text = "EVO Image App";
             //outDirPath = "C:\\Users\\Administrator\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
             outDirPath = currentDirectory + "\\Resources\\AllLatestModels\\" + today + "\\";
+            dataGridView1.Columns.Add("Regions", "Region");
+            dataGridView1.Columns.Add("LargestDefect", "Largest Defect");
+            dataGridView1.Columns.Add("DefectCount", "Defect Count");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             AllLatestModels.GetLatestImages();
 
             //ListView controls
@@ -44,7 +48,7 @@ namespace EVO_Image_app
             }
 
             listView1.Items.AddRange(listViewItems.ToArray());
-
+            Cursor.Current = Cursors.AppStarting;
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -72,10 +76,8 @@ namespace EVO_Image_app
                     pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                     side = 0;
-                    Front front = (Front)programDetails.sides[side];
-                    front.ReadFile();
 
-                
+                    Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
 
                     currentItem = item;
                 } 
@@ -109,7 +111,7 @@ namespace EVO_Image_app
                 // Load and display the image
                 //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-
+                Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
             }
             else
             {
@@ -136,7 +138,7 @@ namespace EVO_Image_app
                 // Load and display the image
                 //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-
+                Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
             }
             else
             {

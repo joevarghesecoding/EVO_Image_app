@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EVO_Image_app.EVO_BACK_END
 {
-    class Sides
+    abstract class Sides
     {
         public string Image { get; set; }
         public string File { get; set; }
@@ -15,7 +15,16 @@ namespace EVO_Image_app.EVO_BACK_END
             this.Image = Image;
             this.File = File;
         }
-      
+
+        public abstract void ReadFile();
+
+        public abstract string[] GetRegions();
+
+        public abstract string[] GetHighestDefect();
+
+        public abstract string[] GetDefectCount();
+
+
 
     }
 }

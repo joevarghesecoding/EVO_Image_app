@@ -35,9 +35,6 @@ namespace EVO_Image_app
             this.ModelsAndColors = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Region = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.DefectCount = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.HighestDefect = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -91,38 +88,13 @@ namespace EVO_Image_app
             // 
             this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Region,
-            this.DefectCount,
-            this.HighestDefect});
+           
             this.dataGridView1.Location = new System.Drawing.Point(930, 41);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(304, 467);
             this.dataGridView1.TabIndex = 4;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            // 
-            // Region
-            // 
-            this.Region.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.Region.HeaderText = "Region";
-            this.Region.Name = "Region";
-            this.Region.ReadOnly = true;
-            this.Region.Width = 66;
-            // 
-            // DefectCount
-            // 
-            this.DefectCount.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.DefectCount.HeaderText = "Defect Count";
-            this.DefectCount.Name = "DefectCount";
-            this.DefectCount.ReadOnly = true;
-            this.DefectCount.Width = 95;
-            // 
-            // HighestDefect
-            // 
-            this.HighestDefect.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.HighestDefect.HeaderText = "HighestDefect";
-            this.HighestDefect.Name = "HighestDefect";
-            this.HighestDefect.ReadOnly = true;
+            
             // 
             // imageList1
             // 
@@ -180,9 +152,6 @@ namespace EVO_Image_app
         private System.Windows.Forms.Button ModelsAndColors;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Region;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DefectCount;
-        private System.Windows.Forms.DataGridViewTextBoxColumn HighestDefect;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button4;
