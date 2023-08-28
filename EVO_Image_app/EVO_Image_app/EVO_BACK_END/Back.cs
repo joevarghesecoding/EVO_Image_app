@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace EVO_Image_app.EVO_BACK_END
@@ -11,6 +12,7 @@ namespace EVO_Image_app.EVO_BACK_END
         private string[,] regions = new string[26, 3];
 
         public Back(string Image, string File) : base(Image, File) { }
+
 
         public override string[] GetDefectCount()
         {
@@ -55,7 +57,7 @@ namespace EVO_Image_app.EVO_BACK_END
                     int i = 0;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        if (line != "Back" && line != "data_end" && line != "" && line.Contains("OCR"))
+                        if (line != "Back" && line != "data_end" && line != "" && !line.Contains("OCR"))
                         {
                             GetHighestValueAndCount(line, i);
                             i++;
@@ -73,36 +75,19 @@ namespace EVO_Image_app.EVO_BACK_END
 
         private void GetHighestValueAndCount(string line, int i)
         {
-            string[] splitted = line.Split(',');
+            string pattern = "[+]";
+            string resultLine = Regex.Replace(line, pattern, "");
+            string[] splitted = resultLine.Split(',');
+            
             string highestVal = splitted[2].Trim('0');
 
-
-            if (highestVal.Contains('+') || highestVal.Contains('.'))
+            regions[i, 0] = splitted[1];
+            regions[i, 1] = (highestVal == "") ? "0" : highestVal;
+            
+            if(splitted.Length > 3)
             {
-                for (int k = 0; k < splitted.Length; k++)
-                {
-                    if (splitted[k].Contains('+'))
-                        splitted[k] = splitted[k].Trim('+');
-                    if (splitted[k].Contains('.'))
-                        splitted[k] = splitted[k].Trim('.');
-                }
-            }
-
-            //Console.WriteLine(splitted[1]);
-            if (highestVal == "")
-            {
-                regions[i, 0] = splitted[1];
-                regions[i, 1] = "0";
-                regions[i, 2] = "0";
-
-            }
-            else
-            {
-                regions[i, 0] = splitted[1];
-                regions[i, 1] = highestVal;
-
                 int count = 0;
-                for (int j = 2; j < 10; j++)
+                for(int j = 2; j < splitted.Length; j++)
                 {
                     int res;
                     int.TryParse(splitted[j], out res);
@@ -117,7 +102,10 @@ namespace EVO_Image_app.EVO_BACK_END
                 }
                 //Console.WriteLine(count);
                 regions[i, 2] = count.ToString();
-
+            }
+            else
+            {
+                regions[i, 2] = "0";
             }
         }
     }

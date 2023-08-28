@@ -128,7 +128,7 @@ namespace EVO_Image_app
             {
                 side++;
             }
-            if(side == 5)
+            if(side == 6)
             {
                 side = 0;
             }

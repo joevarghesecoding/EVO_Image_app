@@ -186,9 +186,13 @@ namespace EVO_Image_app.EVO_BACK_END
             string[] count = side.GetDefectCount();
 
             dataGridView.Rows.Clear();
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i <regions.Length; i++)
             {
                 string[] temp = { regions[i], highest[i], count[i] };
+                foreach(string t in temp)
+                {
+                    Console.WriteLine(t);
+                }
                 dataGridView.Rows.Add(temp);
             }
         }
