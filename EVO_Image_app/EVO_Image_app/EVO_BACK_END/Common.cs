@@ -199,6 +199,16 @@ namespace EVO_Image_app.EVO_BACK_END
                 }
             }      
         }
+
+        public static void DeleteOnStart(string environment)
+        {
+            string path = environment + "\\Resources\\AllLatestModels";
+            string[] directories = Directory.GetDirectories(path);
+            foreach(string directory in directories)
+            {
+                Directory.Delete(directory, true);
+            }
+        }
     }
 
 }

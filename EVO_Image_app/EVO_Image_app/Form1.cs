@@ -31,6 +31,7 @@ namespace EVO_Image_app
             dataGridView1.Columns.Add("Regions", "Region");
             dataGridView1.Columns.Add("LargestDefect", "Largest Defect");
             dataGridView1.Columns.Add("DefectCount", "Defect Count");
+            Common.DeleteOnStart(currentDirectory);
         }
 
         private void button1_Click_1(object sender, EventArgs e)
