@@ -16,6 +16,7 @@ namespace EVO_Image_app
         int side = 0;
         string today;
         string outDirPath;
+        List<ListViewItem> originalList;
         ListViewItem currentItem;
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
@@ -32,74 +33,59 @@ namespace EVO_Image_app
             dataGridView1.Columns.Add("DefectCount", "Defect Count");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             AllLatestModels.GetLatestImages();
 
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
-            List<ListViewItem> listViewItems = new List<ListViewItem>();
+            originalList = new List<ListViewItem>();
 
-            foreach(ProgramObjs objs in AllLatestModels.programObjs)
+            foreach (ProgramObjs objs in AllLatestModels.programObjs)
             {
                 ListViewItem temp = new ListViewItem(objs.GetModelAndColor());
-                listViewItems.Add(temp);
+                originalList.Add(temp);
             }
 
-            listView1.Items.AddRange(listViewItems.ToArray());
+            listView1.Items.AddRange(originalList.ToArray());
             Cursor.Current = Cursors.AppStarting;
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             //string today = Common.GetDate();
             ListView.SelectedListViewItemCollection program = this.listView1.SelectedItems;
             //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
-            
+
             foreach (ListViewItem item in program)
             {
                 try
                 {
                     programDetails = AllLatestModels.GetProgramDetails(outDirPath + item.Text);
-                  
+
                     pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                     side = 0;
 
-                    Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
-
+                    Common.DisplayData(programDetails.sides[side], dataGridView1);
+                    Common.DisplaySerialAndDate(programDetails.ProgramObject, serialNum, lastDate);
+                    
                     currentItem = item;
-                } 
-                catch(NullReferenceException ex)
+                    
+                }
+                catch (NullReferenceException ex)
                 {
                     MessageBox.Show("Program contents not found.");
                     Console.WriteLine(ex);
                 }
-                
+
 
             }
-            //List<ProgramDetails> programDetails = AllLatestModels.GetProgramDetails();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void button3_Click_1(object sender, EventArgs e)
         {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            //ProgramDetails programDetails = AllLatestModels.GetProgramDetails(outDirPath + currentItem.Text);
 
             if (side > 0)
             {
@@ -109,18 +95,16 @@ namespace EVO_Image_app
             if (System.IO.File.Exists(programDetails.sides[side].Image))
             {
                 // Load and display the image
-                //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-                Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
+                Common.DisplayData( programDetails.sides[side], dataGridView1);
             }
             else
             {
                 MessageBox.Show("The specified image file does not exist.");
             }
-
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click_1(object sender, EventArgs e)
         {
             //ProgramDetails programDetails = AllLatestModels.GetProgramDetails(outDirPath + currentItem.Text);
 
@@ -128,7 +112,7 @@ namespace EVO_Image_app
             {
                 side++;
             }
-            if(side == 6)
+            if (side == 6)
             {
                 side = 0;
             }
@@ -138,11 +122,35 @@ namespace EVO_Image_app
                 // Load and display the image
                 //pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-                Common.DisplayData(programDetails, programDetails.sides[side], dataGridView1);
+                Common.DisplayData(programDetails.sides[side], dataGridView1);
             }
             else
             {
                 MessageBox.Show("The specified image file does not exist.");
+            }
+        }
+
+        private void pictureBox1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            string keyword = textBox1.Text;
+            ClearFilter(keyword);
+
+        }
+
+        private void ClearFilter(string keyword)
+        {
+            listView1.Items.Clear();
+            foreach(ListViewItem item in originalList)
+            {
+                if (item.Text.Contains(keyword))
+                {
+                    listView1.Items.Add(item);
+                }
             }
         }
     }

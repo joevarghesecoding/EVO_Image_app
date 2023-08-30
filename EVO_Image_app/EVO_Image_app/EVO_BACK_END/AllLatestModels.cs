@@ -27,14 +27,6 @@ namespace EVO_Image_app.EVO_BACK_END
             GetLatestSerials(programObjs);
             string today = Common.GetDate();
 
-            //foreach (ProgramObjs obj in Pobjs)
-            //{
-            //    Console.WriteLine(obj.GetModelAndColor());
-            //    Console.WriteLine(obj.GetSerialNum());
-            //    Console.WriteLine(obj.GetLastDate());
-            //}
-            
-            //Console.WriteLine(currentDirectory);
 
             foreach (ProgramObjs obj in programObjs)
             {
@@ -51,6 +43,11 @@ namespace EVO_Image_app.EVO_BACK_END
                     Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
                 }
             }
+        }
+
+        public static List<ProgramObjs> GetProgramObjs()
+        {
+            return programObjs;
         }
 
         public static ProgramDetails GetProgramDetails(string outDirPath)
@@ -80,15 +77,11 @@ namespace EVO_Image_app.EVO_BACK_END
                         {
                             if (reader.Value.Contains("iPhone"))
                             {
-                                //Console.WriteLine("Model: " + reader.Value);
                                 currentModel = reader.Value;
-                                //Console.WriteLine(" Current Model: " + reader.Value);
-
                             }
                             if (!reader.Name.Contains("ModelPrograms") && !reader.Name.Contains("audit") && !reader.Name.Contains("model") && !string.IsNullOrWhiteSpace(reader.Name)
                                     && !reader.Name.Contains("large") && !reader.Name.Contains("small"))
                             {
-                                //Console.WriteLine("Color: " + reader.Name);
                                 char[] color = reader.Name.ToCharArray();
                                 color[0] = char.ToUpper(color[0]);
                                 string colorUpper = new string(color);
@@ -97,7 +90,6 @@ namespace EVO_Image_app.EVO_BACK_END
                                     colorUpper = "Space Gray";
                                 }
                                 currentModelAndColor = currentModel + "," + colorUpper;
-                                //Console.WriteLine("CurrentModelAndcolor: " + currentModelAndColor);
                                 objs.Add(new ProgramObjs(currentModelAndColor));
                             }
                             
@@ -111,10 +103,6 @@ namespace EVO_Image_app.EVO_BACK_END
                 Console.WriteLine(" ***** ERROR At GetCurrentProgram *****\n " + ex.Message);
             }
 
-            //foreach(ProgramObjs obj in objs)
-            //{
-            //    Console.WriteLine(obj.GetModelAndColor());
-            //}
             return objs;
         }
 
@@ -126,7 +114,6 @@ namespace EVO_Image_app.EVO_BACK_END
 
             DirectoryInfo dir = new DirectoryInfo(path);
             FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
-            //Array.Reverse(files);
             List<FileInfo> result = files.ToList<FileInfo>();
             return result;
         }
@@ -164,12 +151,6 @@ namespace EVO_Image_app.EVO_BACK_END
                     Console.WriteLine("***** ERROR At Find Serials ******\n" + ex.Message);
                 }
             }
-            //foreach(ProgramObjs obj in programObjs)
-            //{
-            //    Console.WriteLine(obj.GetModelAndColor());
-            //    Console.WriteLine(obj.GetSerialNum());
-            //    Console.WriteLine(obj.GetLastDate());
-            //}
         }
 
         private static void GetLatestSerials(List<ProgramObjs> programObjs)

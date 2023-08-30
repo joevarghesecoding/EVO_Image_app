@@ -95,7 +95,7 @@ namespace EVO_Image_app.EVO_BACK_END
             try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(path);
-                Console.WriteLine(sourceInfo.FullName);
+               // Console.WriteLine(sourceInfo.FullName);
                 if (!sourceInfo.Exists)
                 {
                     //Console.WriteLine(sourceInfo.FullName);
@@ -154,13 +154,7 @@ namespace EVO_Image_app.EVO_BACK_END
                     programDetails.sides[3] = bottom;
                     programDetails.sides[4] = left;
                     programDetails.sides[5] = right;
-                    
                    
-                        //Console.WriteLine(programDetails.BackFile);
-                        //Console.WriteLine(programDetails.FrontFile);
-                        //Console.WriteLine(programDetails.LeftImage);
-                        //Console.WriteLine(programDetails.BottomImage);
-
                 }
 
             }
@@ -177,7 +171,7 @@ namespace EVO_Image_app.EVO_BACK_END
         /// </summary>
         /// <param name="programDetails">Program Details generated</param>
         /// <param name="side"># corresponding to side</param>
-        public static void DisplayData(ProgramDetails programDetails, Sides side, System.Windows.Forms.DataGridView dataGridView)
+        public static void DisplayData(Sides side, System.Windows.Forms.DataGridView dataGridView)
         {
           
             side.ReadFile();
@@ -189,12 +183,21 @@ namespace EVO_Image_app.EVO_BACK_END
             for (int i = 0; i <regions.Length; i++)
             {
                 string[] temp = { regions[i], highest[i], count[i] };
-                foreach(string t in temp)
-                {
-                    Console.WriteLine(t);
-                }
                 dataGridView.Rows.Add(temp);
             }
+        }
+
+        public static void DisplaySerialAndDate(ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate)
+        {
+            List<ProgramObjs> programs = AllLatestModels.GetProgramObjs();
+            foreach (ProgramObjs program in programs)
+            {
+                if(programObjs.GetModelAndColor() == program.GetModelAndColor())
+                {
+                    serialNum.Text = program.GetSerialNum();
+                    lastDate.Text = program.GetLastDate();
+                }
+            }      
         }
     }
 
