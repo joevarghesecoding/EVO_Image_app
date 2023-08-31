@@ -32,6 +32,7 @@ namespace EVO_Image_app
             dataGridView1.Columns.Add("LargestDefect", "Largest Defect");
             dataGridView1.Columns.Add("DefectCount", "Defect Count");
             Common.DeleteOnStart(currentDirectory);
+            previousBtn.BackgroundImageLayout = ImageLayout.Center;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -49,6 +50,8 @@ namespace EVO_Image_app
                 originalList.Add(temp);
             }
 
+            textBox1.Text = "Filter";
+            textBox1.ForeColor = System.Drawing.Color.DimGray;
             listView1.Items.AddRange(originalList.ToArray());
             Cursor.Current = Cursors.AppStarting;
         }
@@ -106,9 +109,7 @@ namespace EVO_Image_app
         }
 
         private void button4_Click_1(object sender, EventArgs e)
-        {
-            //ProgramDetails programDetails = AllLatestModels.GetProgramDetails(outDirPath + currentItem.Text);
-
+        { 
             if (side < 6)
             {
                 side++;
@@ -136,6 +137,11 @@ namespace EVO_Image_app
 
         }
 
+        private void textBox1_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string keyword = textBox1.Text;
@@ -153,6 +159,27 @@ namespace EVO_Image_app
                     listView1.Items.Add(item);
                 }
             }
+        }
+ 
+
+
+        private void nextButton_MouseEnter(object sender, EventArgs e)
+        {
+            nextButton.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            nextButton.BackColor = Color.DarkGray;
+
+            previousBtn.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            previousBtn.BackColor = Color.DarkGray;
+
+        }
+
+        private void nextButton_MouseLeave(object sender, EventArgs e)
+        {
+            nextButton.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            nextButton.BackColor = Color.LightGray;
+
+            previousBtn.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
+            previousBtn.BackColor = Color.LightGray;
         }
     }
 }

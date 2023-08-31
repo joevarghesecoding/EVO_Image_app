@@ -75,18 +75,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -497,8 +497,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EVO_FRONT_END\Icons\previous.png" />
-    <Content Include="EVO_FRONT_END\Icons\right-arrow.png" />
+    <Content Include="EVO_FRONT_END\Icons\icons8-previous-64.png" />
+    <Content Include="EVO_FRONT_END\Icons\icons8-right-button-64.png" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Bottom.jpg" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Display.jpg" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Housing.jpg" />
