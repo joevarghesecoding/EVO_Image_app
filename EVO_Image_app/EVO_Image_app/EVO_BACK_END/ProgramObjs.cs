@@ -12,6 +12,13 @@
             this.SerialNum = "";
             this.LastDate = "";
         }
+
+        public ProgramObjs(string ModelAndColor, string SerialNum, string LastDate)
+        {
+            this.ModelAndColor = ModelAndColor;
+            this.SerialNum = SerialNum;
+            this.LastDate = LastDate;
+        }
         public string GetModelAndColor()
         {
             return this.ModelAndColor;

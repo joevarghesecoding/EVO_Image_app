@@ -33,28 +33,32 @@ namespace EVO_Image_app
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EVO_Image_App));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.panel2 = new System.Windows.Forms.Panel();
+            this.findBtn = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.panel3 = new System.Windows.Forms.Panel();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
-            this.manualSearch = new System.Windows.Forms.Button();
+            this.modelsAndColorsBtn = new System.Windows.Forms.Button();
+            this.manualSearchBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lastDate = new System.Windows.Forms.TextBox();
             this.serialNum = new System.Windows.Forms.TextBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.Find = new System.Windows.Forms.Button();
             this.nextButton = new System.Windows.Forms.Button();
             this.previousBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.modelSearch = new System.Windows.Forms.Button();
+            this.calendarBtn = new System.Windows.Forms.Button();
+            this.modelDropDown = new System.Windows.Forms.ComboBox();
+            this.searchBtn = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
-            this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // imageList1
@@ -68,13 +72,22 @@ namespace EVO_Image_app
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.panel2.AutoSize = true;
-            this.panel2.Controls.Add(this.Find);
+            this.panel2.Controls.Add(this.findBtn);
             this.panel2.Controls.Add(this.textBox1);
             this.panel2.Controls.Add(this.listView1);
             this.panel2.Location = new System.Drawing.Point(0, 27);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(308, 560);
             this.panel2.TabIndex = 1;
+            // 
+            // findBtn
+            // 
+            this.findBtn.Location = new System.Drawing.Point(269, 4);
+            this.findBtn.Name = "findBtn";
+            this.findBtn.Size = new System.Drawing.Size(25, 20);
+            this.findBtn.TabIndex = 2;
+            this.findBtn.UseVisualStyleBackColor = true;
+            this.findBtn.Click += new System.EventHandler(this.findBtn_Click);
             // 
             // textBox1
             // 
@@ -118,24 +131,25 @@ namespace EVO_Image_app
             this.dataGridView1.Size = new System.Drawing.Size(374, 518);
             this.dataGridView1.TabIndex = 0;
             // 
-            // button1
+            // modelsAndColorsBtn
             // 
-            this.button1.Location = new System.Drawing.Point(12, 0);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(147, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "All Models And Colors";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.modelsAndColorsBtn.Location = new System.Drawing.Point(12, 0);
+            this.modelsAndColorsBtn.Name = "modelsAndColorsBtn";
+            this.modelsAndColorsBtn.Size = new System.Drawing.Size(147, 23);
+            this.modelsAndColorsBtn.TabIndex = 3;
+            this.modelsAndColorsBtn.Text = "All Models And Colors";
+            this.modelsAndColorsBtn.UseVisualStyleBackColor = true;
+            this.modelsAndColorsBtn.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // manualSearch
+            // manualSearchBtn
             // 
-            this.manualSearch.Location = new System.Drawing.Point(189, 0);
-            this.manualSearch.Name = "manualSearch";
-            this.manualSearch.Size = new System.Drawing.Size(142, 23);
-            this.manualSearch.TabIndex = 4;
-            this.manualSearch.Text = "Manual Search";
-            this.manualSearch.UseVisualStyleBackColor = true;
+            this.manualSearchBtn.Location = new System.Drawing.Point(189, 0);
+            this.manualSearchBtn.Name = "manualSearchBtn";
+            this.manualSearchBtn.Size = new System.Drawing.Size(142, 23);
+            this.manualSearchBtn.TabIndex = 4;
+            this.manualSearchBtn.Text = "Manual Search";
+            this.manualSearchBtn.UseVisualStyleBackColor = true;
+            this.manualSearchBtn.Click += new System.EventHandler(this.manualSearchBtn_Click);
             // 
             // panel1
             // 
@@ -188,25 +202,6 @@ namespace EVO_Image_app
             this.serialNum.Size = new System.Drawing.Size(133, 20);
             this.serialNum.TabIndex = 3;
             // 
-            // panel4
-            // 
-            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel4.Controls.Add(this.manualSearch);
-            this.panel4.Controls.Add(this.button1);
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1314, 22);
-            this.panel4.TabIndex = 5;
-            // 
-            // Find
-            // 
-            this.Find.Location = new System.Drawing.Point(269, 4);
-            this.Find.Name = "Find";
-            this.Find.Size = new System.Drawing.Size(25, 20);
-            this.Find.TabIndex = 2;
-            this.Find.UseVisualStyleBackColor = true;
-            // 
             // nextButton
             // 
             this.nextButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -248,6 +243,56 @@ namespace EVO_Image_app
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click_1);
             // 
+            // panel4
+            // 
+            this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Controls.Add(this.searchBtn);
+            this.panel4.Controls.Add(this.modelDropDown);
+            this.panel4.Controls.Add(this.calendarBtn);
+            this.panel4.Controls.Add(this.modelSearch);
+            this.panel4.Controls.Add(this.manualSearchBtn);
+            this.panel4.Controls.Add(this.modelsAndColorsBtn);
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1314, 22);
+            this.panel4.TabIndex = 5;
+            // 
+            // modelSearch
+            // 
+            this.modelSearch.Location = new System.Drawing.Point(366, 0);
+            this.modelSearch.Name = "modelSearch";
+            this.modelSearch.Size = new System.Drawing.Size(118, 23);
+            this.modelSearch.TabIndex = 5;
+            this.modelSearch.Text = "Model Search";
+            this.modelSearch.UseVisualStyleBackColor = true;
+            // 
+            // calendarBtn
+            // 
+            this.calendarBtn.Location = new System.Drawing.Point(617, 0);
+            this.calendarBtn.Name = "calendarBtn";
+            this.calendarBtn.Size = new System.Drawing.Size(21, 23);
+            this.calendarBtn.TabIndex = 6;
+            this.calendarBtn.Text = "...";
+            this.calendarBtn.UseVisualStyleBackColor = true;
+            // 
+            // modelDropDown
+            // 
+            this.modelDropDown.FormattingEnabled = true;
+            this.modelDropDown.Location = new System.Drawing.Point(490, 0);
+            this.modelDropDown.Name = "modelDropDown";
+            this.modelDropDown.Size = new System.Drawing.Size(121, 21);
+            this.modelDropDown.TabIndex = 7;
+            // 
+            // searchBtn
+            // 
+            this.searchBtn.Location = new System.Drawing.Point(644, 0);
+            this.searchBtn.Name = "searchBtn";
+            this.searchBtn.Size = new System.Drawing.Size(75, 23);
+            this.searchBtn.TabIndex = 8;
+            this.searchBtn.Text = "Search";
+            this.searchBtn.UseVisualStyleBackColor = true;
+            // 
             // EVO_Image_App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -266,8 +311,8 @@ namespace EVO_Image_app
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -282,8 +327,8 @@ namespace EVO_Image_app
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button previousBtn;
         private System.Windows.Forms.Button nextButton;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button manualSearch;
+        private System.Windows.Forms.Button modelsAndColorsBtn;
+        private System.Windows.Forms.Button manualSearchBtn;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label1;
@@ -291,7 +336,11 @@ namespace EVO_Image_app
         private System.Windows.Forms.TextBox serialNum;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button Find;
+        private System.Windows.Forms.Button findBtn;
+        private System.Windows.Forms.Button calendarBtn;
+        private System.Windows.Forms.Button modelSearch;
+        private System.Windows.Forms.Button searchBtn;
+        private System.Windows.Forms.ComboBox modelDropDown;
     }
 }
 

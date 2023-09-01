@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVO_Image_app.EVO_BACK_END;
@@ -20,6 +21,7 @@ namespace EVO_Image_app
         ListViewItem currentItem;
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
+        ManualSearch manualSearch;
         public EVO_Image_App()
         {
             InitializeComponent();
@@ -27,22 +29,29 @@ namespace EVO_Image_app
             today = Common.GetDate();
             this.Text = "EVO Image App";
             //outDirPath = "C:\\Users\\Administrator\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
-            outDirPath = currentDirectory + "\\Resources\\AllLatestModels\\" + today + "\\";
+            
             dataGridView1.Columns.Add("Regions", "Region");
             dataGridView1.Columns.Add("LargestDefect", "Largest Defect");
             dataGridView1.Columns.Add("DefectCount", "Defect Count");
             Common.DeleteOnStart(currentDirectory);
             previousBtn.BackgroundImageLayout = ImageLayout.Center;
+            findBtn.Enabled = false;
+            modelDropDown.Enabled = false;
+            calendarBtn.Enabled = false;
+            searchBtn.Enabled = false;
+            originalList = new List<ListViewItem>();
+            manualSearch = new ManualSearch();
+            textBox1.Enabled = false;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             AllLatestModels.GetLatestImages();
-
+            originalList = new List<ListViewItem>();
+            textBox1.Enabled = true;
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
-            originalList = new List<ListViewItem>();
 
             foreach (ProgramObjs objs in AllLatestModels.programObjs)
             {
@@ -51,6 +60,7 @@ namespace EVO_Image_app
             }
 
             textBox1.Text = "Filter";
+            
             textBox1.ForeColor = System.Drawing.Color.DimGray;
             listView1.Items.AddRange(originalList.ToArray());
             Cursor.Current = Cursors.AppStarting;
@@ -61,12 +71,13 @@ namespace EVO_Image_app
             //string today = Common.GetDate();
             ListView.SelectedListViewItemCollection program = this.listView1.SelectedItems;
             //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
-
+            outDirPath = currentDirectory + "\\Resources\\AllLatestModels\\" + today + "\\";
             foreach (ListViewItem item in program)
             {
                 try
                 {
-                    programDetails = AllLatestModels.GetProgramDetails(outDirPath + item.Text);
+                    Console.WriteLine(outDirPath + item.Text);
+                    programDetails = Common.GetProgramDetails(outDirPath + item.Text);
 
                     pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
@@ -180,6 +191,48 @@ namespace EVO_Image_app
 
             previousBtn.FlatAppearance.BorderColor = Color.FromArgb(224, 224, 224);
             previousBtn.BackColor = Color.LightGray;
+        }
+
+        private void manualSearchBtn_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "Enter Serial and click Search";
+            textBox1.ForeColor = System.Drawing.Color.DimGray;
+            textBox1.Enabled = true;
+            findBtn.Enabled = true;
+            originalList = new List<ListViewItem>();
+            outDirPath = currentDirectory + "\\Resources\\ManualSearch\\" + today + "\\";
+        }
+
+        private void findBtn_Click(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            string serial = textBox1.Text;
+            string pattern = "^[A-Z0-9]{10}$";
+
+
+            if(Regex.IsMatch(serial, pattern))
+            {
+                manualSearch.GetImagesForSerial(serial);
+            }
+            else
+            {
+                MessageBox.Show("Program Not Found");
+            }
+
+            listView1.Columns.Add("Current Programs", -2);
+
+            foreach (ProgramObjs objs in manualSearch.GetProgramObjs())
+            {
+                ListViewItem temp = new ListViewItem(objs.GetSerialNum());
+                originalList.Add(temp);
+            }
+
+            foreach(ListViewItem item in originalList)
+            {
+                Console.WriteLine(item);
+            }
+            listView1.Items.AddRange(originalList.ToArray());
+            Cursor.Current = Cursors.AppStarting;
         }
     }
 }

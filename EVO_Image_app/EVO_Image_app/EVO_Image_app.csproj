@@ -48,17 +48,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EVO_BACK_END\AllLatestModels.cs" />
-    <Compile Include="EVO_BACK_END\Back.cs" />
-    <Compile Include="EVO_BACK_END\Bottom.cs" />
+    <Compile Include="EVO_BACK_END\ManualSearch.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Back.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Bottom.cs" />
     <Compile Include="EVO_BACK_END\Common.cs" />
-    <Compile Include="EVO_BACK_END\Front.cs" />
-    <Compile Include="EVO_BACK_END\Left.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Front.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Left.cs" />
     <Compile Include="EVO_BACK_END\ProgramDetails.cs" />
     <Compile Include="EVO_BACK_END\ProgramObjs.cs" />
-    <Compile Include="EVO_BACK_END\Right.cs" />
-    <Compile Include="EVO_BACK_END\Sides.cs" />
-    <Compile Include="EVO_BACK_END\TodaysFails.cs" />
-    <Compile Include="EVO_BACK_END\Top.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Right.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Sides.cs" />
+    <Compile Include="EVO_BACK_END\Sides\Top.cs" />
     <Compile Include="EVO_FRONT_END\UIButton.cs">
       <SubType>Component</SubType>
     </Compile>
