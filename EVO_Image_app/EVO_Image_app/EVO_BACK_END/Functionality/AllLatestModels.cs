@@ -6,20 +6,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
-namespace EVO_Image_app.EVO_BACK_END
+namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
-    class AllLatestModels
+    class AllLatestModels : Functions
     {
-        public static List<ProgramObjs> programObjs; 
         string today = Common.GetDate();
         
+        public AllLatestModels() : base() { }
         /// <summary>
         /// Gets all the images for the serial numbers and creates a folder for it.
         /// </summary>
         /// <return>
         /// A directory with all the latest phone images.
         /// </return>
-        public static void GetLatestImages()
+        public void GetLatestImages()
         {
             //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string dailyRunData = Common.currentDirectory + "\\Resources";
@@ -45,11 +45,6 @@ namespace EVO_Image_app.EVO_BACK_END
             }
         }
 
-        public static List<ProgramObjs> GetProgramObjs()
-        {
-            return programObjs;
-        }
-        
         private static void GetLatestSerials(List<ProgramObjs> programObjs)
         {
             List<FileInfo> fatSatFiles = Common.GetAllFatSatFiles();

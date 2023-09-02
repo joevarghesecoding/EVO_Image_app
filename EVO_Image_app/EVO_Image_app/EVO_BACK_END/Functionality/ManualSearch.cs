@@ -5,21 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EVO_Image_app.EVO_BACK_END
+namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
-    class ManualSearch
+    class ManualSearch : Functions
     {
-        private List<ProgramObjs> programObjs;
 
-        public ManualSearch()
-        {
-            programObjs = new List<ProgramObjs>();
-        }
-
-        public List<ProgramObjs> GetProgramObjs()
-        {
-            return programObjs;
-        }
+        public ManualSearch() : base() { }
 
         /// <summary>
         /// Gets images for the serial number and creates a folder for it.

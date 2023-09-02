@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EVO_Image_app.EVO_BACK_END;
+using EVO_Image_app.EVO_BACK_END.Functionality;
 
 namespace EVO_Image_app
 {
@@ -22,6 +23,8 @@ namespace EVO_Image_app
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
         ManualSearch manualSearch;
+        AllLatestModels allLatestModels;
+        int flag = 0;
         public EVO_Image_App()
         {
             InitializeComponent();
@@ -47,13 +50,15 @@ namespace EVO_Image_app
         private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            AllLatestModels.GetLatestImages();
+            flag = 1;
+            allLatestModels = new AllLatestModels();
+            allLatestModels.GetLatestImages();
             originalList = new List<ListViewItem>();
             textBox1.Enabled = true;
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
-
-            foreach (ProgramObjs objs in AllLatestModels.programObjs)
+            List<ProgramObjs> allLatestModelsObjs = allLatestModels.GetProgramObjs();
+            foreach (ProgramObjs objs in allLatestModelsObjs)
             {
                 ListViewItem temp = new ListViewItem(objs.GetModelAndColor());
                 originalList.Add(temp);
@@ -71,7 +76,8 @@ namespace EVO_Image_app
             //string today = Common.GetDate();
             ListView.SelectedListViewItemCollection program = this.listView1.SelectedItems;
             //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
-            outDirPath = currentDirectory + "\\Resources\\AllLatestModels\\" + today + "\\";
+            outDirPath = currentDirectory + "\\Resources\\" + Common.currentFlag(flag) + "\\" + today + "\\";
+            List<ProgramObjs> objs = allLatestModels.GetProgramObjs();
             foreach (ListViewItem item in program)
             {
                 try
@@ -84,7 +90,7 @@ namespace EVO_Image_app
                     side = 0;
 
                     Common.DisplayData(programDetails.sides[side], dataGridView1);
-                    Common.DisplaySerialAndDate(programDetails.ProgramObject, serialNum, lastDate);
+                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate);
                     
                     currentItem = item;
                     
@@ -200,7 +206,7 @@ namespace EVO_Image_app
             textBox1.Enabled = true;
             findBtn.Enabled = true;
             originalList = new List<ListViewItem>();
-            outDirPath = currentDirectory + "\\Resources\\ManualSearch\\" + today + "\\";
+            flag = 2;
         }
 
         private void findBtn_Click(object sender, EventArgs e)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using EVO_Image_app.EVO_BACK_END.Functionality;
 
 namespace EVO_Image_app.EVO_BACK_END
 {
@@ -189,9 +190,8 @@ namespace EVO_Image_app.EVO_BACK_END
             }
         }
 
-        public static void DisplaySerialAndDate(ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate)
+        public static void DisplaySerialAndDate(List<ProgramObjs> programs, ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate)
         {
-            List<ProgramObjs> programs = AllLatestModels.GetProgramObjs();
             foreach (ProgramObjs program in programs)
             {
                 if(programObjs.GetModelAndColor() == program.GetModelAndColor())
@@ -362,7 +362,29 @@ namespace EVO_Image_app.EVO_BACK_END
                 }
 
                return null;
+        }
+        
+        ///<summary>
+        /// Sets the path of the out directory based on the currently running function
+        /// </summary>
+        /// <param name="flag">number indicating current function</param>
+        public static string currentFlag(int flag)
+        {
+            string outDirPath;
+            switch (flag)
+            {
+                case 1:
+                    outDirPath = "AllLatestModels";
+                    return outDirPath;
+                case 2:
+                    outDirPath = "ManualSearch";
+                    return outDirPath;
+                case 3:
+                    outDirPath = "ModelSearch";
+                    return outDirPath;
             }
+            return null;
         }
     }
 
+}

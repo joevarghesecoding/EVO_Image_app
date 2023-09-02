@@ -47,15 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EVO_BACK_END\AllLatestModels.cs" />
-    <Compile Include="EVO_BACK_END\ManualSearch.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\AllLatestModels.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\Functions.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\ManualSearch.cs" />
     <Compile Include="EVO_BACK_END\Sides\Back.cs" />
     <Compile Include="EVO_BACK_END\Sides\Bottom.cs" />
-    <Compile Include="EVO_BACK_END\Common.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\Common.cs" />
     <Compile Include="EVO_BACK_END\Sides\Front.cs" />
     <Compile Include="EVO_BACK_END\Sides\Left.cs" />
-    <Compile Include="EVO_BACK_END\ProgramDetails.cs" />
-    <Compile Include="EVO_BACK_END\ProgramObjs.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\ProgramDetails.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\ProgramObjs.cs" />
     <Compile Include="EVO_BACK_END\Sides\Right.cs" />
     <Compile Include="EVO_BACK_END\Sides\Sides.cs" />
     <Compile Include="EVO_BACK_END\Sides\Top.cs" />
