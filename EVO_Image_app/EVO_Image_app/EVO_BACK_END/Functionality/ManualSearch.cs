@@ -18,7 +18,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// <return>
         /// A directory with the serial's images.
         /// </return>
-        public void GetImagesForSerial(string serial)
+        override public void GetImagesForSerial(string serial)
         {
             //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string dailyRunData = Common.currentDirectory + "\\Resources";
@@ -46,6 +46,16 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 }
             }
 
+        }
+
+        public override void GetLatestImages()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetModelImages(ProgramObjs program, string date)
+        {
+            throw new NotImplementedException();
         }
     }
 }

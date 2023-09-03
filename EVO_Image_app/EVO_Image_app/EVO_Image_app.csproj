@@ -50,6 +50,7 @@
     <Compile Include="EVO_BACK_END\Functionality\AllLatestModels.cs" />
     <Compile Include="EVO_BACK_END\Functionality\Functions.cs" />
     <Compile Include="EVO_BACK_END\Functionality\ManualSearch.cs" />
+    <Compile Include="EVO_BACK_END\Functionality\ModelSearch.cs" />
     <Compile Include="EVO_BACK_END\Sides\Back.cs" />
     <Compile Include="EVO_BACK_END\Sides\Bottom.cs" />
     <Compile Include="EVO_BACK_END\Functionality\Common.cs" />

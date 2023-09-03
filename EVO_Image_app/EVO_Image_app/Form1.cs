@@ -22,8 +22,9 @@ namespace EVO_Image_app
         ListViewItem currentItem;
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
-        ManualSearch manualSearch;
-        AllLatestModels allLatestModels;
+        Functions function;
+        string date;
+        int? modelIndex;
         int flag = 0;
         public EVO_Image_App()
         {
@@ -36,28 +37,30 @@ namespace EVO_Image_app
             dataGridView1.Columns.Add("Regions", "Region");
             dataGridView1.Columns.Add("LargestDefect", "Largest Defect");
             dataGridView1.Columns.Add("DefectCount", "Defect Count");
-            Common.DeleteOnStart(currentDirectory);
             previousBtn.BackgroundImageLayout = ImageLayout.Center;
             findBtn.Enabled = false;
             modelDropDown.Enabled = false;
             calendarBtn.Enabled = false;
             searchBtn.Enabled = false;
             originalList = new List<ListViewItem>();
-            manualSearch = new ManualSearch();
             textBox1.Enabled = false;
+            calendar.Visible = false;
+            calendar.MaxDate = DateTime.Today;
         }
 
+        //All Models And Colors button
         private void button1_Click_1(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
             flag = 1;
-            allLatestModels = new AllLatestModels();
-            allLatestModels.GetLatestImages();
+            Common.DeleteOnStart(currentDirectory, flag);
+            function = new AllLatestModels();
+            function.GetLatestImages();
             originalList = new List<ListViewItem>();
             textBox1.Enabled = true;
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
-            List<ProgramObjs> allLatestModelsObjs = allLatestModels.GetProgramObjs();
+            List<ProgramObjs> allLatestModelsObjs = function.GetProgramObjs();
             foreach (ProgramObjs objs in allLatestModelsObjs)
             {
                 ListViewItem temp = new ListViewItem(objs.GetModelAndColor());
@@ -71,13 +74,14 @@ namespace EVO_Image_app
             Cursor.Current = Cursors.AppStarting;
         }
 
+        //List view containing programs
         private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             //string today = Common.GetDate();
             ListView.SelectedListViewItemCollection program = this.listView1.SelectedItems;
             //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
-            outDirPath = currentDirectory + "\\Resources\\" + Common.currentFlag(flag) + "\\" + today + "\\";
-            List<ProgramObjs> objs = allLatestModels.GetProgramObjs();
+            outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
+            List<ProgramObjs> objs = function.GetProgramObjs();
             foreach (ListViewItem item in program)
             {
                 try
@@ -105,6 +109,7 @@ namespace EVO_Image_app
             }
         }
 
+        //Previous button
         private void button3_Click_1(object sender, EventArgs e)
         {
 
@@ -125,6 +130,7 @@ namespace EVO_Image_app
             }
         }
 
+        //Next Button
         private void button4_Click_1(object sender, EventArgs e)
         { 
             if (side < 6)
@@ -154,15 +160,21 @@ namespace EVO_Image_app
 
         }
 
+        //Search/Filter Box
         private void textBox1_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
         }
 
+        //Search/Filter box
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string keyword = textBox1.Text;
-            ClearFilter(keyword);
+            if(flag == 1 || flag == 3)
+            {
+                ClearFilter(keyword);
+            }
+            
 
         }
 
@@ -199,16 +211,22 @@ namespace EVO_Image_app
             previousBtn.BackColor = Color.LightGray;
         }
 
+        //Manual Search button
         private void manualSearchBtn_Click(object sender, EventArgs e)
         {
+            flag = 2;
+            Common.DeleteOnStart(currentDirectory, flag);
+            function = new ManualSearch();
             textBox1.Text = "Enter Serial and click Search";
             textBox1.ForeColor = System.Drawing.Color.DimGray;
             textBox1.Enabled = true;
             findBtn.Enabled = true;
             originalList = new List<ListViewItem>();
-            flag = 2;
+            listView1.Columns.Add("Current Programs", -2);
+            listView1.Items.Clear();
         }
 
+        //Find button next to manual search
         private void findBtn_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -218,27 +236,104 @@ namespace EVO_Image_app
 
             if(Regex.IsMatch(serial, pattern))
             {
-                manualSearch.GetImagesForSerial(serial);
+                function.GetImagesForSerial(serial);
+                ListViewItem temp = new ListViewItem(serial);
+                listView1.Items.Add(temp);
             }
             else
             {
                 MessageBox.Show("Program Not Found");
             }
 
-            listView1.Columns.Add("Current Programs", -2);
-
-            foreach (ProgramObjs objs in manualSearch.GetProgramObjs())
-            {
-                ListViewItem temp = new ListViewItem(objs.GetSerialNum());
-                originalList.Add(temp);
-            }
-
-            foreach(ListViewItem item in originalList)
-            {
-                Console.WriteLine(item);
-            }
-            listView1.Items.AddRange(originalList.ToArray());
             Cursor.Current = Cursors.AppStarting;
         }
+
+        private void modelSearch_Click(object sender, EventArgs e)
+        {
+            flag = 3;
+            listView1.Columns.Add("Current Programs", -2);
+            listView1.Items.Clear();
+            Common.DeleteOnStart(currentDirectory, flag);
+            function = new ModelSearch();
+            modelDropDown.Enabled = true;
+            calendarBtn.Enabled = true;
+            searchBtn.Enabled = true;
+            string[] models = getModelSearchModels();
+            modelDropDown.Items.AddRange(models);
+        }
+
+        private string[] getModelSearchModels()
+        {
+            List<ProgramObjs> modelSearch = function.GetProgramObjs();
+            string[] models = new string[modelSearch.Count];
+            int i = 0;
+            foreach (ProgramObjs obj in modelSearch)
+            {
+                models[i] = obj.GetModelAndColor();
+                i++;
+            }
+
+            return models;
+        }
+
+        private void modelDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+             modelIndex = modelDropDown.SelectedIndex;
+        }
+
+        private void calendarBtn_Click(object sender, EventArgs e)
+        {
+            if (calendar.Visible)
+                calendar.Visible = false;
+            else
+                calendar.Visible = true;
+
+        }
+
+        private void monthCalendar1_DateChanged(object sender, DateRangeEventArgs e)
+        {
+            
+            SelectionRange selectedRange = calendar.SelectionRange;
+
+            DateTime selectedDate = selectedRange.Start;
+            date = Common.FormatDate(selectedDate);
+
+        }
+
+
+        private void searchBtn_Click(object sender, EventArgs e)
+        {
+            if (calendar.Visible)
+                calendar.Visible = false;
+            outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
+            if (modelIndex.HasValue)
+            {
+                int index = modelIndex.Value;
+                string[] models = getModelSearchModels();
+                
+                ProgramObjs program = new ProgramObjs(models[index]);
+                if (date != null)
+                    function.GetModelImages(program, date);
+                else
+                    function.GetModelImages(program, today);
+                List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+
+                originalList = new List<ListViewItem>();
+                foreach (ProgramObjs objs in modelSearch)
+                {
+                    //Console.WriteLine(objs.GetSerialNum());
+                    ListViewItem temp = new ListViewItem(objs.GetSerialNum() + "," + objs.GetModelAndColor());
+                    originalList.Add(temp);
+                }
+
+                textBox1.Text = "Filter";
+                textBox1.Enabled = true;
+                textBox1.ForeColor = System.Drawing.Color.DimGray;
+                listView1.Items.AddRange(originalList.ToArray());
+
+  
+            }
+           
+        }   
     }
 }

@@ -24,6 +24,16 @@ namespace EVO_Image_app.EVO_BACK_END
             return formattedDate;
         }
 
+        ///<summary> 
+        ///Formats the date from string
+        ///</summary>
+        ///<returns>Date in correct format</returns>
+        public static string FormatDate(DateTime date)
+        {
+            string formattedDate = date.ToString("M-d-yyyy");
+            return formattedDate;
+        }
+
         ///<summary>
         ///Makes a folder if there isn't one, copies images from source to destination
         /// </summary>
@@ -207,14 +217,23 @@ namespace EVO_Image_app.EVO_BACK_END
         /// </summary>
         /// <param name="environment">Current environment the program is running in.</param>
 
-        public static void DeleteOnStart(string environment)
+        public static void DeleteOnStart(string environment, int flag)
         {
-            string path = environment + "\\Resources\\AllLatestModels";
-            string[] directories = Directory.GetDirectories(path);
-            foreach(string directory in directories)
+            string path = environment + "\\Resources\\"+ CurrentFlag(flag) + "\\";
+            try
             {
-                Directory.Delete(directory, true);
+                string[] directories = Directory.GetDirectories(path);
+                foreach (string directory in directories)
+                {
+                   // Console.WriteLine(directory);
+                    Directory.Delete(directory, true);
+                }
+            } catch(DirectoryNotFoundException ex)
+            {
+                Console.WriteLine("******* ERROR AT DeleteOnStart *******\n" + ex.Message);
             }
+           
+           
         }
 
         /// <summary>
@@ -286,6 +305,24 @@ namespace EVO_Image_app.EVO_BACK_END
             return result;
         }
 
+        ///<summary>
+        ///Gets FAT-SAT files for the specific date
+        /// </summary>
+        /// <returns>The FAT-SAT file for the specific date</returns>
+        public static FileInfo GetFatSatFile(string date)
+        {
+            string path = currentDirectory + "\\Resources\\FAT-SAT\\";
+            DirectoryInfo dir = new DirectoryInfo(path);
+            foreach(FileInfo file in dir.GetFiles().OrderByDescending(f => f.LastWriteTime))
+            {
+                if(file.Name.Contains(date))
+                {
+                    return file;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// Finds individual serial numbers based on last run program (color and model) within a fat-sat file.
         /// </summary>
@@ -299,25 +336,31 @@ namespace EVO_Image_app.EVO_BACK_END
             //Change Full Path when in prod
             foreach (ProgramObjs objs in programObjs)
             {
+                List<string> foundSerials = new List<string>();
                 try
                 {
                     using (StreamReader reader = new StreamReader(fullPath))
                     {
                         string line;
-                        while ((line = reader.ReadLine()) != null)
+                        while ((line = reader.ReadLine()) != null )
                         {
                             if (line.Contains(objs.GetModelAndColor()))
                             {
-                                if (objs.GetSerialNum() == "")
-                                {
-                                    string[] splitted = line.Split(',');
-                                    objs.SetSerialNum(splitted[3]);
-                                    string[] dateSplit = splitted[0].Split(' ');
-                                    objs.SetLastDate(dateSplit[0].Replace("/", "-"));
-                                }
+                                foundSerials.Add(line);
                             }
                         }
                     }
+                    string lastLine = foundSerials.Last();
+                    if (objs.GetSerialNum() == "")
+                    {
+                        string[] splitted = lastLine.Split(',');
+                        objs.SetSerialNum(splitted[3]);
+                        string[] dateSplit = splitted[0].Split(' ');
+                        objs.SetLastDate(dateSplit[0].Replace("/", "-"));
+                        objs.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
+                    }
+                    foundSerials.RemoveAt(foundSerials.Count - 1);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -349,7 +392,7 @@ namespace EVO_Image_app.EVO_BACK_END
                                 string[] splitted = line.Split(',');
                                 string[] dateSplit = splitted[0].Split(' ');
 
-                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"));
+                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
                                 return program;
                                 
                             }
@@ -368,7 +411,7 @@ namespace EVO_Image_app.EVO_BACK_END
         /// Sets the path of the out directory based on the currently running function
         /// </summary>
         /// <param name="flag">number indicating current function</param>
-        public static string currentFlag(int flag)
+        public static string CurrentFlag(int flag)
         {
             string outDirPath;
             switch (flag)

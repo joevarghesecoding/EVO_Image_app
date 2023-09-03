@@ -13,13 +13,15 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         string today = Common.GetDate();
         
         public AllLatestModels() : base() { }
+
+
         /// <summary>
         /// Gets all the images for the serial numbers and creates a folder for it.
         /// </summary>
         /// <return>
         /// A directory with all the latest phone images.
         /// </return>
-        public void GetLatestImages()
+        override public void GetLatestImages()
         {
             //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string dailyRunData = Common.currentDirectory + "\\Resources";
@@ -45,7 +47,18 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             }
         }
 
-        private static void GetLatestSerials(List<ProgramObjs> programObjs)
+        public override void GetModelImages(ProgramObjs program, string date)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetImagesForSerial(string serial)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        private void GetLatestSerials(List<ProgramObjs> programObjs)
         {
             List<FileInfo> fatSatFiles = Common.GetAllFatSatFiles();
             foreach(FileInfo file in fatSatFiles)

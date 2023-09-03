@@ -49,10 +49,11 @@ namespace EVO_Image_app
             this.previousBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.modelSearch = new System.Windows.Forms.Button();
-            this.calendarBtn = new System.Windows.Forms.Button();
-            this.modelDropDown = new System.Windows.Forms.ComboBox();
             this.searchBtn = new System.Windows.Forms.Button();
+            this.modelDropDown = new System.Windows.Forms.ComboBox();
+            this.calendarBtn = new System.Windows.Forms.Button();
+            this.modelSearch = new System.Windows.Forms.Button();
+            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -156,6 +157,7 @@ namespace EVO_Image_app
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.calendar);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lastDate);
@@ -258,6 +260,35 @@ namespace EVO_Image_app
             this.panel4.Size = new System.Drawing.Size(1314, 22);
             this.panel4.TabIndex = 5;
             // 
+            // searchBtn
+            // 
+            this.searchBtn.Location = new System.Drawing.Point(685, 0);
+            this.searchBtn.Name = "searchBtn";
+            this.searchBtn.Size = new System.Drawing.Size(75, 23);
+            this.searchBtn.TabIndex = 8;
+            this.searchBtn.Text = "Search";
+            this.searchBtn.UseVisualStyleBackColor = true;
+            this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
+            // 
+            // modelDropDown
+            // 
+            this.modelDropDown.FormattingEnabled = true;
+            this.modelDropDown.Location = new System.Drawing.Point(490, 0);
+            this.modelDropDown.Name = "modelDropDown";
+            this.modelDropDown.Size = new System.Drawing.Size(162, 21);
+            this.modelDropDown.TabIndex = 7;
+            this.modelDropDown.SelectedIndexChanged += new System.EventHandler(this.modelDropDown_SelectedIndexChanged);
+            // 
+            // calendarBtn
+            // 
+            this.calendarBtn.Location = new System.Drawing.Point(658, 0);
+            this.calendarBtn.Name = "calendarBtn";
+            this.calendarBtn.Size = new System.Drawing.Size(21, 23);
+            this.calendarBtn.TabIndex = 6;
+            this.calendarBtn.Text = "...";
+            this.calendarBtn.UseVisualStyleBackColor = true;
+            this.calendarBtn.Click += new System.EventHandler(this.calendarBtn_Click);
+            // 
             // modelSearch
             // 
             this.modelSearch.Location = new System.Drawing.Point(366, 0);
@@ -266,32 +297,15 @@ namespace EVO_Image_app
             this.modelSearch.TabIndex = 5;
             this.modelSearch.Text = "Model Search";
             this.modelSearch.UseVisualStyleBackColor = true;
+            this.modelSearch.Click += new System.EventHandler(this.modelSearch_Click);
             // 
-            // calendarBtn
+            // calendar
             // 
-            this.calendarBtn.Location = new System.Drawing.Point(617, 0);
-            this.calendarBtn.Name = "calendarBtn";
-            this.calendarBtn.Size = new System.Drawing.Size(21, 23);
-            this.calendarBtn.TabIndex = 6;
-            this.calendarBtn.Text = "...";
-            this.calendarBtn.UseVisualStyleBackColor = true;
-            // 
-            // modelDropDown
-            // 
-            this.modelDropDown.FormattingEnabled = true;
-            this.modelDropDown.Location = new System.Drawing.Point(490, 0);
-            this.modelDropDown.Name = "modelDropDown";
-            this.modelDropDown.Size = new System.Drawing.Size(121, 21);
-            this.modelDropDown.TabIndex = 7;
-            // 
-            // searchBtn
-            // 
-            this.searchBtn.Location = new System.Drawing.Point(644, 0);
-            this.searchBtn.Name = "searchBtn";
-            this.searchBtn.Size = new System.Drawing.Size(75, 23);
-            this.searchBtn.TabIndex = 8;
-            this.searchBtn.Text = "Search";
-            this.searchBtn.UseVisualStyleBackColor = true;
+            this.calendar.Location = new System.Drawing.Point(347, -9);
+            this.calendar.Name = "calendar";
+            this.calendar.TabIndex = 7;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
+
             // 
             // EVO_Image_App
             // 
@@ -341,6 +355,7 @@ namespace EVO_Image_app
         private System.Windows.Forms.Button modelSearch;
         private System.Windows.Forms.Button searchBtn;
         private System.Windows.Forms.ComboBox modelDropDown;
+        private System.Windows.Forms.MonthCalendar calendar;
     }
 }
 
