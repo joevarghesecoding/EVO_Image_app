@@ -46,6 +46,8 @@ namespace EVO_Image_app
             textBox1.Enabled = false;
             calendar.Visible = false;
             calendar.MaxDate = DateTime.Today;
+            ComptiaBox.ReadOnly = true;
+            regionsBox.ReadOnly = true;
         }
 
         //All Models And Colors button
@@ -77,24 +79,63 @@ namespace EVO_Image_app
         //List view containing programs
         private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
+            ComptiaBox.Text = "";
+            regionsBox.Text = "";
             //string today = Common.GetDate();
             ListView.SelectedListViewItemCollection program = this.listView1.SelectedItems;
             //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
             outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
             List<ProgramObjs> objs = function.GetProgramObjs();
+          
             foreach (ListViewItem item in program)
             {
                 try
                 {
-                    Console.WriteLine(outDirPath + item.Text);
+                    //Console.WriteLine(outDirPath + item.Text);
                     programDetails = Common.GetProgramDetails(outDirPath + item.Text);
+                    
+                    if(flag == 1)
+                    {
+                        foreach (ProgramObjs o in objs)
+                        {
+                           if(o.GetModelAndColor() == item.Text)
+                            {
+                                programDetails.ProgramObject = o;
+                                break;
+                            }
+                        }
+                    }
+                    else if(flag == 2)
+                    {
+                        foreach (ProgramObjs o in objs)
+                        {
+                            if (o.GetSerialNum() == item.Text)
+                            {
+                                programDetails.ProgramObject = o;
+                                break;
+                            }
+                        }
+                    }
+                    else if (flag == 3)
+                    {
+                        string[] text = item.Text.Split(',');
+                        objs = function.GetFoundPrograms();
+                        foreach (ProgramObjs o in objs)
+                        {
+                            if (o.GetSerialNum() == text[0])
+                            {
+                                programDetails.ProgramObject = o;
+                                break;
+                            }
+                        }
+                    }
 
                     pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                     side = 0;
 
                     Common.DisplayData(programDetails.sides[side], dataGridView1);
-                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate);
+                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
                     
                     currentItem = item;
                     
@@ -329,11 +370,14 @@ namespace EVO_Image_app
                 textBox1.Text = "Filter";
                 textBox1.Enabled = true;
                 textBox1.ForeColor = System.Drawing.Color.DimGray;
+                listView1.Items.Clear();
                 listView1.Items.AddRange(originalList.ToArray());
 
   
             }
            
-        }   
+        }
+
+       
     }
 }

@@ -200,7 +200,15 @@ namespace EVO_Image_app.EVO_BACK_END
             }
         }
 
-        public static void DisplaySerialAndDate(List<ProgramObjs> programs, ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate)
+        /// <summary>
+        /// Displays the serial number and date at the textboxes 
+        /// </summary>
+        /// <param name="programs"></param>
+        /// <param name="programObjs"></param>
+        /// <param name="serialNum"></param>
+        /// <param name="lastDate"></param>
+
+        public static void DisplaySerialAndDate(List<ProgramObjs> programs, ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
         {
             foreach (ProgramObjs program in programs)
             {
@@ -208,6 +216,17 @@ namespace EVO_Image_app.EVO_BACK_END
                 {
                     serialNum.Text = program.GetSerialNum();
                     lastDate.Text = program.GetLastDate();
+                    string[] splitted = program.GetComptia().Split(',');
+                    if (splitted[0] == "PASS")
+                    {
+                        comptia.Text = "PASS";
+                        regions.Text = "N/A";
+                    }
+                    else if (splitted[0] == "FAIL")
+                    {
+                        comptia.Text = splitted[0] + ":" + splitted[1];
+                        regions.Text = splitted[2];
+                    }
                 }
             }      
         }
@@ -427,6 +446,24 @@ namespace EVO_Image_app.EVO_BACK_END
                     return outDirPath;
             }
             return null;
+        }
+
+
+        public static void DisplayComptiaAndRegions(ProgramObjs current, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
+        {
+           
+            string[] splitted = current.GetComptia().Split(',');
+            if (splitted[0] == "PASS")
+            {
+                comptia.Text = "PASS";
+                regions.Text = "N/A";
+            }
+            else if (splitted[0] == "FAIL")
+            {
+                comptia.Text = splitted[0] + ":" + splitted[1];
+                regions.Text = splitted[2];
+            }
+              
         }
     }
 

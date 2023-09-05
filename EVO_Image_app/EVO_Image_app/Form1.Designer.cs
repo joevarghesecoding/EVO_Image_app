@@ -37,10 +37,13 @@ namespace EVO_Image_app
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.listView1 = new System.Windows.Forms.ListView();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.regionsBox = new System.Windows.Forms.TextBox();
+            this.ComptiaBox = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.modelsAndColorsBtn = new System.Windows.Forms.Button();
             this.manualSearchBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lastDate = new System.Windows.Forms.TextBox();
@@ -53,7 +56,6 @@ namespace EVO_Image_app
             this.modelDropDown = new System.Windows.Forms.ComboBox();
             this.calendarBtn = new System.Windows.Forms.Button();
             this.modelSearch = new System.Windows.Forms.Button();
-            this.calendar = new System.Windows.Forms.MonthCalendar();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -116,11 +118,33 @@ namespace EVO_Image_app
             // 
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel3.Controls.Add(this.regionsBox);
+            this.panel3.Controls.Add(this.ComptiaBox);
             this.panel3.Controls.Add(this.dataGridView1);
             this.panel3.Location = new System.Drawing.Point(910, 27);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(404, 533);
             this.panel3.TabIndex = 2;
+            // 
+            // regionsBox
+            // 
+            this.regionsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.regionsBox.Font = new System.Drawing.Font("Georgia", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.regionsBox.Location = new System.Drawing.Point(197, 464);
+            this.regionsBox.Multiline = true;
+            this.regionsBox.Name = "regionsBox";
+            this.regionsBox.Size = new System.Drawing.Size(193, 57);
+            this.regionsBox.TabIndex = 2;
+            // 
+            // ComptiaBox
+            // 
+            this.ComptiaBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ComptiaBox.Font = new System.Drawing.Font("Georgia", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComptiaBox.Location = new System.Drawing.Point(16, 464);
+            this.ComptiaBox.Multiline = true;
+            this.ComptiaBox.Name = "ComptiaBox";
+            this.ComptiaBox.Size = new System.Drawing.Size(174, 57);
+            this.ComptiaBox.TabIndex = 1;
             // 
             // dataGridView1
             // 
@@ -129,7 +153,7 @@ namespace EVO_Image_app
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(16, 12);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(374, 518);
+            this.dataGridView1.Size = new System.Drawing.Size(374, 445);
             this.dataGridView1.TabIndex = 0;
             // 
             // modelsAndColorsBtn
@@ -169,6 +193,13 @@ namespace EVO_Image_app
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(583, 543);
             this.panel1.TabIndex = 0;
+            // 
+            // calendar
+            // 
+            this.calendar.Location = new System.Drawing.Point(347, -9);
+            this.calendar.Name = "calendar";
+            this.calendar.TabIndex = 7;
+            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
             // 
             // label2
             // 
@@ -299,14 +330,6 @@ namespace EVO_Image_app
             this.modelSearch.UseVisualStyleBackColor = true;
             this.modelSearch.Click += new System.EventHandler(this.modelSearch_Click);
             // 
-            // calendar
-            // 
-            this.calendar.Location = new System.Drawing.Point(347, -9);
-            this.calendar.Name = "calendar";
-            this.calendar.TabIndex = 7;
-            this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
-
-            // 
             // EVO_Image_App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -322,6 +345,7 @@ namespace EVO_Image_app
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
@@ -356,6 +380,8 @@ namespace EVO_Image_app
         private System.Windows.Forms.Button searchBtn;
         private System.Windows.Forms.ComboBox modelDropDown;
         private System.Windows.Forms.MonthCalendar calendar;
+        private System.Windows.Forms.TextBox regionsBox;
+        private System.Windows.Forms.TextBox ComptiaBox;
     }
 }
 

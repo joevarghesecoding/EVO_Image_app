@@ -78,7 +78,7 @@ namespace EVO_Image_app.EVO_BACK_END
             string resultLine = Regex.Replace(line, pattern, "");
             string[] splitted = resultLine.Split(',');
 
-            string highestVal = splitted[2].Trim('0');
+            string highestVal = splitted[2].TrimStart('0');
 
             regions[i, 0] = splitted[1];
             regions[i, 1] = (highestVal == "") ? "0" : highestVal;

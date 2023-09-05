@@ -27,6 +27,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             {
                 ProgramObjs tempObj = Common.FindProgramData(serial, fileInfo);
                 programObjs.Add(tempObj);
+                
+                
                 if (tempObj != null)
                 {
                     string today = Common.GetDate();

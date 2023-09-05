@@ -75,20 +75,18 @@ namespace EVO_Image_app.EVO_BACK_END
 
         private void GetHighestValueAndCount(string line, int i)
         {
-            string pattern = "[+]";
-            string resultLine = Regex.Replace(line, pattern, "");
-            string[] splitted = resultLine.Split(',');
-            
-            string highestVal = splitted[2].Trim('0');
-
-            regions[i, 0] = splitted[1];
-            regions[i, 1] = (highestVal == "") ? "0" : highestVal;
-            
-            if(splitted.Length > 3)
+            if (line.Contains("Crack, H1"))
             {
+                string[] splitted = line.Split(',');
                 int count = 0;
-                for(int j = 2; j < splitted.Length; j++)
+                regions[i, 0] = splitted[0] + ',' + splitted[1];
+                for (int j = 13; j < splitted.Length; j++)
                 {
+                    if (j == 13)
+                    {
+                        string highestVal = splitted[13].TrimStart('0');
+                        regions[i, 1] = (highestVal == "") ? "0" : highestVal;
+                    }
                     int res;
                     int.TryParse(splitted[j], out res);
                     if (res > 0)
@@ -100,13 +98,46 @@ namespace EVO_Image_app.EVO_BACK_END
                         break;
                     }
                 }
-                //Console.WriteLine(count);
                 regions[i, 2] = count.ToString();
             }
             else
             {
-                regions[i, 2] = "0";
+                string pattern = "[+]";
+                string resultLine = Regex.Replace(line, pattern, "");
+                string[] splitted = resultLine.Split(',');
+
+                string highestVal = splitted[2].TrimStart('0');
+
+                regions[i, 0] = splitted[1];
+                regions[i, 1] = (highestVal == "") ? "0" : highestVal;
+
+                if (splitted.Length > 3)
+                {
+                    int count = 0;
+                    for (int j = 2; j < splitted.Length; j++)
+                    {
+                        int res;
+                        int.TryParse(splitted[j], out res);
+                        if (res > 0)
+                        {
+                            count++;
+                        }
+                        if (res == 0)
+                        {
+                            break;
+                        }
+                    }
+                    //Console.WriteLine(count);
+                    regions[i, 2] = count.ToString();
+                }
+                else
+                {
+                    regions[i, 2] = "0";
+                }
             }
+
+
+
         }
     }
     

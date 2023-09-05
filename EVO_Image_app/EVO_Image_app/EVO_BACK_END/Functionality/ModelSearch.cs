@@ -71,6 +71,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 string date = dateSplit[0].Replace("/", "-");
                                 string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
                                 ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, comptia);
+                                Console.WriteLine(temp.GetSerialNum());
+                                Console.WriteLine(temp.GetComptia());
                                 foundPrograms.Add(temp);
                             }
                         }
