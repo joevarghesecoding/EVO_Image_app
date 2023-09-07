@@ -85,10 +85,12 @@ namespace EVO_Image_app
             // 
             // findBtn
             // 
+            this.findBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.findBtn.Location = new System.Drawing.Point(269, 4);
             this.findBtn.Name = "findBtn";
             this.findBtn.Size = new System.Drawing.Size(25, 20);
             this.findBtn.TabIndex = 2;
+            this.findBtn.Text = ">";
             this.findBtn.UseVisualStyleBackColor = true;
             this.findBtn.Click += new System.EventHandler(this.findBtn_Click);
             // 
@@ -129,7 +131,7 @@ namespace EVO_Image_app
             // regionsBox
             // 
             this.regionsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.regionsBox.Font = new System.Drawing.Font("Georgia", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.regionsBox.Font = new System.Drawing.Font("Georgia", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.regionsBox.Location = new System.Drawing.Point(197, 464);
             this.regionsBox.Multiline = true;
             this.regionsBox.Name = "regionsBox";
@@ -139,7 +141,7 @@ namespace EVO_Image_app
             // ComptiaBox
             // 
             this.ComptiaBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ComptiaBox.Font = new System.Drawing.Font("Georgia", 17F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComptiaBox.Font = new System.Drawing.Font("Georgia", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComptiaBox.Location = new System.Drawing.Point(16, 464);
             this.ComptiaBox.Multiline = true;
             this.ComptiaBox.Name = "ComptiaBox";

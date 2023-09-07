@@ -23,8 +23,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// </return>
         override public void GetLatestImages()
         {
-            //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            string dailyRunData = Common.currentDirectory + "\\Resources";
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            //string dailyRunData = Common.currentDirectory + "\\Resources";
             programObjs = Common.GetCurrentPrograms();
             GetLatestSerials(programObjs);
             string today = Common.GetDate();
@@ -61,10 +61,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         private void GetLatestSerials(List<ProgramObjs> programObjs)
         {
             List<FileInfo> fatSatFiles = Common.GetAllFatSatFiles();
-            foreach(FileInfo file in fatSatFiles)
+            
+            foreach (FileInfo file in fatSatFiles)
             {
                 Common.FindSerials(programObjs, file);
             }
+           
+            
         }
     }
 }

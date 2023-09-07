@@ -109,7 +109,7 @@ namespace EVO_Image_app.EVO_BACK_END
                 string highestVal = splitted[2].TrimStart('0');
 
                 regions[i, 0] = splitted[1];
-                regions[i, 1] = (highestVal == "") ? "0" : highestVal;
+                regions[i, 1] = (highestVal == "" || highestVal.Contains(".000")) ? "0" : highestVal;
 
                 if (splitted.Length > 3)
                 {

@@ -17,7 +17,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         public override void GetModelImages(ProgramObjs program, string date)
         {
-            string dailyRunData = Common.currentDirectory + "\\Resources";
+            //string dailyRunData = Common.currentDirectory + "\\Resources";
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string today = Common.GetDate();
             try
             {
@@ -25,20 +26,64 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 if(file != null)
                 {
                     FindSerialCount(program, file);
-                    foreach (ProgramObjs obj in foundPrograms)
+                    HashSet<string> unique = new HashSet<string>();
+                    List<ProgramObjs> duplicates = new List<ProgramObjs>();
+                    List<ProgramObjs> finalList = new List<ProgramObjs>();
+                    foreach(ProgramObjs p in foundPrograms)
                     {
-                        string serial = obj.GetSerialNum();
-                        string lastDate = obj.GetLastDate();
+                        if (!unique.Add(p.GetSerialNum()))
+                        {
+                            duplicates.Add(p);
+                        }
+                    }
+
+                    foreach(ProgramObjs d in duplicates)
+                    {
+                        string currentSerial = d.GetSerialNum();
+                        int count = 0;
+                        string current = currentSerial;
+                        while (currentSerial.Equals(current))
+                        {
+                            d.SetSerialNum(currentSerial + " - " + count.ToString());
+                            count++;
+                            
+                            current = d.GetSerialNum();
+                        }
+                    }
+                    
+                    foreach(ProgramObjs obj in foundPrograms)
+                    {
+                        if (unique.Contains(obj.GetSerialNum()))
+                        {
+                            finalList.Add(obj);
+                        }
+                    }
+
+                    foreach (ProgramObjs duplicate in duplicates)
+                    {
+                        finalList.Add(duplicate);
+                    }
+
+                    foreach(ProgramObjs f in finalList)
+                    {
+                        string serial = f.GetSerialNum();
+                        string lastDate = f.GetLastDate();
                         string inDirPath = dailyRunData + "\\" + date;
                         string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + today;
 
-                        string fileName = obj.GetSerialNum() + "," + obj.GetModelAndColor();
+                        string fileName = f.GetSerialNum() + "," + f.GetModelAndColor();
                         if (date != "" && date != "iPhone")
                         {
                             Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
                         }
+
                     }
+
+
                 }
+                    
+                    
+                
                 else
                 {
                     System.Windows.Forms.MessageBox.Show("No Data found for Date");
@@ -55,7 +100,9 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             if(file != null)
             {
-                string fullPath = Environment.CurrentDirectory + "\\Resources\\FAT-SAT\\" + file.Name;
+                string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + file.Name;
+                //string fullPath = Environment.CurrentDirectory + "\\Resources\\FAT-SAT\\" + file.Name;
+                
                 try
                 {
                     using(StreamReader reader = new StreamReader(fullPath))
@@ -71,8 +118,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 string date = dateSplit[0].Replace("/", "-");
                                 string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
                                 ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, comptia);
-                                Console.WriteLine(temp.GetSerialNum());
-                                Console.WriteLine(temp.GetComptia());
                                 foundPrograms.Add(temp);
                             }
                         }

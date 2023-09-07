@@ -129,16 +129,13 @@ namespace EVO_Image_app
                             }
                         }
                     }
-
+                    
                     pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                     side = 0;
 
                     Common.DisplayData(programDetails.sides[side], dataGridView1);
                     Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
-                    
-                    currentItem = item;
-                    
                 }
                 catch (NullReferenceException ex)
                 {
@@ -271,8 +268,8 @@ namespace EVO_Image_app
         private void findBtn_Click(object sender, EventArgs e)
         {
             Cursor.Current = Cursors.WaitCursor;
-            string serial = textBox1.Text;
-            string pattern = "^[A-Z0-9]{10}$";
+            string serial = textBox1.Text.ToUpper();
+            string pattern = "[A-Z0-9]";
 
 
             if(Regex.IsMatch(serial, pattern))

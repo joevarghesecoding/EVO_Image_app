@@ -20,31 +20,48 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// </return>
         override public void GetImagesForSerial(string serial)
         {
-            //string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            string dailyRunData = Common.currentDirectory + "\\Resources";
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            // string dailyRunData = Common.currentDirectory + "\\Resources";
             List<FileInfo> fatSatPaths = Common.GetAllFatSatFiles();
             foreach(FileInfo fileInfo in fatSatPaths)
             {
-                ProgramObjs tempObj = Common.FindProgramData(serial, fileInfo);
-                programObjs.Add(tempObj);
-                
-                
-                if (tempObj != null)
+                string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + fileInfo.Name;
+                try
                 {
-                    string today = Common.GetDate();
-
-                    string date = tempObj.GetLastDate();
-                    string inDirPath = dailyRunData + "\\" + date;
-                    //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today;
-                    //string outDirPath = "C:\\Users\\Administrator\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\bin\\Debug\\Resources\\AllLatestModels\\" + today;
-                    string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-
-                    string fileName = serial;
-                    if (date != "" && date != "iPhone")
+                    using (StreamReader reader = new StreamReader(fullPath))
                     {
-                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            if (line.Contains(serial))
+                            {
+                                string[] splitted = line.Split(',');
+                                string[] dateSplit = splitted[0].Split(' ');
+                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
+                                programObjs.Add(program);
+
+                                if (program != null)
+                                {
+                                    string today = Common.GetDate();
+
+                                    string date = program.GetLastDate();
+                                    string inDirPath = dailyRunData + "\\" + date;
+                                    string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
+
+                                    string fileName = serial;
+                                    if (date != "" && date != "iPhone")
+                                    {
+                                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    break;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("***** ERROR At FindProgramData ******\n" + ex.Message);
                 }
             }
 

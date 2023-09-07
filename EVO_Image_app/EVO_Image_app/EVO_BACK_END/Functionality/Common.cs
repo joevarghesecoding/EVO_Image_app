@@ -108,7 +108,7 @@ namespace EVO_Image_app.EVO_BACK_END
             try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(path);
-               // Console.WriteLine(sourceInfo.FullName);
+                //Console.WriteLine(sourceInfo.FullName);
                 if (!sourceInfo.Exists)
                 {
                     //Console.WriteLine(sourceInfo.FullName);
@@ -212,7 +212,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             foreach (ProgramObjs program in programs)
             {
-                if(programObjs.GetModelAndColor() == program.GetModelAndColor())
+                if(programObjs.GetSerialNum() == program.GetSerialNum())
                 {
                     serialNum.Text = program.GetSerialNum();
                     lastDate.Text = program.GetLastDate();
@@ -262,8 +262,8 @@ namespace EVO_Image_app.EVO_BACK_END
         public static List<ProgramObjs> GetCurrentPrograms()
         {
             List<ProgramObjs> objs = new List<ProgramObjs>();
-            //string cpPath = "c:\\EVO-3\\Parameters\\color_programs_evo_display_img.xml";
-            string cpPath = currentDirectory + "\\Resources\\color_programs.xml";
+            string cpPath = "c:\\EVO-3\\Parameters\\color_programs_evo_display_img.xml";
+            //string cpPath = currentDirectory + "\\Resources\\color_programs.xml";
             try
             {
                 using (XmlReader reader = XmlReader.Create(cpPath))
@@ -315,8 +315,8 @@ namespace EVO_Image_app.EVO_BACK_END
         public static List<FileInfo> GetAllFatSatFiles()
         {
 
-            //string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
-            string path = currentDirectory + "\\Resources\\FAT-SAT\\";
+            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
+            //string path = currentDirectory + "\\Resources\\FAT-SAT\\";
 
             DirectoryInfo dir = new DirectoryInfo(path);
             FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
@@ -330,7 +330,8 @@ namespace EVO_Image_app.EVO_BACK_END
         /// <returns>The FAT-SAT file for the specific date</returns>
         public static FileInfo GetFatSatFile(string date)
         {
-            string path = currentDirectory + "\\Resources\\FAT-SAT\\";
+            //string path = currentDirectory + "\\Resources\\FAT-SAT\\";
+            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
             DirectoryInfo dir = new DirectoryInfo(path);
             foreach(FileInfo file in dir.GetFiles().OrderByDescending(f => f.LastWriteTime))
             {
@@ -350,82 +351,32 @@ namespace EVO_Image_app.EVO_BACK_END
         public static void FindSerials(List<ProgramObjs> programObjs, FileInfo path)
         {
 
-            //string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
-            string fullPath = currentDirectory + "\\Resources\\FAT-SAT\\" + path.Name;
+            string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
+
+            //string fullPath = currentDirectory + "\\Resources\\FAT-SAT\\" + path.Name;
             //Change Full Path when in prod
-            foreach (ProgramObjs objs in programObjs)
+            var lines = File.ReadAllLines(fullPath).Reverse();
+            foreach (ProgramObjs program in programObjs)
             {
-                List<string> foundSerials = new List<string>();
-                try
+                foreach (string line in lines)
                 {
-                    using (StreamReader reader = new StreamReader(fullPath))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null )
+                    if (line.Contains(program.GetModelAndColor())){
+                        if (program.GetSerialNum() == "")
                         {
-                            if (line.Contains(objs.GetModelAndColor()))
-                            {
-                                foundSerials.Add(line);
-                            }
+                            string[] splitted = line.Split(',');
+                            program.SetSerialNum(splitted[3]);
+                            string[] dateSplit = splitted[0].Split(' ');
+                            program.SetLastDate(dateSplit[0].Replace("/", "-"));
+                            program.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
                         }
                     }
-                    string lastLine = foundSerials.Last();
-                    if (objs.GetSerialNum() == "")
-                    {
-                        string[] splitted = lastLine.Split(',');
-                        objs.SetSerialNum(splitted[3]);
-                        string[] dateSplit = splitted[0].Split(' ');
-                        objs.SetLastDate(dateSplit[0].Replace("/", "-"));
-                        objs.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
-                    }
-                    foundSerials.RemoveAt(foundSerials.Count - 1);
-                    
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("***** ERROR At Find Serials ******\n" + ex.Message);
                 }
             }
+            
+          
         }
 
-        /// <summary>
-        /// Finds color and model data within a fat-sat file using a serial number.
-        /// </summary>
-        /// <param name="serial">serial number</param>
-        /// <param name="path">FAT-SAT file path</param>
-        public static ProgramObjs FindProgramData(string serial, FileInfo path)
-        {
 
-            //string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
-            string fullPath = currentDirectory + "\\Resources\\FAT-SAT\\" + path.Name;
-            //Change Full Path when in prod
-             try
-                {
-                    using (StreamReader reader = new StreamReader(fullPath))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            if (line.Contains(serial))
-                            {
-                                string[] splitted = line.Split(',');
-                                string[] dateSplit = splitted[0].Split(' ');
-
-                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
-                                return program;
-                                
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("***** ERROR At FindProgramData ******\n" + ex.Message);
-                }
-
-               return null;
-        }
-        
         ///<summary>
         /// Sets the path of the out directory based on the currently running function
         /// </summary>
