@@ -65,7 +65,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             string source = inputPath + "\\" + inputSerial;
             string destination = outputPath + "\\" +fileName;
-
+            //Console.WriteLine(source);
             try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(source);
@@ -212,7 +212,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             foreach (ProgramObjs program in programs)
             {
-                if(programObjs.GetSerialNum() == program.GetSerialNum())
+                if(programObjs.GetSerialNum() == program.GetSerialNum() && programObjs.GetLastDate() == program.GetLastDate())
                 {
                     serialNum.Text = program.GetSerialNum();
                     lastDate.Text = program.GetLastDate();

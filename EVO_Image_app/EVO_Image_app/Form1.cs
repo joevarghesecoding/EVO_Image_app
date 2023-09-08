@@ -107,9 +107,11 @@ namespace EVO_Image_app
                     }
                     else if(flag == 2)
                     {
+                        
                         foreach (ProgramObjs o in objs)
                         {
-                            if (o.GetSerialNum() == item.Text)
+                            programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum() + " " + o.GetLastDate());
+                            if (o.GetSerialNum() + " " + o.GetLastDate() == item.Text)
                             {
                                 programDetails.ProgramObject = o;
                                 break;
@@ -275,8 +277,14 @@ namespace EVO_Image_app
             if(Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
-                ListViewItem temp = new ListViewItem(serial);
-                listView1.Items.Add(temp);
+                List<ProgramObjs> programs = function.GetProgramObjs();
+                foreach (ProgramObjs program in programs)
+                {
+                    //Console.WriteLine(program.GetSerialNum() + " " + program.GetLastDate());
+                    ListViewItem temp = new ListViewItem(program.GetSerialNum() + " " + program.GetLastDate());
+                    listView1.Items.Add(temp);
+                }
+               
             }
             else
             {

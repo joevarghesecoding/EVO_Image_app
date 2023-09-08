@@ -20,7 +20,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// </return>
         override public void GetImagesForSerial(string serial)
         {
-            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            
             // string dailyRunData = Common.currentDirectory + "\\Resources";
             List<FileInfo> fatSatPaths = Common.GetAllFatSatFiles();
             foreach(FileInfo fileInfo in fatSatPaths)
@@ -35,29 +35,15 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         {
                             if (line.Contains(serial))
                             {
+                                //Console.WriteLine(line);
                                 string[] splitted = line.Split(',');
                                 string[] dateSplit = splitted[0].Split(' ');
                                 ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
                                 programObjs.Add(program);
-
-                                if (program != null)
-                                {
-                                    string today = Common.GetDate();
-
-                                    string date = program.GetLastDate();
-                                    string inDirPath = dailyRunData + "\\" + date;
-                                    string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-
-                                    string fileName = serial;
-                                    if (date != "" && date != "iPhone")
-                                    {
-                                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
-                                    }
-                                    break;
-                                }
                             }
                         }
                     }
+                    GetImagesForSerialHelper(serial);
                 }
                 catch (Exception ex)
                 {
@@ -66,6 +52,63 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             }
 
         }
+
+        private void GetImagesForSerialHelper(string serial)
+        {
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            string today = Common.GetDate();
+            string[] dates = new string[programObjs.Count];
+            int[] count = new int[dates.Length];
+            int i = 0;
+            foreach(ProgramObjs program in programObjs)
+            {
+                dates[i] = program.GetLastDate();
+                i++;
+            }
+            for(int j = 0; j < count.Length - 1; j++)
+            {
+                int next = j + 1;
+               
+                if(next < count.Length && dates[j] == dates[next])
+                {
+                    count[next] = count[j] + 1;
+                }
+            }
+
+            for(int k = 0; k < count.Length; k++)
+            {
+                if (count[k] > 0)
+                {
+                    programObjs.ElementAt(k).SetSerialNum(serial + " - " + (count[k] - 1).ToString());
+                    programObjs.ElementAt(k).SetLastDate(dates[k]);
+                }
+                else
+                {
+                    programObjs.ElementAt(k).SetSerialNum(serial);
+                    programObjs.ElementAt(k).SetLastDate(dates[k]);
+                }
+                    
+                //Console.WriteLine(programObjs.ElementAt(k).GetSerialNum() + " " + dates[k]);
+            }
+
+            
+
+            foreach (ProgramObjs f in programObjs)
+            {
+                string newSerial = f.GetSerialNum();
+                string lastDate = f.GetLastDate();
+                string inDirPath = dailyRunData + "\\" + lastDate;
+                //Console.WriteLine(inDirPath);    
+                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
+                string fileName = f.GetSerialNum();
+                if (lastDate != "" && lastDate != "iPhone")
+                {
+                    Common.CopyResultsToDirectory(newSerial, inDirPath, outDirPath, fileName + " " + f.GetLastDate());
+                }
+
+            }
+        }
+
 
         public override void GetLatestImages()
         {
