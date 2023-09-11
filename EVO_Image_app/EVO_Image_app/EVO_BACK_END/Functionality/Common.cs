@@ -262,7 +262,7 @@ namespace EVO_Image_app.EVO_BACK_END
         public static List<ProgramObjs> GetCurrentPrograms()
         {
             List<ProgramObjs> objs = new List<ProgramObjs>();
-            string cpPath = "c:\\EVO-3\\Parameters\\color_programs_evo_display_img.xml";
+            string cpPath = "c:\\EVO-3\\Parameters\\color_programs.xml";
             //string cpPath = currentDirectory + "\\Resources\\color_programs.xml";
             try
             {

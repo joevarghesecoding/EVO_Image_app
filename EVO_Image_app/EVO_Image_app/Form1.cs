@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -277,20 +278,24 @@ namespace EVO_Image_app
             if(Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
-                List<ProgramObjs> programs = function.GetProgramObjs();
-                foreach (ProgramObjs program in programs)
+                
+                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
+                DirectoryInfo sourceInfo = new DirectoryInfo(outDirPath);
+                FileInfo[] files = sourceInfo.GetFiles();
+                
+                foreach (FileInfo file in files)
                 {
-                    //Console.WriteLine(program.GetSerialNum() + " " + program.GetLastDate());
-                    ListViewItem temp = new ListViewItem(program.GetSerialNum() + " " + program.GetLastDate());
-                    listView1.Items.Add(temp);
+                  
+                    Console.WriteLine(file.Name);
+                   
                 }
-               
             }
             else
             {
                 MessageBox.Show("Program Not Found");
             }
-
+            listView1.Items.Clear();
+            listView1.Items.AddRange(originalList.ToArray());
             Cursor.Current = Cursors.AppStarting;
         }
 
