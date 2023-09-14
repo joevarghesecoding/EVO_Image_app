@@ -103,7 +103,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string fileName = f.GetSerialNum();
                 if (lastDate != "" && lastDate != "iPhone")
                 {
-                    Common.CopyResultsToDirectory(newSerial, inDirPath, outDirPath, fileName + " " + f.GetLastDate());
+                    Common.CopyResultsToDirectory(newSerial, inDirPath, outDirPath, fileName);
                 }
 
             }

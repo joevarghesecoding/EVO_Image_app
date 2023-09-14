@@ -108,15 +108,22 @@ namespace EVO_Image_app
                     }
                     else if(flag == 2)
                     {
+                        DirectoryInfo folders = new DirectoryInfo(outDirPath);
+                        DirectoryInfo[] eachFolder = folders.GetDirectories();
                         
-                        foreach (ProgramObjs o in objs)
+                        foreach (DirectoryInfo directory in eachFolder)
                         {
-                            programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum() + " " + o.GetLastDate());
-                            if (o.GetSerialNum() + " " + o.GetLastDate() == item.Text)
+                            foreach(ProgramObjs o in objs)
                             {
-                                programDetails.ProgramObject = o;
-                                break;
+                                if(o.GetSerialNum() == item.Text && directory.Name == item.Text)
+                                {
+                                    programDetails = Common.GetProgramDetails(directory.FullName);
+                                    programDetails.ProgramObject = o;
+                                    Console.WriteLine(programDetails.ProgramObject.GetSerialNum());
+                                    break;
+                                } 
                             }
+                            
                         }
                     }
                     else if (flag == 3)
@@ -274,20 +281,19 @@ namespace EVO_Image_app
             string serial = textBox1.Text.ToUpper();
             string pattern = "[A-Z0-9]";
 
-
+            originalList.Clear();
             if(Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
                 
                 string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-                DirectoryInfo sourceInfo = new DirectoryInfo(outDirPath);
-                FileInfo[] files = sourceInfo.GetFiles();
+                DirectoryInfo folders = new DirectoryInfo(outDirPath);
+                DirectoryInfo[] eachFolder = folders.GetDirectories();
                 
-                foreach (FileInfo file in files)
+                foreach(DirectoryInfo directory in eachFolder)
                 {
-                  
-                    Console.WriteLine(file.Name);
-                   
+                    ListViewItem item = new ListViewItem(directory.Name);
+                    originalList.Add(item);
                 }
             }
             else
