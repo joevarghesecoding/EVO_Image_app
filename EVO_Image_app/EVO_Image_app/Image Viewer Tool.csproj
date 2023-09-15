@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DA0ECDE0-FB38-4284-9D52-E7F70A0CA127}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>EVO_Image_app</RootNamespace>
-    <AssemblyName>EVO_Image_app</AssemblyName>
+    <RootNamespace>Image_Viewer_Tool</RootNamespace>
+    <AssemblyName>Image Viewer Tool</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,6 +32,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icons8-picture-in-picture-100.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -501,6 +504,7 @@
   <ItemGroup>
     <Content Include="EVO_FRONT_END\Icons\icons8-previous-64.png" />
     <Content Include="EVO_FRONT_END\Icons\icons8-right-button-64.png" />
+    <Content Include="icons8-picture-in-picture-100.ico" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Bottom.jpg" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Display.jpg" />
     <Content Include="Resources\8-10-2023\C7970CYMPM\Housing.jpg" />

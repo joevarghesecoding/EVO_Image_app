@@ -35,8 +35,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string serial = obj.GetSerialNum();
                 string date = obj.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + date;
-                //string outDirPath = "C:\\Users\\Joe.Varghese\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today;
-                //string outDirPath = "C:\\Users\\Administrator\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\bin\\Debug\\Resources\\AllLatestModels\\" + today;
                 string outDirPath = Common.currentDirectory + "\\Resources\\AllLatestModels\\" + today;
 
                 string fileName = obj.GetModelAndColor();

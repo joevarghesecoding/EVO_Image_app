@@ -216,7 +216,7 @@ namespace EVO_Image_app.EVO_BACK_END
                 if(programObjs.GetSerialNum() == program.GetSerialNum() && programObjs.GetLastDate() == program.GetLastDate())
                 {
                     serialNum.Text = program.GetSerialNum();
-                    lastDate.Text = program.GetLastDate();
+                    lastDate.Text = program.GetLastDate() + " " + program.GetLastTime();
                     string[] splitted = program.GetComptia().Split(',');
                     if (splitted[0] == "PASS")
                     {
@@ -369,6 +369,7 @@ namespace EVO_Image_app.EVO_BACK_END
                             string[] dateSplit = splitted[0].Split(' ');
                             program.SetLastDate(dateSplit[0].Replace("/", "-"));
                             program.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
+                            program.SetLastTime(dateSplit[1] + " " + dateSplit[2]);
                         }
                     }
                 }

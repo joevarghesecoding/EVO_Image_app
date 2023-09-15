@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33529.622
+# Visual Studio 15
+VisualStudioVersion = 15.0.33403.129
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EVO_Image_app", "EVO_Image_app\EVO_Image_app.csproj", "{DA0ECDE0-FB38-4284-9D52-E7F70A0CA127}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Image Viewer Tool", "EVO_Image_app\Image Viewer Tool.csproj", "{DA0ECDE0-FB38-4284-9D52-E7F70A0CA127}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -198,7 +198,7 @@ namespace EVO_Image_app
             // 
             // calendar
             // 
-            this.calendar.Location = new System.Drawing.Point(347, -9);
+            this.calendar.Location = new System.Drawing.Point(344, -9);
             this.calendar.Name = "calendar";
             this.calendar.TabIndex = 7;
             this.calendar.DateChanged += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateChanged);
@@ -207,11 +207,11 @@ namespace EVO_Image_app
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(332, 7);
+            this.label2.Location = new System.Drawing.Point(303, 7);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Date:";
+            this.label2.Text = "Date && Time:";
             // 
             // label1
             // 
@@ -342,8 +342,9 @@ namespace EVO_Image_app
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "EVO_Image_App";
-            this.Text = "EVO Image App";
+            this.Text = "Image Viewer Tool";
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);

@@ -32,7 +32,6 @@ namespace EVO_Image_app
             InitializeComponent();
             //this.WindowState = FormWindowState.Maximized;
             today = Common.GetDate();
-            this.Text = "EVO Image App";
             //outDirPath = "C:\\Users\\Administrator\\Desktop\\EVO_Image_app\\EVO_Image_app\\EVO_Image_app\\Resources\\AllLatestModels\\" + today + "\\";
             
             dataGridView1.Columns.Add("Regions", "Region");
@@ -49,6 +48,7 @@ namespace EVO_Image_app
             calendar.MaxDate = DateTime.Today;
             ComptiaBox.ReadOnly = true;
             regionsBox.ReadOnly = true;
+            this.Text = "Image Viewer Tool v1.1";
         }
 
         //All Models And Colors button
@@ -273,6 +273,12 @@ namespace EVO_Image_app
         {
             Cursor.Current = Cursors.WaitCursor;
             string serial = textBox1.Text.ToUpper();
+            if(serial.Length > 12)
+            {
+                string[] split = serial.Split(';');
+                serial = split[0];
+
+            }
             string pattern = "[A-Z0-9]";
 
             originalList.Clear();
@@ -388,6 +394,6 @@ namespace EVO_Image_app
            
         }
 
-       
+    
     }
 }
