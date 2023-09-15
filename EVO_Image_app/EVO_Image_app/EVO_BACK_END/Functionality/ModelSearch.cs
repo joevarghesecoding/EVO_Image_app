@@ -42,6 +42,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string currentSerial = d.GetSerialNum();
                         int count = 0;
                         string current = currentSerial;
+                        if (!currentSerial.Equals(current))
+                            count = 0;
                         while (currentSerial.Equals(current))
                         {
                             d.SetSerialNum(currentSerial + " - " + count.ToString());

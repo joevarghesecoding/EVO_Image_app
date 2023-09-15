@@ -212,6 +212,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             foreach (ProgramObjs program in programs)
             {
+               
                 if(programObjs.GetSerialNum() == program.GetSerialNum() && programObjs.GetLastDate() == program.GetLastDate())
                 {
                     serialNum.Text = program.GetSerialNum();

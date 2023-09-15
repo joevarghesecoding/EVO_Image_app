@@ -108,22 +108,15 @@ namespace EVO_Image_app
                     }
                     else if(flag == 2)
                     {
-                        DirectoryInfo folders = new DirectoryInfo(outDirPath);
-                        DirectoryInfo[] eachFolder = folders.GetDirectories();
-                        
-                        foreach (DirectoryInfo directory in eachFolder)
+                        foreach (ProgramObjs o in objs)
                         {
-                            foreach(ProgramObjs o in objs)
+                            if(o.GetSerialNum() == item.Text)
                             {
-                                if(o.GetSerialNum() == item.Text && directory.Name == item.Text)
-                                {
-                                    programDetails = Common.GetProgramDetails(directory.FullName);
-                                    programDetails.ProgramObject = o;
-                                    Console.WriteLine(programDetails.ProgramObject.GetSerialNum());
-                                    break;
-                                } 
-                            }
-                            
+                                programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum());
+                                programDetails.ProgramObject = o;
+                                //Console.WriteLine(programDetails.ProgramObject.GetSerialNum());
+                                break;
+                            }   
                         }
                     }
                     else if (flag == 3)
@@ -144,6 +137,7 @@ namespace EVO_Image_app
 
                     side = 0;
 
+ 
                     Common.DisplayData(programDetails.sides[side], dataGridView1);
                     Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
                 }

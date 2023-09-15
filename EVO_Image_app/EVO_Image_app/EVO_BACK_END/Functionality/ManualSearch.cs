@@ -20,10 +20,11 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// </return>
         override public void GetImagesForSerial(string serial)
         {
-            
+
             // string dailyRunData = Common.currentDirectory + "\\Resources";
             List<FileInfo> fatSatPaths = Common.GetAllFatSatFiles();
-            foreach(FileInfo fileInfo in fatSatPaths)
+
+            foreach (FileInfo fileInfo in fatSatPaths)
             {
                 string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + fileInfo.Name;
                 try
@@ -38,12 +39,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 //Console.WriteLine(line);
                                 string[] splitted = line.Split(',');
                                 string[] dateSplit = splitted[0].Split(' ');
-                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], serial, dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
+                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], splitted[3], dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6]);
                                 programObjs.Add(program);
                             }
                         }
                     }
-                    GetImagesForSerialHelper(serial);
+
+                   
                 }
                 catch (Exception ex)
                 {
@@ -51,59 +53,69 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 }
             }
 
+            GetImagesForSerialHelper();
+
         }
 
-        private void GetImagesForSerialHelper(string serial)
+
+        private void GetImagesForSerialHelper()
         {
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string today = Common.GetDate();
-            string[] dates = new string[programObjs.Count];
-            int[] count = new int[dates.Length];
-            int i = 0;
-            foreach(ProgramObjs program in programObjs)
+            HashSet<string> unique = new HashSet<string>();
+            List<ProgramObjs> uniqueObjs = new List<ProgramObjs>();
+            List<ProgramObjs> duplicates = new List<ProgramObjs>();
+            List<ProgramObjs> finalList = new List<ProgramObjs>();
+            foreach (ProgramObjs p in programObjs)
             {
-                dates[i] = program.GetLastDate();
-                i++;
-            }
-            for(int j = 0; j < count.Length - 1; j++)
-            {
-                int next = j + 1;
-               
-                if(next < count.Length && dates[j] == dates[next])
+                if (!unique.Add(p.GetSerialNum()))
                 {
-                    count[next] = count[j] + 1;
-                }
-            }
-
-            for(int k = 0; k < count.Length; k++)
-            {
-                if (count[k] > 0)
-                {
-                    programObjs.ElementAt(k).SetSerialNum(serial + " - " + (count[k] - 1).ToString());
-                    programObjs.ElementAt(k).SetLastDate(dates[k]);
+                    duplicates.Add(p);
                 }
                 else
                 {
-                    programObjs.ElementAt(k).SetSerialNum(serial);
-                    programObjs.ElementAt(k).SetLastDate(dates[k]);
+                    uniqueObjs.Add(p);
                 }
-                    
-                //Console.WriteLine(programObjs.ElementAt(k).GetSerialNum() + " " + dates[k]);
             }
 
-            
-
-            foreach (ProgramObjs f in programObjs)
+            int count = 0;
+            foreach (ProgramObjs d in duplicates)
             {
-                string newSerial = f.GetSerialNum();
+                string currentSerial = d.GetSerialNum();
+
+                string current = currentSerial;
+                if (!currentSerial.Equals(current))
+                    count = 0;
+                while (currentSerial.Equals(current))
+                {
+                    d.SetSerialNum(currentSerial + " - " + count.ToString());
+                    count++;
+
+                    current = d.GetSerialNum();
+                }
+            }
+
+            foreach (ProgramObjs obj in uniqueObjs)
+            {
+                finalList.Add(obj);
+            }
+
+            foreach (ProgramObjs duplicate in duplicates)
+            {
+                finalList.Add(duplicate);
+            }
+
+            foreach (ProgramObjs f in finalList)
+            {
+                string serial = f.GetSerialNum();
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + lastDate;
-                //Console.WriteLine(inDirPath);    
                 string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
+
                 string fileName = f.GetSerialNum();
                 if (lastDate != "" && lastDate != "iPhone")
                 {
-                    Common.CopyResultsToDirectory(newSerial, inDirPath, outDirPath, fileName);
+                    Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
                 }
 
             }
@@ -120,4 +132,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
     }
+
 }
+
+
