@@ -126,17 +126,17 @@ namespace EVO_Image_app.EVO_BACK_END
                         rightImage = rightFile = bottomImage = bottomFile = topImage = topFile = "";
                     foreach (FileInfo file in files)
                         {
-                            if (file.Name == "Display.jpg")
+                        if (file.Name.Contains("DSP") ||  file.Name == "Display.jpg")
                                 frontImage = file.FullName;
-                            else if (file.Name == "Housing.jpg")
+                            else if (file.Name.Contains("HSG") || file.Name == "Housing.jpg")
                                 backImage = file.FullName;
-                            else if (file.Name == "Left.jpg")
+                            else if (file.Name.Contains("LFT") || file.Name == "Left.jpg")
                                 leftImage = file.FullName;
-                            else if (file.Name == "Right.jpg")
+                            else if (file.Name.Contains("RHT") || file.Name == "Right.jpg")
                                 rightImage = file.FullName;
-                            else if (file.Name == "Top.jpg")
+                            else if (file.Name.Contains("TOP") || file.Name == "Top.jpg")
                                 topImage = file.FullName;
-                            else if (file.Name == "Bottom.jpg")
+                            else if (file.Name.Contains("BTM") || file.Name == "Bottom.jpg")
                                 bottomImage = file.FullName;
                             else if (file.Name == "Back.csv")
                                 backFile = file.FullName;
@@ -208,28 +208,29 @@ namespace EVO_Image_app.EVO_BACK_END
         /// <param name="serialNum"></param>
         /// <param name="lastDate"></param>
 
-        public static void DisplaySerialAndDate(List<ProgramObjs> programs, ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
+        public static void DisplaySerialAndDate(List<ProgramObjs> objs, ProgramObjs programObjs, System.Windows.Forms.TextBox serialNum, System.Windows.Forms.TextBox lastDate, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
         {
-            foreach (ProgramObjs program in programs)
+            foreach(ProgramObjs obj in objs)
             {
-               
-                if(programObjs.GetSerialNum() == program.GetSerialNum() && programObjs.GetLastDate() == program.GetLastDate())
+                if(obj.GetSerialNum() == programObjs.GetSerialNum() && obj.GetLastDate() == programObjs.GetLastDate() && obj.GetLastTime() == programObjs.GetLastTime())
                 {
-                    serialNum.Text = program.GetSerialNum();
-                    lastDate.Text = program.GetLastDate() + " " + program.GetLastTime();
-                    string[] splitted = program.GetComptia().Split(',');
+                    serialNum.Text = programObjs.GetSerialNum();
+                    lastDate.Text = programObjs.GetLastDate() + " " + programObjs.GetLastTime();
+                    string[] splitted = programObjs.GetComptia().Split(',');
                     if (splitted[0] == "PASS")
                     {
-                        comptia.Text = "PASS";
-                        regions.Text = "N/A";
+                        comptia.Text = "DEVICE GRADE: PASS";
+                        regions.Text = "REGIONS : N/A";
                     }
                     else if (splitted[0] == "FAIL")
                     {
-                        comptia.Text = splitted[0] + ":" + splitted[1];
-                        regions.Text = splitted[2];
+                        comptia.Text = "DEVICE GRADE : " + splitted[0] + "-" + splitted[1];
+                        regions.Text = "REGIONS : " + splitted[2];
                     }
+
                 }
-            }      
+            }
+           
         }
 
         /// <summary>
@@ -322,6 +323,14 @@ namespace EVO_Image_app.EVO_BACK_END
             DirectoryInfo dir = new DirectoryInfo(path);
             FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
             List<FileInfo> result = files.ToList<FileInfo>();
+
+            string auditPath = "C:\\EVO-3\\Save Data\\Logs\\Audit_FAT-SAT\\";
+            DirectoryInfo auditDir = new DirectoryInfo(auditPath);
+            List<FileInfo> auditFiles = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToList();
+            foreach(FileInfo fileInfo in auditFiles)
+            {
+                result.Add(fileInfo);
+            }
             return result;
         }
 
@@ -402,22 +411,26 @@ namespace EVO_Image_app.EVO_BACK_END
         }
 
 
-        public static void DisplayComptiaAndRegions(ProgramObjs current, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
-        {
+        //public static void DisplayComptiaAndRegions(ProgramObjs current, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
+        //{
            
-            string[] splitted = current.GetComptia().Split(',');
-            if (splitted[0] == "PASS")
-            {
-                comptia.Text = "PASS";
-                regions.Text = "N/A";
-            }
-            else if (splitted[0] == "FAIL")
-            {
-                comptia.Text = splitted[0] + ":" + splitted[1];
-                regions.Text = splitted[2];
-            }
+        //    string[] splitted = current.GetComptia().Split(',');
+        //    foreach(string split in splitted)
+        //    {
+        //        Console.WriteLine(split);
+        //    }
+        //    if (splitted[0] == "PASS")
+        //    {
+        //        comptia.Text = "PASS";
+        //        regions.Text = "N/A";
+        //    }
+        //    else if (splitted[0] == "FAIL")
+        //    {
+        //        comptia.Text = splitted[0] + ":" + splitted[1];
+        //        regions.Text = splitted[2];
+        //    }
               
-        }
+        //}
     }
 
 }

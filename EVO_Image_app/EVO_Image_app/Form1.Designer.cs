@@ -56,6 +56,9 @@ namespace EVO_Image_app
             this.modelDropDown = new System.Windows.Forms.ComboBox();
             this.calendarBtn = new System.Windows.Forms.Button();
             this.modelSearch = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.passwordButton = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -131,7 +134,7 @@ namespace EVO_Image_app
             // regionsBox
             // 
             this.regionsBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.regionsBox.Font = new System.Drawing.Font("Georgia", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.regionsBox.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.regionsBox.Location = new System.Drawing.Point(197, 464);
             this.regionsBox.Multiline = true;
             this.regionsBox.Name = "regionsBox";
@@ -141,7 +144,7 @@ namespace EVO_Image_app
             // ComptiaBox
             // 
             this.ComptiaBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ComptiaBox.Font = new System.Drawing.Font("Georgia", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ComptiaBox.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ComptiaBox.Location = new System.Drawing.Point(16, 464);
             this.ComptiaBox.Multiline = true;
             this.ComptiaBox.Name = "ComptiaBox";
@@ -282,6 +285,9 @@ namespace EVO_Image_app
             // 
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel4.Controls.Add(this.passwordButton);
+            this.panel4.Controls.Add(this.passwordTextBox);
+            this.panel4.Controls.Add(this.label3);
             this.panel4.Controls.Add(this.searchBtn);
             this.panel4.Controls.Add(this.modelDropDown);
             this.panel4.Controls.Add(this.calendarBtn);
@@ -332,6 +338,39 @@ namespace EVO_Image_app
             this.modelSearch.UseVisualStyleBackColor = true;
             this.modelSearch.Click += new System.EventHandler(this.modelSearch_Click);
             // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1034, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Password:";
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.passwordTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.passwordTextBox.Location = new System.Drawing.Point(1096, 1);
+            this.passwordTextBox.MaximumSize = new System.Drawing.Size(100, 20);
+            this.passwordTextBox.MaxLength = 100;
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
+            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
+            this.passwordTextBox.TabIndex = 10;
+            // 
+            // passwordButton
+            // 
+            this.passwordButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.passwordButton.Location = new System.Drawing.Point(1202, -1);
+            this.passwordButton.Name = "passwordButton";
+            this.passwordButton.Size = new System.Drawing.Size(29, 24);
+            this.passwordButton.TabIndex = 11;
+            this.passwordButton.Text = ">>";
+            this.passwordButton.UseVisualStyleBackColor = true;
+            this.passwordButton.Click += new System.EventHandler(this.passwordButton_Click);
+            // 
             // EVO_Image_App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -354,6 +393,7 @@ namespace EVO_Image_app
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -385,6 +425,9 @@ namespace EVO_Image_app
         private System.Windows.Forms.MonthCalendar calendar;
         private System.Windows.Forms.TextBox regionsBox;
         private System.Windows.Forms.TextBox ComptiaBox;
+        private System.Windows.Forms.TextBox passwordTextBox;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button passwordButton;
     }
 }
 

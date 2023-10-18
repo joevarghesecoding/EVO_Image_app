@@ -48,8 +48,14 @@ namespace EVO_Image_app
             calendar.MaxDate = DateTime.Today;
             ComptiaBox.ReadOnly = true;
             regionsBox.ReadOnly = true;
-            this.Text = "Image Viewer Tool v1.1";
+            this.Text = "EVO Image Viewer Tool v1.2";
+            modelsAndColorsBtn.Enabled = false;
+            modelSearch.Enabled = false;
+            manualSearchBtn.Enabled = false;
         }
+
+        //Password Protection
+        
 
         //All Models And Colors button
         private void button1_Click_1(object sender, EventArgs e)
@@ -114,7 +120,7 @@ namespace EVO_Image_app
                             {
                                 programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum());
                                 programDetails.ProgramObject = o;
-                                //Console.WriteLine(programDetails.ProgramObject.GetSerialNum());
+                               // Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
                                 break;
                             }   
                         }
@@ -140,6 +146,7 @@ namespace EVO_Image_app
  
                     Common.DisplayData(programDetails.sides[side], dataGridView1);
                     Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                
                 }
                 catch (NullReferenceException ex)
                 {
@@ -289,12 +296,13 @@ namespace EVO_Image_app
                 string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
                 DirectoryInfo folders = new DirectoryInfo(outDirPath);
                 DirectoryInfo[] eachFolder = folders.GetDirectories();
-                
-                foreach(DirectoryInfo directory in eachFolder)
+                List<ProgramObjs> manualSearchObjs = function.GetProgramObjs();
+                foreach (DirectoryInfo directory in eachFolder)
                 {
                     ListViewItem item = new ListViewItem(directory.Name);
                     originalList.Add(item);
                 }
+                              
             }
             else
             {
@@ -394,6 +402,20 @@ namespace EVO_Image_app
            
         }
 
-    
+        //Password Code
+        private void passwordButton_Click(object sender, EventArgs e)
+        {
+            if(passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            {
+                modelsAndColorsBtn.Enabled = true;
+                modelSearch.Enabled = true;
+                manualSearchBtn.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Incorrect Password");
+            }
+        }
+
     }
 }
