@@ -10,7 +10,10 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
     class ManualSearch : Functions
     {
 
-        public ManualSearch() : base() { }
+        public ManualSearch() : base() 
+        {
+            programObjs = new List<ProgramObjs>();
+        }
 
         /// <summary>
         /// Gets images for the serial number and creates a folder for it.
@@ -22,7 +25,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
 
             // string dailyRunData = Common.currentDirectory + "\\Resources";
-            List<FileInfo> fatSatPaths = Common.GetAllFatSatFiles();
+            List<FileInfo> fatSatPaths = GetAllFatSatFiles();
 
             foreach (FileInfo fileInfo in fatSatPaths)
             {

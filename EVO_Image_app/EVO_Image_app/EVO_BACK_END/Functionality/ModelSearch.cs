@@ -11,7 +11,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
     {
         public ModelSearch() : base() 
         {
-            programObjs = Common.GetCurrentPrograms();
+            programObjs = GetCurrentPrograms();
         }
 
 
@@ -22,7 +22,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             string today = Common.GetDate();
             try
             {
-                FileInfo file = Common.GetFatSatFile(date);
+                FileInfo file = GetFatSatFile(date);
                 if(file != null)
                 {
                     FindSerialCount(program, file);
@@ -83,9 +83,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
 
                 }
-                    
-                    
-                
                 else
                 {
                     System.Windows.Forms.MessageBox.Show("No Data found for Date");
@@ -132,6 +129,25 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             }
         }
 
+        ///<summary>
+        ///Gets FAT-SAT files for the specific date
+        /// </summary>
+        /// <returns>The FAT-SAT file for the specific date</returns>
+        public FileInfo GetFatSatFile(string date)
+        {
+            //string path = currentDirectory + "\\Resources\\FAT-SAT\\";
+            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
+            DirectoryInfo dir = new DirectoryInfo(path);
+            foreach (FileInfo file in dir.GetFiles().OrderByDescending(f => f.LastWriteTime))
+            {
+                if (file.Name.Contains(date))
+                {
+                    return file;
+                }
+            }
+            return null;
+        }
+
         public override void GetImagesForSerial(string serial)
         {
             throw new NotImplementedException();
@@ -141,5 +157,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             throw new NotImplementedException();
         }
+
     }
 }
