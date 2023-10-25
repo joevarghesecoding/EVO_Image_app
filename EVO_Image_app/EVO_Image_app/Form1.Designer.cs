@@ -52,13 +52,13 @@ namespace EVO_Image_app
             this.previousBtn = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.passwordButton = new System.Windows.Forms.Button();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.searchBtn = new System.Windows.Forms.Button();
             this.modelDropDown = new System.Windows.Forms.ComboBox();
             this.calendarBtn = new System.Windows.Forms.Button();
             this.modelSearch = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.passwordButton = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -105,6 +105,7 @@ namespace EVO_Image_app
             this.textBox1.TabIndex = 1;
             this.textBox1.Click += new System.EventHandler(this.textBox1_Click);
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textbox1Enter_Click);
             // 
             // listView1
             // 
@@ -299,6 +300,40 @@ namespace EVO_Image_app
             this.panel4.Size = new System.Drawing.Size(1314, 22);
             this.panel4.TabIndex = 5;
             // 
+            // passwordButton
+            // 
+            this.passwordButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.passwordButton.Location = new System.Drawing.Point(1202, -1);
+            this.passwordButton.Name = "passwordButton";
+            this.passwordButton.Size = new System.Drawing.Size(29, 24);
+            this.passwordButton.TabIndex = 11;
+            this.passwordButton.Text = ">>";
+            this.passwordButton.UseVisualStyleBackColor = true;
+            this.passwordButton.Click += new System.EventHandler(this.passwordButton_Click);
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.passwordTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
+            this.passwordTextBox.Location = new System.Drawing.Point(1096, 1);
+            this.passwordTextBox.MaximumSize = new System.Drawing.Size(100, 20);
+            this.passwordTextBox.MaxLength = 100;
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
+            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
+            this.passwordTextBox.TabIndex = 10;
+            this.passwordTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.passwordEnter_Click);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(1034, 3);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(56, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Password:";
+            // 
             // searchBtn
             // 
             this.searchBtn.Location = new System.Drawing.Point(685, 0);
@@ -337,39 +372,6 @@ namespace EVO_Image_app
             this.modelSearch.Text = "Model Search";
             this.modelSearch.UseVisualStyleBackColor = true;
             this.modelSearch.Click += new System.EventHandler(this.modelSearch_Click);
-            // 
-            // label3
-            // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1034, 3);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Password:";
-            // 
-            // passwordTextBox
-            // 
-            this.passwordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.passwordTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Lower;
-            this.passwordTextBox.Location = new System.Drawing.Point(1096, 1);
-            this.passwordTextBox.MaximumSize = new System.Drawing.Size(100, 20);
-            this.passwordTextBox.MaxLength = 100;
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(100, 20);
-            this.passwordTextBox.TabIndex = 10;
-            // 
-            // passwordButton
-            // 
-            this.passwordButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.passwordButton.Location = new System.Drawing.Point(1202, -1);
-            this.passwordButton.Name = "passwordButton";
-            this.passwordButton.Size = new System.Drawing.Size(29, 24);
-            this.passwordButton.TabIndex = 11;
-            this.passwordButton.Text = ">>";
-            this.passwordButton.UseVisualStyleBackColor = true;
-            this.passwordButton.Click += new System.EventHandler(this.passwordButton_Click);
             // 
             // EVO_Image_App
             // 

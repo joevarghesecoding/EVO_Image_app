@@ -71,7 +71,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string serial = f.GetSerialNum();
                         string lastDate = f.GetLastDate();
                         string inDirPath = dailyRunData + "\\" + date;
-                        string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + today;
+                        string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date;
 
                         string fileName = f.GetSerialNum() + "," + f.GetModelAndColor();
                         if (date != "" && date != "iPhone")

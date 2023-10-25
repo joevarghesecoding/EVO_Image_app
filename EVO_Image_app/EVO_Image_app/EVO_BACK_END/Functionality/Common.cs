@@ -69,6 +69,7 @@ namespace EVO_Image_app.EVO_BACK_END
             try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(source);
+               
                 if(!sourceInfo.Exists)
                 {
                     //Console.WriteLine(sourceInfo.FullName);
@@ -97,88 +98,7 @@ namespace EVO_Image_app.EVO_BACK_END
             }
         }
 
-        ///<summary>
-        ///Gets Images and file names for the specific file.
-        /// </summary>
-        /// <param name="path">The path to the directory where the results are</param>
-        /// 
-        public static ProgramDetails GetProgramDetails(string path)
-        {
-            ProgramDetails programDetails = new ProgramDetails();
-            try
-            {
-                DirectoryInfo sourceInfo = new DirectoryInfo(path);
-                //Console.WriteLine(sourceInfo.FullName);
-                if (!sourceInfo.Exists)
-                {
-                    //Console.WriteLine(sourceInfo.FullName);
-                    Console.WriteLine("***** GetProgramDetails missing File *****\n");
-                    
-                }
-                else
-                {
-                        FileInfo[] files = sourceInfo.GetFiles();
-                        ProgramObjs temp2 = new ProgramObjs(sourceInfo.Name);
-                        programDetails.ProgramObject = temp2;
-                        string frontImage, frontFile, backImage, backFile, leftImage, leftFile, 
-                        rightImage, rightFile, bottomImage, bottomFile, topImage, topFile;
-                        frontImage = frontFile = backImage = backFile = leftImage = leftFile =
-                        rightImage = rightFile = bottomImage = bottomFile = topImage = topFile = "";
-                    foreach (FileInfo file in files)
-                        {
-                        if (file.Name.Contains("DSP") ||  file.Name == "Display.jpg")
-                                frontImage = file.FullName;
-                            else if (file.Name.Contains("HSG") || file.Name == "Housing.jpg")
-                                backImage = file.FullName;
-                            else if (file.Name.Contains("LFT") || file.Name == "Left.jpg")
-                                leftImage = file.FullName;
-                            else if (file.Name.Contains("RHT") || file.Name == "Right.jpg")
-                                rightImage = file.FullName;
-                            else if (file.Name.Contains("TOP") || file.Name == "Top.jpg")
-                                topImage = file.FullName;
-                            else if (file.Name.Contains("BTM") || file.Name == "Bottom.jpg")
-                                bottomImage = file.FullName;
-                            else if (file.Name == "Back.csv")
-                                backFile = file.FullName;
-                            else if (file.Name == "Front.csv")
-                                frontFile = file.FullName;
-                            else if (file.Name == "Long.csv")
-                            {
-                                leftFile = file.FullName;
-                                rightFile = file.FullName;
-                            }
-                            else if (file.Name == "Short.csv")
-                            {
-                                topFile = file.FullName;
-                                bottomFile = file.FullName;
-                            }
-                        }
-
-                        Front front = new Front(frontImage, frontFile);
-                        Back back = new Back(backImage, backFile);
-                        Top top = new Top(topImage, topFile);
-                        Bottom bottom = new Bottom(bottomImage, bottomFile);
-                        Left left = new Left(leftImage, leftFile);
-                        Right right = new Right(rightImage, rightFile);
-
-                    programDetails.sides[0] = front;
-                    programDetails.sides[1] = back;
-                    programDetails.sides[2] = top;
-                    programDetails.sides[3] = bottom;
-                    programDetails.sides[4] = left;
-                    programDetails.sides[5] = right;
-                   
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("****** CopyResultsToDirectoryHelper ERROR ******\n " + ex.Message);
-            }
-
-            return programDetails;
-        }
-
+      
         ///<summary>
         ///Reads the CSV file and displays data to the correct
         /// </summary>

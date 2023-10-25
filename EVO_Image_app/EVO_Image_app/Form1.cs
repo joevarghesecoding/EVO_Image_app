@@ -20,7 +20,6 @@ namespace EVO_Image_app
         string today;
         string outDirPath;
         List<ListViewItem> originalList;
-        ListViewItem currentItem;
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
         Functions function;
@@ -98,8 +97,8 @@ namespace EVO_Image_app
             {
                 try
                 {
-                    //Console.WriteLine(outDirPath + item.Text);
-                    programDetails = Common.GetProgramDetails(outDirPath + item.Text);
+                    programDetails = new ProgramDetails();
+                    programDetails.GetProgramDetails(outDirPath + item.Text);
                     
                     if(flag == 1)
                     {
@@ -118,7 +117,7 @@ namespace EVO_Image_app
                         {
                             if(o.GetSerialNum() == item.Text)
                             {
-                                programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum());
+                                programDetails.GetProgramDetails(outDirPath + o.GetSerialNum());
                                 programDetails.ProgramObject = o;
                                // Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
                                 break;
@@ -296,9 +295,15 @@ namespace EVO_Image_app
                 string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
                 DirectoryInfo folders = new DirectoryInfo(outDirPath);
                 DirectoryInfo[] eachFolder = folders.GetDirectories();
-                List<ProgramObjs> manualSearchObjs = function.GetProgramObjs();
+                Array.Sort(eachFolder, (a, b) => a.CreationTime.CompareTo(b.CreationTime));
                 foreach (DirectoryInfo directory in eachFolder)
                 {
+                    string date = directory.CreationTime.ToString("MMddyyy");
+                    ListViewItem dateDivider = new ListViewItem("======" + date + "======");
+                    if (!originalList.Contains(dateDivider))
+                    {
+                        originalList.Add(dateDivider);
+                    }
                     ListViewItem item = new ListViewItem(directory.Name);
                     originalList.Add(item);
                 }
@@ -417,5 +422,32 @@ namespace EVO_Image_app
             }
         }
 
+        private void passwordEnter_Click(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+                {
+                    modelsAndColorsBtn.Enabled = true;
+                    modelSearch.Enabled = true;
+                    manualSearchBtn.Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect Password");
+                }
+            }
+        }
+
+        private void textbox1Enter_Click(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if(flag == 2)
+                {
+                    findBtn_Click(sender, e);
+                }
+            }
+        }
     }
 }

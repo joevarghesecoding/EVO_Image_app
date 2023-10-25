@@ -64,7 +64,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         /// Gets a list of all current programs from the colors_program.xml file
         /// </summary>
         /// <returns></returns>
-        public static List<ProgramObjs> GetCurrentPrograms()
+        public List<ProgramObjs> GetCurrentPrograms()
         {
             List<ProgramObjs> objs = new List<ProgramObjs>();
             string cpPath = "c:\\EVO-3\\Parameters\\color_programs.xml";

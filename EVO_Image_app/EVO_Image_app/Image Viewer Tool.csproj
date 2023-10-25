@@ -59,8 +59,8 @@
     <Compile Include="EVO_BACK_END\Functionality\Common.cs" />
     <Compile Include="EVO_BACK_END\Sides\Front.cs" />
     <Compile Include="EVO_BACK_END\Sides\Left.cs" />
-    <Compile Include="EVO_BACK_END\Functionality\ProgramDetails.cs" />
-    <Compile Include="EVO_BACK_END\Functionality\ProgramObjs.cs" />
+    <Compile Include="EVO_BACK_END\Program\ProgramDetails.cs" />
+    <Compile Include="EVO_BACK_END\Program\ProgramObjs.cs" />
     <Compile Include="EVO_BACK_END\Sides\Right.cs" />
     <Compile Include="EVO_BACK_END\Sides\Sides.cs" />
     <Compile Include="EVO_BACK_END\Sides\Top.cs" />

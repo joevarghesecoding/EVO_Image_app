@@ -8,6 +8,14 @@
         private string Comptia;
         private string LastTime;
 
+        public ProgramObjs()
+        {
+            this.ModelAndColor = "";
+            this.SerialNum = "";
+            this.LastDate = "";
+            this.LastTime = "";
+            this.Comptia = "";
+        }
         public ProgramObjs(string ModelAndColor)
         {
             this.ModelAndColor = ModelAndColor;

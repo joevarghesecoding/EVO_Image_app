@@ -56,12 +56,12 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 }
             }
 
-            GetImagesForSerialHelper();
+            RenameSerials();
 
         }
 
 
-        private void GetImagesForSerialHelper()
+        private void RenameSerials()
         {
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             string today = Common.GetDate();
@@ -113,7 +113,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string serial = f.GetSerialNum();
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + lastDate;
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
+                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today + "\\" + lastDate;
 
                 string fileName = f.GetSerialNum();
                 if (lastDate != "" && lastDate != "iPhone")
