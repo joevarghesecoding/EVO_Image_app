@@ -113,7 +113,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string serial = f.GetSerialNum();
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + lastDate;
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today + "\\" + lastDate;
+                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate;
 
                 string fileName = f.GetSerialNum();
                 if (lastDate != "" && lastDate != "iPhone")

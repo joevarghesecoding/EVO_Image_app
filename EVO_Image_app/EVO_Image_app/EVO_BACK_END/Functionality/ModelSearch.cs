@@ -19,7 +19,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             //string dailyRunData = Common.currentDirectory + "\\Resources";
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            string today = Common.GetDate();
+            //string today = Common.GetDate();
             try
             {
                 FileInfo file = GetFatSatFile(date);

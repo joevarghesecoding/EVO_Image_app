@@ -47,7 +47,7 @@ namespace EVO_Image_app
             calendar.MaxDate = DateTime.Today;
             ComptiaBox.ReadOnly = true;
             regionsBox.ReadOnly = true;
-            this.Text = "EVO Image Viewer Tool v1.2";
+            this.Text = "EVO Image Viewer Tool v1.4";
             modelsAndColorsBtn.Enabled = false;
             modelSearch.Enabled = false;
             manualSearchBtn.Enabled = false;
@@ -95,65 +95,69 @@ namespace EVO_Image_app
           
             foreach (ListViewItem item in program)
             {
-                try
+                if (!item.ToString().Contains('='))
                 {
-                    programDetails = new ProgramDetails();
-                    programDetails.GetProgramDetails(outDirPath + item.Text);
-                    
-                    if(flag == 1)
+                    try
                     {
-                        foreach (ProgramObjs o in objs)
+                        programDetails = new ProgramDetails();
+                        programDetails.GetProgramDetails(outDirPath + item.Text);
+
+                        if (flag == 1)
                         {
-                           if(o.GetModelAndColor() == item.Text)
+                            foreach (ProgramObjs o in objs)
                             {
-                                programDetails.ProgramObject = o;
-                                break;
+                                if (o.GetModelAndColor() == item.Text)
+                                {
+                                    programDetails.ProgramObject = o;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    else if(flag == 2)
-                    {
-                        foreach (ProgramObjs o in objs)
+                        else if (flag == 2)
                         {
-                            if(o.GetSerialNum() == item.Text)
+                           
+                            foreach (ProgramObjs o in objs)
                             {
-                                programDetails.GetProgramDetails(outDirPath + o.GetSerialNum());
-                                programDetails.ProgramObject = o;
-                               // Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
-                                break;
-                            }   
-                        }
-                    }
-                    else if (flag == 3)
-                    {
-                        string[] text = item.Text.Split(',');
-                        objs = function.GetFoundPrograms();
-                        foreach (ProgramObjs o in objs)
-                        {
-                            if (o.GetSerialNum() == text[0])
-                            {
-                                programDetails.ProgramObject = o;
-                                break;
+                                if (o.GetSerialNum() == item.Text)
+                                {
+                                    outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
+                                    programDetails.GetProgramDetails(outDirPath + o.GetSerialNum());
+                                    programDetails.ProgramObject = o;
+                                    // Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
+                                    break;
+                                }
                             }
                         }
+                        else if (flag == 3)
+                        {
+                            string[] text = item.Text.Split(',');
+                            objs = function.GetFoundPrograms();
+                            foreach (ProgramObjs o in objs)
+                            {
+                                if (o.GetSerialNum() == text[0])
+                                {
+                                    Console.WriteLine(text[0]);
+                                    programDetails.ProgramObject = o;
+                                    break;
+                                }
+                            }
+                        }
+
+                        pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+
+                        side = 0;
+
+
+                        Common.DisplayData(programDetails.sides[side], dataGridView1);
+                        Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+
                     }
-                    
-                    pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-
-                    side = 0;
-
- 
-                    Common.DisplayData(programDetails.sides[side], dataGridView1);
-                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
-                
+                    catch (NullReferenceException ex)
+                    {
+                        MessageBox.Show("Program contents not found.");
+                        Console.WriteLine(ex);
+                    }
                 }
-                catch (NullReferenceException ex)
-                {
-                    MessageBox.Show("Program contents not found.");
-                    Console.WriteLine(ex);
-                }
-
-
             }
         }
 
@@ -291,23 +295,39 @@ namespace EVO_Image_app
             if(Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
-                
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-                DirectoryInfo folders = new DirectoryInfo(outDirPath);
-                DirectoryInfo[] eachFolder = folders.GetDirectories();
-                Array.Sort(eachFolder, (a, b) => a.CreationTime.CompareTo(b.CreationTime));
-                foreach (DirectoryInfo directory in eachFolder)
+                List<ProgramObjs> objs = function.GetProgramObjs();
+                List<string> dateList = new List<string>();
+                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\";
+                DirectoryInfo dateFolders = new DirectoryInfo(outDirPath);
+                DirectoryInfo[] eachDate = dateFolders.GetDirectories();
+                foreach(DirectoryInfo each in eachDate)
                 {
-                    string date = directory.CreationTime.ToString("MMddyyy");
-                    ListViewItem dateDivider = new ListViewItem("======" + date + "======");
-                    if (!originalList.Contains(dateDivider))
+                    DirectoryInfo[] units = each.GetDirectories();
+                    //Array.Sort(units, (a, b) => a.CreationTime.CompareTo(b.CreationTime));
+                    foreach (DirectoryInfo unit in units)
                     {
-                        originalList.Add(dateDivider);
+                        foreach(ProgramObjs obj in objs)
+                        {
+                            if (unit.Name.Contains(obj.GetSerialNum()))
+                            {
+                                ListViewItem dateDivider = new ListViewItem("======" + obj.GetLastDate() + "======");
+                                ListViewItem item = new ListViewItem(unit.Name);
+
+                                if (!dateList.Contains(obj.GetLastDate()))
+                                {
+                                    dateList.Add(obj.GetLastDate());
+                                    originalList.Add(dateDivider);
+                                    originalList.Add(item);
+                                }
+                                else
+                                {
+                                    originalList.Add(item);
+                                }
+                            }
+                        }
+                        
                     }
-                    ListViewItem item = new ListViewItem(directory.Name);
-                    originalList.Add(item);
-                }
-                              
+                }                
             }
             else
             {
@@ -370,7 +390,7 @@ namespace EVO_Image_app
 
         }
 
-
+        //Model search button
         private void searchBtn_Click(object sender, EventArgs e)
         {
             if (calendar.Visible)
