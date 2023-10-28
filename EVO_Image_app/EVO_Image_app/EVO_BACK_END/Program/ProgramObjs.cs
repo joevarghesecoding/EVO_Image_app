@@ -7,6 +7,7 @@
         private string LastDate;
         private string Comptia;
         private string LastTime;
+        private string Result;
 
         public ProgramObjs()
         {
@@ -15,6 +16,7 @@
             this.LastDate = "";
             this.LastTime = "";
             this.Comptia = "";
+            this.Result = ""; 
         }
         public ProgramObjs(string ModelAndColor)
         {
@@ -23,14 +25,16 @@
             this.LastDate = "";
             this.LastTime = "";
             this.Comptia = "";
+            this.Result = "";
         }
 
-        public ProgramObjs(string ModelAndColor, string SerialNum, string LastDate, string Comptia, string LastTime)
+        public ProgramObjs(string ModelAndColor, string SerialNum, string LastDate, string Result, string Comptia, string LastTime)
         {
             this.ModelAndColor = ModelAndColor;
             this.SerialNum = SerialNum;
             this.LastDate = LastDate;
             this.LastTime = LastTime;
+            this.Result = Result;
             this.Comptia = Comptia;
         }
         public string GetModelAndColor()
@@ -61,6 +65,14 @@
         public void SetComptia(string comptia)
         {
             this.Comptia = comptia;
+        }
+        public string GetResult()
+        {
+            return this.Result;
+        }
+        public void SetResult(string Result)
+        {
+            this.Result = Result;
         }
         public void SetLastTime(string LastTime)
         {

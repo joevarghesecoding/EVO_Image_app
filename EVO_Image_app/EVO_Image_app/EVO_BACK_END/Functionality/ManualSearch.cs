@@ -42,7 +42,9 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 //Console.WriteLine(line);
                                 string[] splitted = line.Split(',');
                                 string[] dateSplit = splitted[0].Split(' ');
-                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], splitted[3], dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6], dateSplit[1] + " " + dateSplit[2]);
+                                string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], splitted[3], dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5],
+                                    comptia, dateSplit[1] + " " + dateSplit[2]);
                                 programObjs.Add(program);
                             }
                         }
@@ -130,7 +132,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
 
-        public override void GetModelImages(ProgramObjs program, string date)
+        public override void GetModelImages(ProgramObjs program, string date, int type)
         {
             throw new NotImplementedException();
         }

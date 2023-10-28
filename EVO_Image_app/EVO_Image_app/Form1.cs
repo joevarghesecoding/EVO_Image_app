@@ -138,7 +138,8 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
-                                    Console.WriteLine(text[0]);
+                                    outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
+                                    programDetails.GetProgramDetails(outDirPath + o.GetSerialNum() +","+ o.GetModelAndColor());
                                     programDetails.ProgramObject = o;
                                     break;
                                 }
@@ -355,6 +356,7 @@ namespace EVO_Image_app
             List<string> types = getModelSearchTypes();
             modelDropDown.Items.AddRange(models);
             typeDropDown.Items.AddRange(types.ToArray());
+
         }
 
         private string[] getModelSearchModels()
@@ -441,11 +443,15 @@ namespace EVO_Image_app
         //Model search button
         private void searchBtn_Click(object sender, EventArgs e)
         {
+            int type = 0;
+            originalList = new List<ListViewItem>();
             if (calendar.Visible)
                 calendar.Visible = false;
-            outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
+            //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
             if (typeIndex == null)
                 typeIndex = 0;
+            type = typeIndex ?? default(int);
+            Console.WriteLine(type);
             if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
@@ -453,17 +459,46 @@ namespace EVO_Image_app
                 
                 ProgramObjs program = new ProgramObjs(models[index]);
                 if (date != null)
-                    function.GetModelImages(program, date);
+                {
+                    function.GetModelImages(program, date, type); 
+                }   
                 else
-                    function.GetModelImages(program, today);
+                {
+                    function.GetModelImages(program, today, type);
+                }
+
                 List<ProgramObjs> modelSearch = function.GetFoundPrograms();
 
-                originalList = new List<ListViewItem>();
-                foreach (ProgramObjs objs in modelSearch)
+                List<string> dateList = new List<string>();
+                string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\";
+                DirectoryInfo dateFolders = new DirectoryInfo(outDirPath);
+                DirectoryInfo[] eachDate = dateFolders.GetDirectories();
+                foreach (DirectoryInfo each in eachDate)
                 {
-                    //Console.WriteLine(objs.GetSerialNum());
-                    ListViewItem temp = new ListViewItem(objs.GetSerialNum() + "," + objs.GetModelAndColor());
-                    originalList.Add(temp);
+                    DirectoryInfo[] units = each.GetDirectories();
+                    foreach (DirectoryInfo unit in units)
+                    {
+                        foreach (ProgramObjs obj in modelSearch)
+                        {
+                            if (unit.Name.Contains(obj.GetSerialNum()))
+                            {
+                                ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + obj.GetResult() + "==");
+                                ListViewItem item = new ListViewItem(unit.Name);
+
+                                if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+                                {
+                                    dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
+                                    originalList.Add(dateDivider);
+                                    originalList.Add(item);
+                                }
+                                else
+                                {
+                                    originalList.Add(item);
+                                }
+                            }
+                        }
+
+                    }
                 }
 
                 textBox1.Text = "Filter";

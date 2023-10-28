@@ -14,8 +14,9 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             programObjs = GetCurrentPrograms();
         }
 
+        private string[] types = { "ALL", "LINTLOGIC FLIPS", "PASS", "FAIL", "MSS-FAILS", "MAC", "MBG", "MEA", "DEA", "D9J", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
 
-        public override void GetModelImages(ProgramObjs program, string date)
+        public override void GetModelImages(ProgramObjs program, string date, int type)
         {
             //string dailyRunData = Common.currentDirectory + "\\Resources";
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
@@ -25,7 +26,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 FileInfo file = GetFatSatFile(date);
                 if(file != null)
                 {
-                    FindSerialCount(program, file);
+                    FindSerialCount(program, file, type);
                     HashSet<string> unique = new HashSet<string>();
                     List<ProgramObjs> duplicates = new List<ProgramObjs>();
                     List<ProgramObjs> finalList = new List<ProgramObjs>();
@@ -73,7 +74,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string inDirPath = dailyRunData + "\\" + date;
                         string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date;
 
-                        string fileName = f.GetSerialNum() + "," + f.GetModelAndColor();
+                        string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                         if (date != "" && date != "iPhone")
                         {
                             Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
@@ -95,7 +96,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             
         }
 
-        private void FindSerialCount(ProgramObjs program, FileInfo file)
+        private void FindSerialCount(ProgramObjs program, FileInfo file, int type)
         {
             if(file != null)
             {
@@ -104,23 +105,96 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 
                 try
                 {
-                    using(StreamReader reader = new StreamReader(fullPath))
+                  if(type != 1 && type != 4)
                     {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
+                        using (StreamReader reader = new StreamReader(fullPath))
                         {
-                            if (line.Contains(program.GetModelAndColor()))
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
                             {
-                                string[] splitted = line.Split(',');
-                                string serial = splitted[3];
-                                string[] dateSplit = splitted[0].Split(' ');
-                                string date = dateSplit[0].Replace("/", "-");
-                                string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
-                                ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, comptia, dateSplit[1] + " " + dateSplit[2]);
-                                foundPrograms.Add(temp);
+                                //ALL
+                                if (type == 0 && line.Contains(program.GetModelAndColor()))
+                                {
+                                    string[] splitted = line.Split(',');
+                                    string serial = splitted[3];
+                                    string[] dateSplit = splitted[0].Split(' ');
+                                    string date = dateSplit[0].Replace("/", "-");
+                                    string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                    ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                    foundPrograms.Add(temp);
+                                }
+                                //PASS, FAILS and INDIVIDUAL COMPTIAS
+                                else
+                                {
+                                    if(line.Contains(program.GetModelAndColor()) )
+                                    {
+                                        string[] splitted = line.Split(',');
+                                        string serial = splitted[3];
+                                        string[] dateSplit = splitted[0].Split(' ');
+                                        string date = dateSplit[0].Replace("/", "-");
+                                        string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                        ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                        if (type == 2)
+                                        {
+                                            if(splitted[4] == "PASS")
+                                            {
+                                                foundPrograms.Add(temp);
+                                            }
+                                        }
+                                        else if(type == 3)
+                                        {
+                                            if(splitted[4] == "FAIL")
+                                            {
+                                                foundPrograms.Add(temp);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if(splitted[5] == types[type])
+                                            {
+                                                foundPrograms.Add(temp);
+                                            }
+                                        }
+                                       
+                                        
+                                    }
+                                }
                             }
                         }
                     }
+                       
+                    
+                   
+                    else if(type == 1)
+                    {
+                        //lint logic code
+                    }
+                    else if(type == 4)
+                    {
+                        //mss fails only
+                        string[] mss_fails = { "DEA", "D9J", "MEA", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
+                        using (StreamReader reader = new StreamReader(fullPath))
+                        {
+                            string line;
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                foreach (string mss in mss_fails)
+                                {
+                                    if(line.Contains(mss) && line.Contains(program.GetModelAndColor()))
+                                    {
+                                        string[] splitted = line.Split(',');
+                                        string serial = splitted[3];
+                                        string[] dateSplit = splitted[0].Split(' ');
+                                        string date = dateSplit[0].Replace("/", "-");
+                                        string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                        ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                        foundPrograms.Add(temp);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                   
                 }
                 catch (Exception ex)
                 {
