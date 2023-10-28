@@ -25,6 +25,7 @@ namespace EVO_Image_app
         Functions function;
         string date;
         int? modelIndex;
+        int? typeIndex;
         int flag = 0;
         public EVO_Image_App()
         {
@@ -39,6 +40,7 @@ namespace EVO_Image_app
             previousBtn.BackgroundImageLayout = ImageLayout.Center;
             findBtn.Enabled = false;
             modelDropDown.Enabled = false;
+            typeDropDown.Enabled = false;
             calendarBtn.Enabled = false;
             searchBtn.Enabled = false;
             originalList = new List<ListViewItem>();
@@ -346,10 +348,13 @@ namespace EVO_Image_app
             Common.DeleteOnStart(currentDirectory, flag);
             function = new ModelSearch();
             modelDropDown.Enabled = true;
+            typeDropDown.Enabled = true;
             calendarBtn.Enabled = true;
             searchBtn.Enabled = true;
             string[] models = getModelSearchModels();
+            List<string> types = getModelSearchTypes();
             modelDropDown.Items.AddRange(models);
+            typeDropDown.Items.AddRange(types.ToArray());
         }
 
         private string[] getModelSearchModels()
@@ -366,17 +371,60 @@ namespace EVO_Image_app
             return models;
         }
 
+        private List<string> getModelSearchTypes()
+        {
+            string fullPathAsIs = Common.currentDirectory + "//Resources//result_types_as_is.txt";
+            string fullPathMSS = Common.currentDirectory + "//Resources//result_types_mss.txt";
+
+            List<string> types = new List<string>();
+            try
+            {
+                using (StreamReader reader = new StreamReader(fullPathAsIs))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        types.Add(line);
+                    }
+                }
+                using (StreamReader reader = new StreamReader(fullPathMSS))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        types.Add(line);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("***** ERROR At FindProgramData ******\n" + ex.Message);
+            }
+            return types;
+        }
+
         private void modelDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
              modelIndex = modelDropDown.SelectedIndex;
         }
 
+        private void typeDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            typeIndex = typeDropDown.SelectedIndex;
+        }
+
         private void calendarBtn_Click(object sender, EventArgs e)
         {
+            calendar.BringToFront();
             if (calendar.Visible)
                 calendar.Visible = false;
             else
+            {
+                calendar.BringToFront();
                 calendar.Visible = true;
+            }
+                
 
         }
 
@@ -396,7 +444,9 @@ namespace EVO_Image_app
             if (calendar.Visible)
                 calendar.Visible = false;
             outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
-            if (modelIndex.HasValue)
+            if (typeIndex == null)
+                typeIndex = 0;
+            if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
                 string[] models = getModelSearchModels();
@@ -469,5 +519,7 @@ namespace EVO_Image_app
                 }
             }
         }
+
+        
     }
 }
