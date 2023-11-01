@@ -16,6 +16,56 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         private string[] types = { "ALL", "LINTLOGIC FLIPS", "PASS", "FAIL", "MSS-FAILS", "MAC", "MBG", "MEA", "DEA", "D9J", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
 
+        public string getType(int index)
+        {
+            return types[index];
+        }
+
+        public override void GetAllModelImages(string date)
+        {
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            try
+            {
+                FileInfo file = GetFatSatFile(date);
+                if (file != null)
+                {
+                    using (StreamReader reader = new StreamReader(file.FullName))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            string[] splitted = line.Split(',');
+                            string serial = splitted[3];
+                            string[] dateSplit = splitted[0].Split(' ');
+                            string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                            ProgramObjs temp = new ProgramObjs(splitted[1]+","+splitted[2], serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                            foundPrograms.Add(temp);
+                        }
+                    }
+                }
+
+                foreach (ProgramObjs f in foundPrograms)
+                {
+                    string serial = f.GetSerialNum();
+                    string lastDate = f.GetLastDate();
+                    string inDirPath = dailyRunData + "\\" + date;
+                    string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetResult();
+
+                    string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
+                    if (date != "" && date != "iPhone")
+                    {
+                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                    }
+
+                }
+            }
+            catch (NullReferenceException ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Incorrect Date");
+                Console.WriteLine("******* ERROR AT GetAllModelImages ******\n" + ex.Message);
+            }
+        }
+
         public override void GetModelImages(ProgramObjs program, string date, int type)
         {
             //string dailyRunData = Common.currentDirectory + "\\Resources";
@@ -72,7 +122,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string serial = f.GetSerialNum();
                         string lastDate = f.GetLastDate();
                         string inDirPath = dailyRunData + "\\" + date;
-                        string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date;
+                        string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult();
 
                         string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                         if (date != "" && date != "iPhone")
@@ -101,100 +151,30 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             if(file != null)
             {
                 string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + file.Name;
-                //string fullPath = Environment.CurrentDirectory + "\\Resources\\FAT-SAT\\" + file.Name;
-                
+
                 try
                 {
-                  if(type != 1 && type != 4)
+                    using (StreamReader reader = new StreamReader(fullPath))
                     {
-                        using (StreamReader reader = new StreamReader(fullPath))
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            string line;
-                            while ((line = reader.ReadLine()) != null)
+                            if (line.Contains(program.GetModelAndColor()))
                             {
-                                //ALL
-                                if (type == 0 && line.Contains(program.GetModelAndColor()))
-                                {
-                                    string[] splitted = line.Split(',');
-                                    string serial = splitted[3];
-                                    string[] dateSplit = splitted[0].Split(' ');
-                                    string date = dateSplit[0].Replace("/", "-");
-                                    string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
-                                    ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
-                                    foundPrograms.Add(temp);
-                                }
-                                //PASS, FAILS and INDIVIDUAL COMPTIAS
-                                else
-                                {
-                                    if(line.Contains(program.GetModelAndColor()) )
-                                    {
-                                        string[] splitted = line.Split(',');
-                                        string serial = splitted[3];
-                                        string[] dateSplit = splitted[0].Split(' ');
-                                        string date = dateSplit[0].Replace("/", "-");
-                                        string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
-                                        ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
-                                        if (type == 2)
-                                        {
-                                            if(splitted[4] == "PASS")
-                                            {
-                                                foundPrograms.Add(temp);
-                                            }
-                                        }
-                                        else if(type == 3)
-                                        {
-                                            if(splitted[4] == "FAIL")
-                                            {
-                                                foundPrograms.Add(temp);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if(splitted[5] == types[type])
-                                            {
-                                                foundPrograms.Add(temp);
-                                            }
-                                        }
-                                       
-                                        
-                                    }
-                                }
+                                string[] splitted = line.Split(',');
+                                string serial = splitted[3];
+                                string[] dateSplit = splitted[0].Split(' ');
+                                string date = dateSplit[0].Replace("/", "-");
+                                string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                foundPrograms.Add(temp);
                             }
                         }
                     }
-                       
-                    
-                   
-                    else if(type == 1)
+                    if (type == 1)
                     {
                         //lint logic code
                     }
-                    else if(type == 4)
-                    {
-                        //mss fails only
-                        string[] mss_fails = { "DEA", "D9J", "MEA", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
-                        using (StreamReader reader = new StreamReader(fullPath))
-                        {
-                            string line;
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                foreach (string mss in mss_fails)
-                                {
-                                    if(line.Contains(mss) && line.Contains(program.GetModelAndColor()))
-                                    {
-                                        string[] splitted = line.Split(',');
-                                        string serial = splitted[3];
-                                        string[] dateSplit = splitted[0].Split(' ');
-                                        string date = dateSplit[0].Replace("/", "-");
-                                        string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
-                                        ProgramObjs temp = new ProgramObjs(program.GetModelAndColor(), serial, date, splitted[4] + "," + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
-                                        foundPrograms.Add(temp);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                   
                 }
                 catch (Exception ex)
                 {

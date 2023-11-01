@@ -27,6 +27,7 @@ namespace EVO_Image_app
         int? modelIndex;
         int? typeIndex;
         int flag = 0;
+        List<List<ListViewItem>> allLists;
         public EVO_Image_App()
         {
             InitializeComponent();
@@ -43,7 +44,8 @@ namespace EVO_Image_app
             typeDropDown.Enabled = false;
             calendarBtn.Enabled = false;
             searchBtn.Enabled = false;
-            originalList = new List<ListViewItem>();
+            //originalList = new List<ListViewItem>();
+            //allLists = new List<List<ListViewItem>>();
             textBox1.Enabled = false;
             calendar.Visible = false;
             calendar.MaxDate = DateTime.Today;
@@ -67,6 +69,7 @@ namespace EVO_Image_app
             function = new AllLatestModels();
             function.GetLatestImages();
             originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
             textBox1.Enabled = true;
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
@@ -277,6 +280,7 @@ namespace EVO_Image_app
             textBox1.Enabled = true;
             findBtn.Enabled = true;
             originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
             listView1.Columns.Add("Current Programs", -2);
             listView1.Items.Clear();
         }
@@ -347,27 +351,45 @@ namespace EVO_Image_app
             listView1.Columns.Add("Current Programs", -2);
             listView1.Items.Clear();
             Common.DeleteOnStart(currentDirectory, flag);
+            originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
             function = new ModelSearch();
             modelDropDown.Enabled = true;
             typeDropDown.Enabled = true;
             calendarBtn.Enabled = true;
             searchBtn.Enabled = true;
-            string[] models = getModelSearchModels();
+            List<string> models = getModelSearchModels();
             List<string> types = getModelSearchTypes();
-            modelDropDown.Items.AddRange(models);
+            modelDropDown.Items.AddRange(models.ToArray());
             typeDropDown.Items.AddRange(types.ToArray());
 
         }
 
-        private string[] getModelSearchModels()
+        private List<string> getModelSearchModels()
         {
             List<ProgramObjs> modelSearch = function.GetProgramObjs();
-            string[] models = new string[modelSearch.Count];
-            int i = 0;
+            string fullPathModels = Common.currentDirectory + "//Resources//models_type.txt";
+            List<string> models = new List<string>();
+            try
+            {
+                using (StreamReader reader = new StreamReader(fullPathModels))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        models.Add(line);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("***** ERROR At getModelSearchModels() ******\n" + ex.Message);
+            }
+            
             foreach (ProgramObjs obj in modelSearch)
             {
-                models[i] = obj.GetModelAndColor();
-                i++;
+                models.Add(obj.GetModelAndColor());
+                
             }
 
             return models;
@@ -401,7 +423,7 @@ namespace EVO_Image_app
             }
             catch (Exception ex)
             {
-                Console.WriteLine("***** ERROR At FindProgramData ******\n" + ex.Message);
+                Console.WriteLine("***** ERROR At getModelSearchTypes() ******\n" + ex.Message);
             }
             return types;
         }
@@ -443,11 +465,12 @@ namespace EVO_Image_app
         //Model search button
         private void searchBtn_Click(object sender, EventArgs e)
         {
+            ModelSearch ms = new ModelSearch();
             int type = 0;
             originalList = new List<ListViewItem>();
             if (calendar.Visible)
                 calendar.Visible = false;
-            //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
+
             if (typeIndex == null)
                 typeIndex = 0;
             type = typeIndex ?? default(int);
@@ -455,59 +478,174 @@ namespace EVO_Image_app
             if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
-                string[] models = getModelSearchModels();
+                string[] models = getModelSearchModels().ToArray();
                 
-                ProgramObjs program = new ProgramObjs(models[index]);
-                if (date != null)
+                if(models[index] != "ALL")
                 {
-                    function.GetModelImages(program, date, type); 
-                }   
+                    ProgramObjs program = new ProgramObjs(models[index]);
+                    if (date != null)
+                    {
+                        function.GetModelImages(program, date, type);
+                    }
+                    else
+                    {
+                        function.GetModelImages(program, today, type);
+                    }
+
+                }
                 else
                 {
-                    function.GetModelImages(program, today, type);
-                }
-
-                List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-
-                List<string> dateList = new List<string>();
-                string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\";
-                DirectoryInfo dateFolders = new DirectoryInfo(outDirPath);
-                DirectoryInfo[] eachDate = dateFolders.GetDirectories();
-                foreach (DirectoryInfo each in eachDate)
-                {
-                    DirectoryInfo[] units = each.GetDirectories();
-                    foreach (DirectoryInfo unit in units)
+                    if (date != null)
                     {
-                        foreach (ProgramObjs obj in modelSearch)
-                        {
-                            if (unit.Name.Contains(obj.GetSerialNum()))
-                            {
-                                ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + obj.GetResult() + "==");
-                                ListViewItem item = new ListViewItem(unit.Name);
-
-                                if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
-                                {
-                                    dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
-                                    originalList.Add(dateDivider);
-                                    originalList.Add(item);
-                                }
-                                else
-                                {
-                                    originalList.Add(item);
-                                }
-                            }
-                        }
-
+                        function.GetAllModelImages(date);
+                    }
+                    else
+                    {
+                        function.GetAllModelImages(today);
                     }
                 }
+               
 
-                textBox1.Text = "Filter";
-                textBox1.Enabled = true;
-                textBox1.ForeColor = System.Drawing.Color.DimGray;
-                listView1.Items.Clear();
-                listView1.Items.AddRange(originalList.ToArray());
+                List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+                
+                List<string> dateList = new List<string>();
+                string typeDir = "";
+                string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\";
+               
+                DirectoryInfo dateFolders = new DirectoryInfo(outDirPath);
+                DirectoryInfo[] eachDate = dateFolders.GetDirectories();
 
-  
+                if (models[index] != "ALL")
+                {
+                    foreach (DirectoryInfo each in eachDate)
+                    {
+                        DirectoryInfo[] eachModels = each.GetDirectories();
+
+                        foreach (DirectoryInfo eachModel in eachModels)
+                        {
+                            DirectoryInfo[] eachResults = eachModel.GetDirectories();
+                            if (type == 0)
+                            {
+                                foreach (DirectoryInfo eachResult in eachResults)
+                                {
+                                    DirectoryInfo[] eachSerials = eachResult.GetDirectories();
+                                    foreach (DirectoryInfo eachSerial in eachSerials)
+                                    {
+                                        foreach (ProgramObjs obj in modelSearch)
+                                        {
+                                            if (eachSerial.Name.Contains(obj.GetSerialNum()))
+                                            {
+                                                ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + ms.getType(type) + "==");
+                                                dateDivider.BackColor = Color.Black;
+                                                dateDivider.ForeColor = Color.Aqua;
+                                                ListViewItem item = new ListViewItem(eachSerial.Name);
+
+                                                if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+                                                {
+                                                    dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
+                                                    originalList.Add(dateDivider);
+                                                    originalList.Add(item);
+                                                }
+                                                else
+                                                {
+                                                    originalList.Add(item);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                foreach (DirectoryInfo eachResult in eachResults)
+                                {
+                                    string t = ms.getType(type);
+                                    if (eachResult.Name.Contains(t))
+                                    {
+                                        foreach (ProgramObjs obj in modelSearch)
+                                        {
+                                            DirectoryInfo[] eachSerials = eachResult.GetDirectories();
+                                            foreach (DirectoryInfo eachSerial in eachSerials)
+                                            {
+                                                if (eachSerial.Name.Contains(obj.GetSerialNum()))
+                                                {
+                                                    ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + ms.getType(type) + "==");
+                                                    dateDivider.BackColor = Color.Black;
+                                                    dateDivider.ForeColor = Color.Aqua;
+                                                    ListViewItem item = new ListViewItem(eachSerial.Name);
+
+                                                    if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+                                                    {
+                                                        dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
+                                                        originalList.Add(dateDivider);
+                                                        originalList.Add(item);
+                                                    }
+                                                    else
+                                                    {
+                                                        originalList.Add(item);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        if (type != 3)
+                                            break;
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (DirectoryInfo each in eachDate)
+                    {
+                        DirectoryInfo[] eachResults = each.GetDirectories();
+                        foreach (DirectoryInfo eachResult in eachResults)
+                        {
+                            DirectoryInfo[] eachSerials = eachResult.GetDirectories();
+                            foreach (DirectoryInfo eachSerial in eachSerials)
+                            {
+                                foreach (ProgramObjs obj in modelSearch)
+                                {
+                                    if (eachSerial.Name.Contains(obj.GetSerialNum()))
+                                    {
+                                        ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + ms.getType(type) + "==");
+                                        dateDivider.BackColor = Color.Black;
+                                        dateDivider.ForeColor = Color.Aqua;
+                                        ListViewItem item = new ListViewItem(eachSerial.Name);
+
+                                        if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+                                        {
+                                            dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
+                                            originalList.Add(dateDivider);
+                                            originalList.Add(item);
+                                        }
+                                        else
+                                        {
+                                            originalList.Add(item);
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    allLists.Add(originalList);
+                    //originalList.Clear();
+                    textBox1.Text = "Filter";
+                    textBox1.Enabled = true;
+                    textBox1.ForeColor = System.Drawing.Color.DimGray;
+                    listView1.Items.Clear();
+                    foreach (List<ListViewItem> list in allLists)
+                    {
+                        listView1.Items.AddRange(list.ToArray());
+                    }
+                    //listView1.Items.AddRange(allLists.ToArray());
+
+                }
             }
            
         }

@@ -315,6 +315,7 @@ namespace EVO_Image_app
             // 
             // Zip
             // 
+            this.Zip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.Zip.Location = new System.Drawing.Point(1260, 0);
             this.Zip.Name = "Zip";
             this.Zip.Size = new System.Drawing.Size(40, 23);
@@ -426,7 +427,6 @@ namespace EVO_Image_app
         #endregion
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -454,6 +454,7 @@ namespace EVO_Image_app
         private System.Windows.Forms.Button passwordButton;
         private System.Windows.Forms.ComboBox typeDropDown;
         private System.Windows.Forms.Button Zip;
+        private System.Windows.Forms.ListView listView1;
     }
 }
 

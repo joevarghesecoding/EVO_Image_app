@@ -99,5 +99,10 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 }
             }
         }
+
+        public override void GetAllModelImages(string date)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
