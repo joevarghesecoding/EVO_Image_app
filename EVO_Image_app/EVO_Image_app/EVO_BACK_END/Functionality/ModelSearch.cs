@@ -9,6 +9,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
     class ModelSearch : Functions
     {
+        
+
         public ModelSearch() : base() 
         {
             programObjs = GetCurrentPrograms();
@@ -21,8 +23,9 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             return types[index];
         }
 
-        public override void GetAllModelImages(string date)
+        public override void GetAllModelImages(string date, int type)
         {
+            string currentType = types[type];
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             try
             {
@@ -34,12 +37,16 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            string[] splitted = line.Split(',');
-                            string serial = splitted[3];
-                            string[] dateSplit = splitted[0].Split(' ');
-                            string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
-                            ProgramObjs temp = new ProgramObjs(splitted[1]+","+splitted[2], serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
-                            foundPrograms.Add(temp);
+                            if (line.Contains(currentType))
+                            {
+                                string[] splitted = line.Split(',');
+                                string serial = splitted[3];
+                                string[] dateSplit = splitted[0].Split(' ');
+                                string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                                ProgramObjs temp = new ProgramObjs(splitted[1] + "," + splitted[2], serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                foundPrograms.Add(temp);
+                            }
+                            
                         }
                     }
                 }
@@ -49,7 +56,9 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                     string serial = f.GetSerialNum();
                     string lastDate = f.GetLastDate();
                     string inDirPath = dailyRunData + "\\" + date;
-                    string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetResult();
+                    string outDirPath = Path.GetFullPath( Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult() );
+                    
+                    f.SetOutputDirectoryPath(outDirPath);
 
                     string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                     if (date != "" && date != "iPhone")
@@ -65,6 +74,81 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 Console.WriteLine("******* ERROR AT GetAllModelImages ******\n" + ex.Message);
             }
         }
+
+        public override void GetLintLogicImages(string date)
+        {
+            LintLogicCandidates = new List<ProgramObjs>();
+            string logsPath = "C:\\EVO-3\\Save Data\\Logs\\Device\\" + date;
+            DirectoryInfo dir = new DirectoryInfo(logsPath);
+            FileInfo[] files = dir.GetFiles();
+
+            foreach (FileInfo file in files)
+            {
+                using (StreamReader reader = new StreamReader(file.FullName))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string serial = "", time = "";
+                        if(line.Contains("SCANNED ID"))
+                        {
+                            serial = line.Split(' ')[2];
+                        }
+                        if(line.Contains("START DATE/TIME:"))
+                        {
+                            string[] splitted = line.Split(' ');
+                            time = splitted[3] + " " + splitted[4];
+                        }
+                        if (line.Contains("LintCheck_Grade-PASS"))
+                        {
+                            ProgramObjs temp = new ProgramObjs(serial, date, time, "LintCheck_Grade-PASS");
+                            LintLogicCandidates.Add(temp);
+                            break;
+                        }
+                        else if (line.Contains("LintCheck_Grade-MAC"))
+                        {
+                            ProgramObjs temp = new ProgramObjs(serial, date, time, "LintCheck_Grade-MAC");
+                            LintLogicCandidates.Add(temp);
+                            break;
+                        }
+                        else if (line.Contains("As-is|LintCheck_Grade"))
+                        {
+                            ProgramObjs temp = new ProgramObjs(serial, date, time, "As-is|LintCheck_Grade");
+                            LintLogicCandidates.Add(temp);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            CollectLintLogicCandidatesInfo(date);
+        }
+
+        private void CollectLintLogicCandidatesInfo(string date)
+        {
+            FileInfo fatSat = GetFatSatFile(date);
+            using(StreamReader reader = new StreamReader(fatSat.FullName))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    foreach (ProgramObjs obj in LintLogicCandidates)
+                    {
+                        if (line.Contains(obj.GetSerialNum()))
+                        {
+                            string[] splitted = line.Split(',');
+                            string serial = splitted[3];
+                            string[] dateSplit = splitted[0].Split(' ');
+                            string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                            obj.SetResult(splitted[4] + " " + splitted[5]);
+                            obj.SetComptia(comptia);
+                        }
+                    }
+                }      
+            } 
+        }
+
+       
 
         public override void GetModelImages(ProgramObjs program, string date, int type)
         {
@@ -122,7 +206,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string serial = f.GetSerialNum();
                         string lastDate = f.GetLastDate();
                         string inDirPath = dailyRunData + "\\" + date;
-                        string outDirPath = Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult();
+                        string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult());
+                        f.SetOutputDirectoryPath(outDirPath);
 
                         string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                         if (date != "" && date != "iPhone")

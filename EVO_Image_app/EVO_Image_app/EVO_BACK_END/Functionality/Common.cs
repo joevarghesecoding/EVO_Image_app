@@ -85,11 +85,55 @@ namespace EVO_Image_app.EVO_BACK_END
                 }
 
                 FileInfo[] files = sourceInfo.GetFiles();
-
-                foreach(FileInfo file in files)
+                string newName = "";
+                foreach (FileInfo file in files)
                 {
-                    string desFilePath = Path.Combine(destinationInfo.FullName, file.Name);
-                    file.CopyTo(desFilePath, true);
+                   
+                    Console.WriteLine(file.Name);
+                    
+                    if (file.Name.Contains("DSP"))
+                    {
+                        newName = "DSP.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("HSG"))
+                    {
+                        newName = "HSG.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("LFT"))
+                    {
+                        newName = "LFT.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("RHT"))
+                    {
+                        newName = "RHT.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("TOP"))
+                    {
+                        newName = "TOP.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("BTM"))
+                    {
+                        newName = "BTM.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else
+                    {
+                        string desFilePath = Path.Combine(destinationInfo.FullName, file.Name);
+                        file.CopyTo(desFilePath, true);
+                    }
+
+                    
                 }
 
             } catch (Exception ex)

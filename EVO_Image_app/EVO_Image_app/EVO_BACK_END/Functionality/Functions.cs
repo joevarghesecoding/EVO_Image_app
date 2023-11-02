@@ -14,6 +14,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         protected List<ProgramObjs> foundPrograms;
 
+        protected List<ProgramObjs> LintLogicCandidates;
+
         public Functions()
         {
             foundPrograms = new List<ProgramObjs>();
@@ -32,10 +34,16 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             foundPrograms.Add(programObj);
         }
 
+        public List<ProgramObjs> getLintLogicCandidates()
+        {
+            return LintLogicCandidates;
+        }
+
         public abstract void GetLatestImages();
         public abstract void GetImagesForSerial(string serial);
         public abstract void GetModelImages(ProgramObjs program, string date, int type);
-        public abstract void GetAllModelImages(string date);
+        public abstract void GetAllModelImages(string date, int type);
+        public abstract void GetLintLogicImages(string date);
 
         /// <summary>
         /// Finds all file names of FAT-SAT files

@@ -8,6 +8,8 @@
         private string Comptia;
         private string LastTime;
         private string Result;
+        private string OutputDirectoryPath;
+        private string LintLogicResult;
 
         public ProgramObjs()
         {
@@ -16,7 +18,9 @@
             this.LastDate = "";
             this.LastTime = "";
             this.Comptia = "";
-            this.Result = ""; 
+            this.Result = "";
+            this.OutputDirectoryPath = "";
+            this.LintLogicResult = "";
         }
         public ProgramObjs(string ModelAndColor)
         {
@@ -26,6 +30,8 @@
             this.LastTime = "";
             this.Comptia = "";
             this.Result = "";
+            this.OutputDirectoryPath = "";
+            this.LintLogicResult = "";
         }
 
         public ProgramObjs(string ModelAndColor, string SerialNum, string LastDate, string Result, string Comptia, string LastTime)
@@ -36,6 +42,20 @@
             this.LastTime = LastTime;
             this.Result = Result;
             this.Comptia = Comptia;
+            this.OutputDirectoryPath = "";
+            this.LintLogicResult = "";
+        }
+
+        public ProgramObjs(string SerialNum, string LastDate, string LastTime, string LintLogicResult)
+        {
+            this.ModelAndColor = "";
+            this.SerialNum = SerialNum;
+            this.LastDate = LastDate;
+            this.LastTime = LastTime;
+            this.Result = "";
+            this.Comptia = "";
+            this.OutputDirectoryPath = "";
+            this.LintLogicResult = LintLogicResult;
         }
         public string GetModelAndColor()
         {
@@ -81,6 +101,22 @@
         public string GetLastTime()
         {
             return this.LastTime;
+        }
+        public void SetOutputDirectoryPath(string outputDirectoryPath)
+        {
+            this.OutputDirectoryPath = outputDirectoryPath;
+        }
+        public string GetOutputDirectoryPath()
+        {
+            return this.OutputDirectoryPath;
+        }
+        public void SetLintLogicResult(string LintLogicResult)
+        {
+            this.LintLogicResult = LintLogicResult;
+        }
+        public string GetLintLogicResult()
+        {
+            return this.LintLogicResult;
         }
     }
 }

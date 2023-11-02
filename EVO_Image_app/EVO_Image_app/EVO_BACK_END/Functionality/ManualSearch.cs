@@ -137,7 +137,12 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
 
-        public override void GetAllModelImages(string date)
+        public override void GetAllModelImages(string date, int type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetLintLogicImages(string date)
         {
             throw new NotImplementedException();
         }
