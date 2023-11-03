@@ -59,13 +59,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
             List<FileInfo> result = files.ToList<FileInfo>();
 
-            string auditPath = "C:\\EVO-3\\Save Data\\Logs\\Audit_FAT-SAT\\";
-            DirectoryInfo auditDir = new DirectoryInfo(auditPath);
-            List<FileInfo> auditFiles = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToList();
-            foreach (FileInfo fileInfo in auditFiles)
-            {
-                result.Add(fileInfo);
-            }
+            //string auditPath = "C:\\EVO-3\\Save Data\\Logs\\Audit_FAT-SAT\\";
+            //DirectoryInfo auditDir = new DirectoryInfo(auditPath);
+            //List<FileInfo> auditFiles = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToList();
+            //foreach (FileInfo fileInfo in auditFiles)
+            //{
+            //    result.Add(fileInfo);
+            //}
             return result;
         }
 

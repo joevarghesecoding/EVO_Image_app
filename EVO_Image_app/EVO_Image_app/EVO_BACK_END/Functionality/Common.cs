@@ -72,7 +72,7 @@ namespace EVO_Image_app.EVO_BACK_END
                
                 if(!sourceInfo.Exists)
                 {
-                    //Console.WriteLine(sourceInfo.FullName);
+                    Console.WriteLine(sourceInfo.FullName);
                     Console.WriteLine("***** Source Info missing COPY HELPER *****\n");
                     return;
                 }
@@ -89,7 +89,7 @@ namespace EVO_Image_app.EVO_BACK_END
                 foreach (FileInfo file in files)
                 {
                    
-                    Console.WriteLine(file.Name);
+                    //Console.WriteLine(file.Name);
                     
                     if (file.Name.Contains("DSP"))
                     {
@@ -244,27 +244,6 @@ namespace EVO_Image_app.EVO_BACK_END
             return null;
         }
 
-
-        //public static void DisplayComptiaAndRegions(ProgramObjs current, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
-        //{
-           
-        //    string[] splitted = current.GetComptia().Split(',');
-        //    foreach(string split in splitted)
-        //    {
-        //        Console.WriteLine(split);
-        //    }
-        //    if (splitted[0] == "PASS")
-        //    {
-        //        comptia.Text = "PASS";
-        //        regions.Text = "N/A";
-        //    }
-        //    else if (splitted[0] == "FAIL")
-        //    {
-        //        comptia.Text = splitted[0] + ":" + splitted[1];
-        //        regions.Text = splitted[2];
-        //    }
-              
-        //}
     }
 
 }

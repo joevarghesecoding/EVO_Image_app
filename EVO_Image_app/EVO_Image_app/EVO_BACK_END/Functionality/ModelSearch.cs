@@ -26,7 +26,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         public override void GetAllModelImages(string date, int type)
         {
             string currentType = types[type];
-            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             try
             {
                 FileInfo file = GetFatSatFile(date);
@@ -51,22 +50,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                     }
                 }
 
-                foreach (ProgramObjs f in foundPrograms)
-                {
-                    string serial = f.GetSerialNum();
-                    string lastDate = f.GetLastDate();
-                    string inDirPath = dailyRunData + "\\" + date;
-                    string outDirPath = Path.GetFullPath( Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult() );
-                    
-                    f.SetOutputDirectoryPath(outDirPath);
-
-                    string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
-                    if (date != "" && date != "iPhone")
-                    {
-                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
-                    }
-
-                }
+                SendToDirectory(foundPrograms, date, false);
             }
             catch (NullReferenceException ex)
             {
@@ -79,9 +63,10 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             LintLogicCandidates = new List<ProgramObjs>();
             string logsPath = "C:\\EVO-3\\Save Data\\Logs\\Device\\" + date;
+            Console.WriteLine("LOGSPATH " + logsPath);
             DirectoryInfo dir = new DirectoryInfo(logsPath);
             FileInfo[] files = dir.GetFiles();
-
+            string serial = "", time = "";
             foreach (FileInfo file in files)
             {
                 using (StreamReader reader = new StreamReader(file.FullName))
@@ -89,10 +74,11 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                     string line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        string serial = "", time = "";
                         if(line.Contains("SCANNED ID"))
                         {
+                            //Console.WriteLine(line);
                             serial = line.Split(' ')[2];
+                            //Console.WriteLine("SERIAL : " + serial);
                         }
                         if(line.Contains("START DATE/TIME:"))
                         {
@@ -111,17 +97,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                             LintLogicCandidates.Add(temp);
                             break;
                         }
-                        else if (line.Contains("As-is|LintCheck_Grade"))
-                        {
-                            ProgramObjs temp = new ProgramObjs(serial, date, time, "As-is|LintCheck_Grade");
-                            LintLogicCandidates.Add(temp);
-                            break;
-                        }
                     }
                 }
             }
 
             CollectLintLogicCandidatesInfo(date);
+            SendToDirectory(LintLogicCandidates, date, true);
+
         }
 
         private void CollectLintLogicCandidatesInfo(string date)
@@ -140,6 +122,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                             string serial = splitted[3];
                             string[] dateSplit = splitted[0].Split(' ');
                             string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                            obj.SetModelAndColor(splitted[1] + "," + splitted[2]);
                             obj.SetResult(splitted[4] + " " + splitted[5]);
                             obj.SetComptia(comptia);
                         }
@@ -148,13 +131,32 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             } 
         }
 
-       
+       private void SendToDirectory(List<ProgramObjs> programObjs, string date, bool lintLogicFlag)
+        {
+            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
+            foreach (ProgramObjs f in programObjs)
+            {
+                string serial = f.GetSerialNum();
+                string lastDate = f.GetLastDate();
+                string inDirPath = dailyRunData + "\\" + date;
+                string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult());
+                if (lintLogicFlag)
+                {
+                    outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetLintLogicResult()) + "\\" + f.GetModelAndColor();
+                }
+                f.SetOutputDirectoryPath(outDirPath);
+
+                string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
+                if (date != "" && date != "iPhone")
+                {
+                    Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                }
+
+            }
+        }
 
         public override void GetModelImages(ProgramObjs program, string date, int type)
         {
-            //string dailyRunData = Common.currentDirectory + "\\Resources";
-            string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            //string today = Common.GetDate();
             try
             {
                 FileInfo file = GetFatSatFile(date);
@@ -201,21 +203,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         finalList.Add(duplicate);
                     }
 
-                    foreach(ProgramObjs f in finalList)
-                    {
-                        string serial = f.GetSerialNum();
-                        string lastDate = f.GetLastDate();
-                        string inDirPath = dailyRunData + "\\" + date;
-                        string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult());
-                        f.SetOutputDirectoryPath(outDirPath);
-
-                        string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
-                        if (date != "" && date != "iPhone")
-                        {
-                            Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
-                        }
-
-                    }
+                    SendToDirectory(foundPrograms, date, false);
 
 
                 }

@@ -26,6 +26,7 @@ namespace EVO_Image_app.EVO_BACK_END
         /// 
         public void GetProgramDetails(string path)
         {
+            Console.WriteLine("PATH: " + path);
            try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(path);

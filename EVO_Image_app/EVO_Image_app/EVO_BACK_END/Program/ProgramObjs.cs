@@ -61,6 +61,10 @@
         {
             return this.ModelAndColor;
         }
+        public void SetModelAndColor(string modelAndColor)
+        {
+            this.ModelAndColor = modelAndColor;
+        }
 
         public void SetSerialNum(string SerialNum)
         {

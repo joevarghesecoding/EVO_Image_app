@@ -28,6 +28,7 @@ namespace EVO_Image_app
         int? typeIndex;
         int flag = 0;
         List<List<ListViewItem>> allLists;
+        bool lintLogicFlag;
         public EVO_Image_App()
         {
             InitializeComponent();
@@ -105,7 +106,7 @@ namespace EVO_Image_app
                     try
                     {
                         programDetails = new ProgramDetails();
-                        programDetails.GetProgramDetails(outDirPath + item.Text);
+                        
 
                         if (flag == 1)
                         {
@@ -113,6 +114,7 @@ namespace EVO_Image_app
                             {
                                 if (o.GetModelAndColor() == item.Text)
                                 {
+                                    programDetails.GetProgramDetails(outDirPath + item.Text);
                                     programDetails.ProgramObject = o;
                                     break;
                                 }
@@ -126,7 +128,7 @@ namespace EVO_Image_app
                                 if (o.GetSerialNum() == item.Text)
                                 {
                                     //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
-                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum());
+                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + " " + o.GetLastTime().Replace(':', ' '));
                                     programDetails.ProgramObject = o;
                                     //Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
                                     break;
@@ -141,7 +143,11 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
+                                    
                                     //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
+                                    //if (!lintLogicFlag)
+                                    //programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    //else
                                     programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     programDetails.ProgramObject = o;
                                     break;
@@ -313,39 +319,28 @@ namespace EVO_Image_app
                 function.GetImagesForSerial(serial);
                 List<ProgramObjs> objs = function.GetProgramObjs();
                 List<string> dateList = new List<string>();
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\";
-                DirectoryInfo dateFolders = new DirectoryInfo(outDirPath);
-                DirectoryInfo[] eachDate = dateFolders.GetDirectories();
-                foreach(DirectoryInfo each in eachDate)
+               
+                foreach(ProgramObjs obj in objs)
                 {
-                    DirectoryInfo[] units = each.GetDirectories();
-                    //Array.Sort(units, (a, b) => a.CreationTime.CompareTo(b.CreationTime));
-                    foreach (DirectoryInfo unit in units)
-                    {
-                        foreach(ProgramObjs obj in objs)
-                        {
-                            if (unit.Name.Contains(obj.GetSerialNum()))
-                            {
-                                ListViewItem dateDivider = new ListViewItem("======" + obj.GetLastDate() + "======");
-                                dateDivider.BackColor = Color.Black;
-                                dateDivider.ForeColor = Color.Aqua;
-                                ListViewItem item = new ListViewItem(unit.Name);
+                            
+                    ListViewItem dateDivider = new ListViewItem("======" + obj.GetLastDate() + "======");
+                    dateDivider.BackColor = Color.Black;
+                    dateDivider.ForeColor = Color.Aqua;
+                    ListViewItem item = new ListViewItem(obj.GetSerialNum());
 
-                                if (!dateList.Contains(obj.GetLastDate()))
-                                {
-                                    dateList.Add(obj.GetLastDate());
-                                    originalList.Add(dateDivider);
-                                    originalList.Add(item);
-                                }
-                                else
-                                {
-                                    originalList.Add(item);
-                                }
-                            }
-                        }
-                        
+                    if (!dateList.Contains(obj.GetLastDate()))
+                    {
+                        dateList.Add(obj.GetLastDate());
+                        originalList.Add(dateDivider);
+                        originalList.Add(item);
                     }
-                }                
+                    else
+                    {
+                        originalList.Add(item);
+                    }
+                            
+                }
+                   
             }
             else
             {
@@ -476,6 +471,8 @@ namespace EVO_Image_app
         //Model search button
         private void searchBtn_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("DATE " + date);
+            Console.WriteLine("TODAY " + today);
             ModelSearch ms = new ModelSearch();
             int type = 0;
             originalList = new List<ListViewItem>();
@@ -490,6 +487,12 @@ namespace EVO_Image_app
             {
                 int index = modelIndex.Value;
                 string[] models = getModelSearchModels().ToArray();
+
+                if(models[index] == "ALL" && type == 0)
+                {
+                    MessageBox.Show("Find the results in the Daily Run Data");
+                    return;
+                }
 
                 if (models[index] != "ALL")
                 {
@@ -508,6 +511,7 @@ namespace EVO_Image_app
 
                     if(type == 0)
                     {
+
                         foreach (ProgramObjs model in modelSearch)
                         {
                             AddToOriginalList(model, ms, type, dateList);
@@ -529,19 +533,28 @@ namespace EVO_Image_app
                 }
                 else
                 {
-                    if (date != null)
-                    {
-                        function.GetAllModelImages(date, type);
-                    }
-                    else
-                    {
-                        function.GetAllModelImages(today, type);
-                    }
-
-                    List<ProgramObjs> modelSearch = function.GetFoundPrograms();
                     List<string> dateList = new List<string>();
-                    if (type == 1)
+                    if (type != 1)
                     {
+                        if (date != null)
+                        {
+                            function.GetAllModelImages(date, type);
+                        }
+                        else
+                        {
+                            function.GetAllModelImages(today, type);
+                        }
+                        List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+
+                        foreach (ProgramObjs model in modelSearch)
+                        {
+
+                            AddToOriginalList(model, ms, type, dateList);
+                        }
+                    }
+                    else if (type == 1)
+                    {
+                        lintLogicFlag = true;
                         if (date != null)
                         {
                             function.GetLintLogicImages(date);
@@ -552,19 +565,14 @@ namespace EVO_Image_app
                         }
 
                         List<ProgramObjs> lintLogicCandidates = function.getLintLogicCandidates();
+                        
                         foreach (ProgramObjs model in lintLogicCandidates)
                         {
+                            Console.WriteLine(model.GetOutputDirectoryPath() + "\\" + model.GetSerialNum() + "," + model.GetModelAndColor() + "," + model.GetResult());
                             AddToOriginalList(model, ms, type, dateList);
                         }
                     }
-                    else
-                    {
-                        foreach (ProgramObjs model in modelSearch)
-                        {
-                            AddToOriginalList(model, ms, type, dateList);
-                        }
-                    }
-                  
+                    
                 }
 
                 allLists.Add(originalList);
@@ -577,7 +585,7 @@ namespace EVO_Image_app
                 {
                     listView1.Items.AddRange(list.ToArray());
                 }
-
+                lintLogicFlag = false;
             }
         }
            
@@ -589,17 +597,37 @@ namespace EVO_Image_app
             dateDivider.BackColor = Color.Black;
             dateDivider.ForeColor = Color.Aqua;
             ListViewItem item = new ListViewItem(obj.GetSerialNum());
-
-            if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+            if (type == 1)
             {
-                dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
-                originalList.Add(dateDivider);
-                originalList.Add(item);
+                dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetLintLogicResult() + "==");
+                dateDivider.BackColor = Color.Black;
+                dateDivider.ForeColor = Color.Aqua;
+                item = new ListViewItem(obj.GetSerialNum() + " " + obj.GetLintLogicResult());
+                if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetLintLogicResult()))
+                {
+                    dateList.Add(obj.GetLastDate() + " " + obj.GetLintLogicResult());
+                    originalList.Add(dateDivider);
+                    originalList.Add(item);
+                }
+                else
+                {
+                    originalList.Add(item);
+                }
             }
             else
             {
-                originalList.Add(item);
+                if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
+                {
+                    dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
+                    originalList.Add(dateDivider);
+                    originalList.Add(item);
+                }
+                else
+                {
+                    originalList.Add(item);
+                }
             }
+           
         }
 
 
