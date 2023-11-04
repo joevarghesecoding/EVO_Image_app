@@ -46,7 +46,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 string result = splitted[4] + "," + splitted[5];
                                 string lastTime = dateSplit[1] + " " + dateSplit[2];
                                 string comptia = splitted[6];
-                                ProgramObjs program = new ProgramObjs(modelAndColor, serial + " " + lastTime.Replace(':',' '), lastDate, result, comptia, lastTime);
+                                ProgramObjs program = new ProgramObjs(modelAndColor, serial, lastDate, result, comptia, lastTime.Replace(':', ' '));
                                 string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
                                 program.SetOutputDirectoryPath(outDirPath);
                                 programObjs.Add(program);
@@ -79,7 +79,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + lastDate;
                 string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
-                string fileName = f.GetSerialNum();
+                string fileName = f.GetSerialNum() + " " + f.GetLastTime().Replace(':', ' ');
                 if (lastDate != "" && lastDate != "iPhone")
                 {
                     Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);

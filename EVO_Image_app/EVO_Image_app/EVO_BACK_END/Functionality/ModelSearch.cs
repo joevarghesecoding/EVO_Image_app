@@ -16,7 +16,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             programObjs = GetCurrentPrograms();
         }
 
-        private string[] types = { "ALL", "LINTLOGIC FLIPS", "PASS", "FAIL", "MSS-FAILS", "MAC", "MBG", "MEA", "DEA", "D9J", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
+        private string[] types = { "ALL", "LINTLOGIC FLIPS", "PASS", "FAIL", "MAC", "MBG", "MEA", "DEA", "D9J", "DAC", "B9J", "D92", "B92", "D9C", "B91" };
 
         public string getType(int index)
         {
@@ -25,6 +25,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         public override void GetAllModelImages(string date, int type)
         {
+            foundPrograms = new List<ProgramObjs>();
             string currentType = types[type];
             try
             {
@@ -36,12 +37,12 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         string line;
                         while ((line = reader.ReadLine()) != null)
                         {
-                            if (line.Contains(currentType))
+                            string[] splitted = line.Split(',');
+                            string serial = splitted[3];
+                            string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                            string[] dateSplit = splitted[0].Split(' ');
+                            if (comptia.Contains(currentType))
                             {
-                                string[] splitted = line.Split(',');
-                                string serial = splitted[3];
-                                string[] dateSplit = splitted[0].Split(' ');
-                                string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
                                 ProgramObjs temp = new ProgramObjs(splitted[1] + "," + splitted[2], serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
                                 foundPrograms.Add(temp);
                             }
@@ -157,12 +158,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         public override void GetModelImages(ProgramObjs program, string date, int type)
         {
+            foundPrograms = new List<ProgramObjs>();
             try
             {
                 FileInfo file = GetFatSatFile(date);
                 if(file != null)
                 {
-                    FindSerialCount(program, file, type);
+                    FindSerialCount(program, file);
                     HashSet<string> unique = new HashSet<string>();
                     List<ProgramObjs> duplicates = new List<ProgramObjs>();
                     List<ProgramObjs> finalList = new List<ProgramObjs>();
@@ -219,7 +221,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             
         }
 
-        private void FindSerialCount(ProgramObjs program, FileInfo file, int type)
+        private void FindSerialCount(ProgramObjs program, FileInfo file)
         {
             if(file != null)
             {
@@ -243,10 +245,6 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 foundPrograms.Add(temp);
                             }
                         }
-                    }
-                    if (type == 1)
-                    {
-                        //lint logic code
                     }
                 }
                 catch (Exception ex)
