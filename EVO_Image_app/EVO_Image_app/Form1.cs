@@ -143,11 +143,12 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
-                                    
+
                                     //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
                                     //if (!lintLogicFlag)
                                     //programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     //else
+                                    Console.WriteLine(o.GetOutputDirectoryPath());
                                     programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     programDetails.ProgramObject = o;
                                     break;
@@ -491,7 +492,7 @@ namespace EVO_Image_app
                     MessageBox.Show("Find the results in the Daily Run Data");
                     return;
                 }
-
+                //Model Search
                 if (models[index] != "ALL")
                 {
                     ProgramObjs program = new ProgramObjs(models[index]);
@@ -505,32 +506,21 @@ namespace EVO_Image_app
                     }
 
                     List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-                    //List<string> dateList = new List<string>();
-
-                    if(type == 0)
-                    {
-                        ReorganizeFoundPrograms(modelSearch);
-                        //foreach (ProgramObjs model in modelSearch)
-                        //{
-                        //    AddToOriginalList(model, ms, type, dateList);
-                        //}
-                    }
-                    else
-                    {
-                        string t = ms.getType(type);
-               
-                        foreach (ProgramObjs model in modelSearch)
-                        {
-                            if (model.GetResult().Contains(t))
-                            {
-                                //AddToOriginalList(model, ms, type, dateList);
-                            }
-                                              
-                        }
-                    }
+                   
+                   // if(type == 0)
+                    //{
+                       // Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                       // AddToAllList(reorganizedModelSearch);
+                    //}
+                   // else
+                    //{
+                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                        AddToAllList(reorganizedModelSearch);
+                    //}
                 }
                 else
                 {
+
                     //List<string> dateList = new List<string>();
                     if (type != 1)
                     {
@@ -543,12 +533,8 @@ namespace EVO_Image_app
                             function.GetAllModelImages(today, type);
                         }
                         List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-                        ReorganizeFoundPrograms(modelSearch);
-                        //foreach (ProgramObjs model in modelSearch)
-                        //{
-
-                        //    AddToOriginalList(model, ms, type, dateList);
-                        //}
+                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                        AddToAllList(reorganizedModelSearch);
                     }
                     else if (type == 1)
                     {
@@ -562,12 +548,8 @@ namespace EVO_Image_app
                         }
 
                         List<ProgramObjs> lintLogicCandidates = function.getLintLogicCandidates();
-                        ReorganizeFoundPrograms(lintLogicCandidates);
-                        //foreach (ProgramObjs model in lintLogicCandidates)
-                        //{
-                        //    Console.WriteLine(model.GetOutputDirectoryPath() + "\\" + model.GetSerialNum() + "," + model.GetModelAndColor() + "," + model.GetResult());
-                        //    AddToOriginalList(model, ms, type, dateList);
-                        //}
+                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(lintLogicCandidates, type);
+                        AddToAllList(reorganizedModelSearch);
                     }
                     
                 }
@@ -585,30 +567,69 @@ namespace EVO_Image_app
             }
         }
 
-        private Dictionary<string, List<ProgramObjs>> ReorganizeFoundPrograms(List<ProgramObjs> programObjs)
+        private Dictionary<string, List<ProgramObjs>> ReorganizeFoundPrograms(List<ProgramObjs> programObjs, int type)
         {
-            
+            ModelSearch ms = new ModelSearch();   
             Dictionary<string, List<ProgramObjs>> hashMap = new Dictionary<string, List<ProgramObjs>>();
-
-            foreach(ProgramObjs program in programObjs)
+            //ALL
+            if (type != 1)
             {
-                if (!hashMap.ContainsKey(program.GetModelAndColor()))
+                foreach (ProgramObjs program in programObjs)
                 {
-                    List<ProgramObjs> temp = new List<ProgramObjs>();
-                    temp.Add(program);
-                    hashMap.Add(program.GetModelAndColor(), temp);
-                }
-                else
-                {
-                    hashMap[program.GetModelAndColor()].Add(program);
+                    if (!hashMap.ContainsKey(program.GetModelAndColor()))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetModelAndColor(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetModelAndColor()].Add(program);
+                    }
                 }
             }
+            //Lint logic
+            else if(type == 1)
+            {
+                foreach (ProgramObjs program in programObjs)
+                {
+                    if (!hashMap.ContainsKey(program.GetLintLogicResult()))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetLintLogicResult(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetLintLogicResult()].Add(program);
+                    }
+                }
+            }
+            //Individual comptias
+            else
+            {
+                string t = ms.getType(type);
+                foreach (ProgramObjs program in programObjs)
+                {
+                    if (!hashMap.ContainsKey(program.GetResult()) && program.GetResult().Contains(t))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetResult(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetResult()].Add(program);
+                    }
+                }
+            }
+           
             return hashMap;
         }
 
         private void AddToAllList(Dictionary<string, List<ProgramObjs>> hashMap)
         {
-            allLists = new List<List<ListViewItem>>();
+            //allLists = new List<List<ListViewItem>>();
 
             foreach (var kvp in hashMap)
             {
@@ -620,7 +641,8 @@ namespace EVO_Image_app
                 tempListView.Add(dateDivider);
                 foreach(ProgramObjs programs in temp)
                 {
-                    tempListView.Add(new ListViewItem(programs.GetSerialNum() + " " + programs.GetResult()));
+                    //Console.WriteLine(programs.GetOutputDirectoryPath());
+                    tempListView.Add(new ListViewItem(programs.GetSerialNum() + "," + programs.GetResult()));
                 }
 
                 allLists.Add(tempListView);
