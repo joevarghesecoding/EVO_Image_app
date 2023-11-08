@@ -116,24 +116,40 @@ namespace EVO_Image_app
                                 {
                                     programDetails.GetProgramDetails(outDirPath + item.Text);
                                     programDetails.ProgramObject = o;
+                                    Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
                                     break;
                                 }
                             }
                         }
                         else if (flag == 2)
                         {
-                           
-                            foreach (ProgramObjs o in objs)
+                            Dictionary<string, List<ProgramObjs>> programs = function.GetManualSearchProgams();
+                            foreach(var kvp in programs)
                             {
-                                if (o.GetSerialNum() + " " + o.GetLastTime().Replace(':', ' ') == item.Text)
+                                objs = kvp.Value;
+                                foreach (ProgramObjs o in objs)
                                 {
-                                    //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
-                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + " " + o.GetLastTime().Replace(':', ' '));
-                                    programDetails.ProgramObject = o;
-                                    //Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
-                                    break;
+                                    if (o.GetSerialNum() + " " + o.GetLastTime().Replace(':', '-') == item.Text)
+                                    {
+                                        programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + " " + o.GetLastTime().Replace(':', '-'));
+                                        programDetails.ProgramObject = o;
+                                        Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                        Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                                        if (o.GetResult().Contains("PASS")){
+                                            ComptiaBox.Text = o.GetResult();
+                                            regionsBox.Text = "N/A";
+                                        } else
+                                        {
+                                            ComptiaBox.Text = o.GetResult();
+                                            regionsBox.Text = o.GetComptia();
+                                        }
+                                        pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+                                        break;
+                                    }
                                 }
                             }
+
                         }
                         else if (flag == 3)
                         {
@@ -143,14 +159,10 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
-
-                                    //outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + o.GetLastDate() + "\\";
-                                    //if (!lintLogicFlag)
-                                    //programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
-                                    //else
-                                    Console.WriteLine(o.GetOutputDirectoryPath());
                                     programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     programDetails.ProgramObject = o;
+                                    Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
                                     break;
                                 }
                             }
@@ -161,8 +173,7 @@ namespace EVO_Image_app
                         side = 0;
 
 
-                        Common.DisplayData(programDetails.sides[side], dataGridView1);
-                        Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                       
 
                     }
                     catch (NullReferenceException ex)
@@ -319,29 +330,21 @@ namespace EVO_Image_app
             if (Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
-                List<ProgramObjs> objs = function.GetProgramObjs();
+                Dictionary<string, List<ProgramObjs>> programs = function.GetManualSearchProgams();
                 
-               
-                foreach(ProgramObjs obj in objs)
-                {    
-                    ListViewItem dateDivider = new ListViewItem("======" + obj.GetLastDate() + "======");
+                foreach(var kvp in programs)
+                {
+                    ListViewItem dateDivider = new ListViewItem("======" + kvp.Key + "======");
                     dateDivider.BackColor = Color.Black;
                     dateDivider.ForeColor = Color.Aqua;
-                    ListViewItem item = new ListViewItem(obj.GetSerialNum() + " " + obj.GetLastTime().Replace(':', ' '));
-
-                    if (!dateList.Contains(obj.GetLastDate()))
+                    originalList.Add(dateDivider);
+                     List<ProgramObjs> objs = kvp.Value;
+                    foreach(ProgramObjs obj in objs)
                     {
-                        dateList.Add(obj.GetLastDate());
-                        originalList.Add(dateDivider);
+                        ListViewItem item = new ListViewItem(obj.GetSerialNum() + " " + obj.GetLastTime().Replace(':', '-'));
                         originalList.Add(item);
                     }
-                    else
-                    {
-                        originalList.Add(item);
-                    }
-                            
-                }
-                   
+                }    
             }
             else
             {

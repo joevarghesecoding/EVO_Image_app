@@ -10,6 +10,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
     abstract class Functions
     {
+        protected Dictionary<string, List<ProgramObjs>> manualSearchProgams;
+
         protected List<ProgramObjs> programObjs;
 
         protected List<ProgramObjs> foundPrograms;
@@ -20,6 +22,12 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             foundPrograms = new List<ProgramObjs>();
         }
+
+        public Dictionary<string, List<ProgramObjs>> GetManualSearchProgams()
+        {
+            return manualSearchProgams;
+        }
+
         public List<ProgramObjs> GetProgramObjs()
         {
             return programObjs;

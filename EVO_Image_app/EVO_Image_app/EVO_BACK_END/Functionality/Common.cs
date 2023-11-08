@@ -176,7 +176,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             foreach(ProgramObjs obj in objs)
             {
-                if(obj.GetSerialNum() == programObjs.GetSerialNum() && obj.GetLastDate() == programObjs.GetLastDate() && obj.GetLastTime() == programObjs.GetLastTime())
+                if(obj.GetSerialNum() == programObjs.GetSerialNum() && obj.GetLastDate() == programObjs.GetLastDate() && obj.GetLastTime().Replace(':', '-') == programObjs.GetLastTime().Replace(':', '-'))
                 {
                     serialNum.Text = programObjs.GetSerialNum();
                     lastDate.Text = programObjs.GetLastDate() + " " + programObjs.GetLastTime();

@@ -9,10 +9,12 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
     class ManualSearch : Functions
     {
+        
 
         public ManualSearch() : base() 
         {
             programObjs = new List<ProgramObjs>();
+            manualSearchProgams = new Dictionary<string, List<ProgramObjs>>();
         }
 
         /// <summary>
@@ -26,7 +28,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
             // string dailyRunData = Common.currentDirectory + "\\Resources";
             List<FileInfo> fatSatPaths = GetAllFatSatFiles();
-
+            
             foreach (FileInfo fileInfo in fatSatPaths)
             {
                 string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + fileInfo.Name;
@@ -46,10 +48,21 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                                 string result = splitted[4] + "," + splitted[5];
                                 string lastTime = dateSplit[1] + " " + dateSplit[2];
                                 string comptia = splitted[6];
-                                ProgramObjs program = new ProgramObjs(modelAndColor, serial, lastDate, result, comptia, lastTime.Replace(':', ' '));
+                                ProgramObjs program = new ProgramObjs(modelAndColor, serial, lastDate, result, comptia, lastTime.Replace(':', '-'));
                                 string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
                                 program.SetOutputDirectoryPath(outDirPath);
-                                programObjs.Add(program);
+                                //programObjs.Add(program);
+
+                                if (manualSearchProgams.ContainsKey(lastDate))
+                                {
+                                    manualSearchProgams[lastDate].Add(program);
+                                }
+                                else
+                                {
+                                    List<ProgramObjs> newDateList = new List<ProgramObjs>();
+                                    newDateList.Add(program);
+                                    manualSearchProgams.Add(lastDate, newDateList);
+                                }
                             }
                         }
                     }
@@ -62,29 +75,36 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 }
             }
 
-            RenameSerials();
+            RenameSerials(manualSearchProgams);
 
         }
 
 
-        private void RenameSerials()
+        private void RenameSerials(Dictionary<string, List<ProgramObjs>> manualSearchProgams)
         {
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            string today = Common.GetDate();
-            foreach (ProgramObjs f in programObjs)
-            {
-                
-                string serial = f.GetSerialNum();
-                //Console.WriteLine(serial);
-                string lastDate = f.GetLastDate();
-                string inDirPath = dailyRunData + "\\" + lastDate;
-                string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
-                string fileName = f.GetSerialNum() + " " + f.GetLastTime().Replace(':', ' ');
-                if (lastDate != "" && lastDate != "iPhone")
-                {
-                    Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
-                }
+            //string today = Common.GetDate();
 
+            foreach(var kvp in manualSearchProgams)
+            {
+                List<ProgramObjs> programs = kvp.Value;
+                foreach(ProgramObjs f in programs)
+                {
+                    string serial = f.GetSerialNum();
+                    //Console.WriteLine("SERIAL: " + serial);
+                    string lastDate = f.GetLastDate();
+                    //Console.WriteLine("LAST DATE: " + lastDate);
+                    string inDirPath = dailyRunData + "\\" + lastDate;
+                    //Console.WriteLine("INDIRPATH: " + inDirPath);
+                    string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
+                    //Console.WriteLine("OUTDIRPATH: " + outDirPath);
+                    string fileName = f.GetSerialNum() + " " + f.GetLastTime().Replace(':', '-');
+                    //Console.WriteLine("FILEPATH: " + fileName);
+                    if (lastDate != "" && lastDate != "iPhone")
+                    {
+                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                    }
+                }
             }
         }
 
