@@ -27,6 +27,7 @@ namespace EVO_Image_app
         int? modelIndex;
         int? typeIndex;
         int flag = 0;
+        int type = 0;
         List<List<ListViewItem>> allLists;
         List<string> dateList;
         public EVO_Image_App()
@@ -476,7 +477,6 @@ namespace EVO_Image_app
         private void searchBtn_Click(object sender, EventArgs e)
         {
             ModelSearch ms = new ModelSearch();
-            int type = 0;
             originalList = new List<ListViewItem>();
             if (calendar.Visible)
                 calendar.Visible = false;
@@ -510,21 +510,13 @@ namespace EVO_Image_app
 
                     List<ProgramObjs> modelSearch = function.GetFoundPrograms();
                    
-                   // if(type == 0)
-                    //{
-                       // Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
-                       // AddToAllList(reorganizedModelSearch);
-                    //}
-                   // else
-                    //{
-                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
-                        AddToAllList(reorganizedModelSearch);
-                    //}
+                    Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                    AddToAllList(reorganizedModelSearch);
+
                 }
                 else
                 {
 
-                    //List<string> dateList = new List<string>();
                     if (type != 1)
                     {
                         if (date != null)
@@ -652,62 +644,25 @@ namespace EVO_Image_app
             }
         }
         
-
-
-        //private void AddToOriginalList(ProgramObjs obj, ModelSearch ms, int type, List<string> dateList)
-        //{
-
-        //    ListViewItem dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetModelAndColor() + " " + ms.getType(type) + "==");
-        //    dateDivider.BackColor = Color.Black;
-        //    dateDivider.ForeColor = Color.Aqua;
-        //    ListViewItem item = new ListViewItem(obj.GetSerialNum());
-        //    if (type == 1)
-        //    {
-        //        dateDivider = new ListViewItem("==" + obj.GetLastDate() + " " + obj.GetLintLogicResult() + "==");
-        //        dateDivider.BackColor = Color.Black;
-        //        dateDivider.ForeColor = Color.Aqua;
-        //        item = new ListViewItem(obj.GetSerialNum() + " " + obj.GetLintLogicResult());
-        //        if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetLintLogicResult()))
-        //        {
-        //            dateList.Add(obj.GetLastDate() + " " + obj.GetLintLogicResult());
-        //            originalList.Add(dateDivider);
-        //            originalList.Add(item);
-        //        }
-        //        else
-        //        {
-        //            originalList.Add(item);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (!dateList.Contains(obj.GetLastDate() + " " + obj.GetModelAndColor()))
-        //        {
-        //            dateList.Add(obj.GetLastDate() + " " + obj.GetModelAndColor());
-        //            originalList.Add(dateDivider);
-        //            originalList.Add(item);
-        //        }
-        //        else
-        //        {
-        //            originalList.Add(item);
-        //        }
-        //    }
-           
-        //}
-
-
         //Password Code
         private void passwordButton_Click(object sender, EventArgs e)
         {
-            if(passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
-            {
-                modelsAndColorsBtn.Enabled = true;
-                modelSearch.Enabled = true;
-                manualSearchBtn.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Incorrect Password");
-            }
+            //DEV
+            modelsAndColorsBtn.Enabled = true;
+            modelSearch.Enabled = true;
+            manualSearchBtn.Enabled = true;
+
+            //PROD
+            //if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            //{
+            //    modelsAndColorsBtn.Enabled = true;
+            //    modelSearch.Enabled = true;
+            //    manualSearchBtn.Enabled = true;
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Incorrect Password");
+            //}
         }
 
         private void passwordEnter_Click(object sender, KeyPressEventArgs e)
