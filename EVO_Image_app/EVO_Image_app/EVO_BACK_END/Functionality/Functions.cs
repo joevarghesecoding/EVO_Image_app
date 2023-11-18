@@ -42,7 +42,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             foundPrograms.Add(programObj);
         }
 
-        public List<ProgramObjs> getLintLogicCandidates()
+        public List<ProgramObjs> GetLintLogicCandidates()
         {
             return LintLogicCandidates;
         }

@@ -155,7 +155,10 @@ namespace EVO_Image_app
                         else if (flag == 3)
                         {
                             string[] text = item.Text.Split(',');
-                            objs = function.GetFoundPrograms();
+                            if (type == 1)
+                                objs = function.GetLintLogicCandidates();
+                            else
+                                objs = function.GetFoundPrograms();
                             foreach (ProgramObjs o in objs)
                             {
                                 if (o.GetSerialNum() == text[0])
@@ -542,7 +545,7 @@ namespace EVO_Image_app
                             function.GetLintLogicImages(today);
                         }
 
-                        List<ProgramObjs> lintLogicCandidates = function.getLintLogicCandidates();
+                        List<ProgramObjs> lintLogicCandidates = function.GetLintLogicCandidates();
                         Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(lintLogicCandidates, type);
                         AddToAllList(reorganizedModelSearch);
                     }

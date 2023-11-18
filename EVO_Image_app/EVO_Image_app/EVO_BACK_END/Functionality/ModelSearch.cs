@@ -23,6 +23,8 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             return types[index];
         }
 
+        
+
         public override void GetAllModelImages(string date, int type)
         {
             foundPrograms = new List<ProgramObjs>();
@@ -141,12 +143,15 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + date;
                 string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult());
+                Console.WriteLine("Others : " + outDirPath);
                 if (lintLogicFlag)
                 {
                     outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetLintLogicResult()) + "\\" + f.GetModelAndColor();
+                    Console.WriteLine("LINT LOGIC : " + outDirPath);
                 }
                 f.SetOutputDirectoryPath(outDirPath);
-
+                Console.WriteLine("FINAL : " + f.GetOutputDirectoryPath());
+                
                 string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                 if (date != "" && date != "iPhone")
                 {
