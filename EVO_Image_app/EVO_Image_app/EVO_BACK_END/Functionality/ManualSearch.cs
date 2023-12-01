@@ -87,29 +87,21 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             foreach (var kvp in dictionary)
             {
                 List<ProgramObjs> temp = kvp.Value;
-                string date = kvp.Key;
-                bool afterFirst = false;
-                int count = 0;
-                foreach(ProgramObjs program in temp)
+                List<string> duplicates = new List<string>();
+                HashSet<string> unique = new HashSet<string>();
+                foreach (ProgramObjs p in temp)
                 {
-                    if (program.GetLastDate().Equals(date))
+                    if (!unique.Add(p.GetSerialNum()))
                     {
-                        if(afterFirst == false)
+                        duplicates.Add(p.GetSerialNum());
+                        var count = duplicates.Count(s => s == p.GetSerialNum());
+                        if(count == 1)
                         {
-                            afterFirst = true;
-                            continue;
+                            p.SetSerialNum(p.GetSerialNum() + " - 0");
                         }
-                        else
+                        if(count > 1)
                         {
-                            if (program.GetSerialNum().Contains('-'))
-                            {
-                                program.SetSerialNum(program.GetSerialNum().Substring(0, 12) + count.ToString());
-                                count++;
-                            }
-                            else
-                            {
-                                program.SetSerialNum(program.GetSerialNum() + " - " + count.ToString());
-                            }
+                            p.SetSerialNum(p.GetSerialNum() + " - " + (count - 1).ToString());
                         }
                     }
                 }
@@ -150,7 +142,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
 
-        public override void GetAllModelImages(string date, int type)
+        public override void GetAllModelImages(ProgramObjs program, string date, int type)
         {
             throw new NotImplementedException();
         }

@@ -25,7 +25,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         
 
-        public override void GetAllModelImages(string date, int type)
+        public override void GetAllModelImages(ProgramObjs program, string date, int type)
         {
             foundPrograms = new List<ProgramObjs>();
             string currentType = types[type];
@@ -40,12 +40,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         while ((line = reader.ReadLine()) != null)
                         {
                             string[] splitted = line.Split(',');
+                            string modelAndColor = splitted[1] + "," + splitted[2];
                             string serial = splitted[3];
                             string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
                             string[] dateSplit = splitted[0].Split(' ');
-                            if (comptia.Contains(currentType))
+                            if (modelAndColor.Contains(program.GetModelAndColor()) && comptia.Contains(currentType))
                             {
-                                ProgramObjs temp = new ProgramObjs(splitted[1] + "," + splitted[2], serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                ProgramObjs temp = new ProgramObjs(modelAndColor, serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
                                 foundPrograms.Add(temp);
                             }
                             
@@ -66,7 +67,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             LintLogicCandidates = new List<ProgramObjs>();
             string logsPath = "C:\\EVO-3\\Save Data\\Logs\\Device\\" + date;
-            Console.WriteLine("LOGSPATH " + logsPath);
+
             DirectoryInfo dir = new DirectoryInfo(logsPath);
             FileInfo[] files = dir.GetFiles();
             string serial = "", time = "";
@@ -143,14 +144,13 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 string lastDate = f.GetLastDate();
                 string inDirPath = dailyRunData + "\\" + date;
                 string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetModelAndColor() + "\\" + f.GetResult());
-                Console.WriteLine("Others : " + outDirPath);
+                
                 if (lintLogicFlag)
                 {
                     outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetLintLogicResult()) + "\\" + f.GetModelAndColor();
-                    Console.WriteLine("LINT LOGIC : " + outDirPath);
+                   
                 }
                 f.SetOutputDirectoryPath(outDirPath);
-                Console.WriteLine("FINAL : " + f.GetOutputDirectoryPath());
                 
                 string fileName = f.GetSerialNum() + "," + f.GetModelAndColor() + "," + f.GetResult();
                 if (date != "" && date != "iPhone")

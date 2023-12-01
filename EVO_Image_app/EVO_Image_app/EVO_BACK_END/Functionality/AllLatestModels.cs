@@ -100,7 +100,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             }
         }
 
-        public override void GetAllModelImages(string date, int type)
+        public override void GetAllModelImages(ProgramObjs program, string date, int type)
         {
             throw new NotImplementedException();
         }

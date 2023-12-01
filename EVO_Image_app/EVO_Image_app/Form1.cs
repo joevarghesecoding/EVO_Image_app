@@ -492,16 +492,17 @@ namespace EVO_Image_app
             {
                 int index = modelIndex.Value;
                 string[] models = getModelSearchModels().ToArray();
+                ProgramObjs program = new ProgramObjs(models[index]);
 
-                if(models[index] == "ALL" && type == 0)
+                if (models[index] == "ALL" && type == 0)
                 {
                     MessageBox.Show("Find the results in the Daily Run Data");
                     return;
                 }
-                //Model Search
-                if (models[index] != "ALL")
+                //Model Search NO COMPTIA
+                if (models[index] == "ALL")
                 {
-                    ProgramObjs program = new ProgramObjs(models[index]);
+                    
                     if (date != null)
                     {
                         function.GetModelImages(program, date, type);
@@ -519,16 +520,16 @@ namespace EVO_Image_app
                 }
                 else
                 {
-
+                    //COMPTIA
                     if (type != 1)
                     {
                         if (date != null)
                         {
-                            function.GetAllModelImages(date, type);
+                            function.GetAllModelImages(program, date, type);
                         }
                         else
                         {
-                            function.GetAllModelImages(today, type);
+                            function.GetAllModelImages(program, today, type);
                         }
                         List<ProgramObjs> modelSearch = function.GetFoundPrograms();
                         Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
