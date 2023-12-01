@@ -27,7 +27,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         public override void GetAllModelImages(ProgramObjs program, string date, int type)
         {
-            foundPrograms = new List<ProgramObjs>();
+            //foundPrograms = new List<ProgramObjs>();
             string currentType = types[type];
             try
             {
@@ -163,66 +163,66 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         public override void GetModelImages(ProgramObjs program, string date, int type)
         {
-            foundPrograms = new List<ProgramObjs>();
-            try
-            {
-                FileInfo file = GetFatSatFile(date);
-                if(file != null)
-                {
-                    FindSerialCount(program, file);
-                    HashSet<string> unique = new HashSet<string>();
-                    List<ProgramObjs> duplicates = new List<ProgramObjs>();
-                    List<ProgramObjs> finalList = new List<ProgramObjs>();
-                    foreach(ProgramObjs p in foundPrograms)
-                    {
-                        if (!unique.Add(p.GetSerialNum()))
-                        {
-                            duplicates.Add(p);
-                        }
-                    }
+        //    foundPrograms = new List<ProgramObjs>();
+        //    try
+        //    {
+        //        FileInfo file = GetFatSatFile(date);
+        //        if(file != null)
+        //        {
+        //            FindSerialCount(program, file);
+        //            HashSet<string> unique = new HashSet<string>();
+        //            List<ProgramObjs> duplicates = new List<ProgramObjs>();
+        //            List<ProgramObjs> finalList = new List<ProgramObjs>();
+        //            foreach(ProgramObjs p in foundPrograms)
+        //            {
+        //                if (!unique.Add(p.GetSerialNum()))
+        //                {
+        //                    duplicates.Add(p);
+        //                }
+        //            }
 
-                    foreach(ProgramObjs d in duplicates)
-                    {
-                        string currentSerial = d.GetSerialNum();
-                        int count = 0;
-                        string current = currentSerial;
-                        if (!currentSerial.Equals(current))
-                            count = 0;
-                        while (currentSerial.Equals(current))
-                        {
-                            d.SetSerialNum(currentSerial + " - " + count.ToString());
-                            count++;
+        //            foreach(ProgramObjs d in duplicates)
+        //            {
+        //                string currentSerial = d.GetSerialNum();
+        //                int count = 0;
+        //                string current = currentSerial;
+        //                if (!currentSerial.Equals(current))
+        //                    count = 0;
+        //                while (currentSerial.Equals(current))
+        //                {
+        //                    d.SetSerialNum(currentSerial + " - " + count.ToString());
+        //                    count++;
                             
-                            current = d.GetSerialNum();
-                        }
-                    }
+        //                    current = d.GetSerialNum();
+        //                }
+        //            }
                     
-                    foreach(ProgramObjs obj in foundPrograms)
-                    {
-                        if (unique.Contains(obj.GetSerialNum()))
-                        {
-                            finalList.Add(obj);
-                        }
-                    }
+        //            foreach(ProgramObjs obj in foundPrograms)
+        //            {
+        //                if (unique.Contains(obj.GetSerialNum()))
+        //                {
+        //                    finalList.Add(obj);
+        //                }
+        //            }
 
-                    foreach (ProgramObjs duplicate in duplicates)
-                    {
-                        finalList.Add(duplicate);
-                    }
+        //            foreach (ProgramObjs duplicate in duplicates)
+        //            {
+        //                finalList.Add(duplicate);
+        //            }
 
-                    SendToDirectory(foundPrograms, date, false);
+        //            SendToDirectory(foundPrograms, date, false);
 
 
-                }
-                else
-                {
-                    System.Windows.Forms.MessageBox.Show("No Data found for Date");
-                }
-            } catch(NullReferenceException ex)
-            {
-                System.Windows.Forms.MessageBox.Show("Incorrect Date");
-                Console.WriteLine("******* ERROR AT GetModelImages ******\n" + ex.Message);
-            }
+        //        }
+        //        else
+        //        {
+        //            System.Windows.Forms.MessageBox.Show("No Data found for Date");
+        //        }
+        //    } catch(NullReferenceException ex)
+        //    {
+        //        System.Windows.Forms.MessageBox.Show("Incorrect Date");
+        //        Console.WriteLine("******* ERROR AT GetModelImages ******\n" + ex.Message);
+        //    }
             
         }
 

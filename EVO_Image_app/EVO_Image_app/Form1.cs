@@ -381,7 +381,7 @@ namespace EVO_Image_app
 
         private List<string> getModelSearchModels()
         {
-            List<ProgramObjs> modelSearch = function.GetProgramObjs();
+            List<ProgramObjs> allCurrentModels = function.GetCurrentPrograms();
             string fullPathModels = Common.currentDirectory + "//Resources//models_type.txt";
             List<string> models = new List<string>();
             try
@@ -400,7 +400,7 @@ namespace EVO_Image_app
                 Console.WriteLine("***** ERROR At getModelSearchModels() ******\n" + ex.Message);
             }
             
-            foreach (ProgramObjs obj in modelSearch)
+            foreach (ProgramObjs obj in allCurrentModels)
             {
                 models.Add(obj.GetModelAndColor());
                 
@@ -487,39 +487,62 @@ namespace EVO_Image_app
             if (typeIndex == null)
                 typeIndex = 0;
             type = typeIndex ?? default(int);
-            //Console.WriteLine(type);
+            Console.WriteLine(type);
+            Console.WriteLine(type.GetType());
             if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
                 string[] models = getModelSearchModels().ToArray();
-                ProgramObjs program = new ProgramObjs(models[index]);
 
-                if (models[index] == "ALL" && type == 0)
-                {
-                    MessageBox.Show("Find the results in the Daily Run Data");
-                    return;
-                }
-                //Model Search NO COMPTIA
+                //ALL with comptia
                 if (models[index] == "ALL")
                 {
-                    
-                    if (date != null)
+                    if (models[index] == "ALL" && type == 0)
                     {
-                        function.GetModelImages(program, date, type);
+                        MessageBox.Show("Find the results in the Daily Run Data");
+                        return;
+                    }
+                    //LINTLOGIC
+                    else if (models[index] == "ALL" && type == 1)
+                    {
+                        Console.WriteLine("INSIDE LINT LOGIC START");
+                        if (date != null)
+                        {
+                            function.GetLintLogicImages(date);
+                        }
+                        else
+                        {
+                            function.GetLintLogicImages(today);
+                        }
                     }
                     else
                     {
-                        function.GetModelImages(program, today, type);
-                    }
+                        List<ProgramObjs> allCurrentModels = function.GetCurrentPrograms();
+                        foreach (ProgramObjs program in allCurrentModels)
+                        {
+                            if (date != null)
+                            {
+                                function.GetAllModelImages(program, date, type);
+                            }
+                            else
+                            {
+                                function.GetAllModelImages(program, today, type);
+                            }
+                        }
 
+
+                       
+                    }
                     List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-                   
+
                     Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
                     AddToAllList(reorganizedModelSearch);
 
                 }
+              
                 else
                 {
+                    ProgramObjs program = new ProgramObjs(models[index]);
                     //COMPTIA
                     if (type != 1)
                     {
@@ -533,21 +556,6 @@ namespace EVO_Image_app
                         }
                         List<ProgramObjs> modelSearch = function.GetFoundPrograms();
                         Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
-                        AddToAllList(reorganizedModelSearch);
-                    }
-                    else if (type == 1)
-                    {
-                        if (date != null)
-                        {
-                            function.GetLintLogicImages(date);
-                        }
-                        else
-                        {
-                            function.GetLintLogicImages(today);
-                        }
-
-                        List<ProgramObjs> lintLogicCandidates = function.GetLintLogicCandidates();
-                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(lintLogicCandidates, type);
                         AddToAllList(reorganizedModelSearch);
                     }
                     
