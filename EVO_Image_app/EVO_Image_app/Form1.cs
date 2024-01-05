@@ -145,7 +145,7 @@ namespace EVO_Image_app
                                             ComptiaBox.Text = o.GetResult();
                                             regionsBox.Text = o.GetComptia();
                                         }
-                                        pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+                                        //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
                                         break;
                                     }
                                 }
@@ -172,12 +172,14 @@ namespace EVO_Image_app
                             }
                         }
 
-                        pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
+                        Image combinedImage = CombineImages( Image.FromFile(programDetails.sides[0].Image), Image.FromFile(programDetails.sides[1].Image), Image.FromFile(programDetails.sides[2].Image),
+                            Image.FromFile(programDetails.sides[3].Image), Image.FromFile(programDetails.sides[4].Image), Image.FromFile(programDetails.sides[5].Image));
+
+                        //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+
+                        pictureBox1.Image = combinedImage;
                         side = 0;
-
-
-                       
 
                     }
                     catch (NullReferenceException ex)
@@ -187,6 +189,23 @@ namespace EVO_Image_app
                     }
                 }
             }
+        }
+
+        private Image CombineImages(Image display, Image back, Image top, Image bottom, Image left, Image right)
+        {
+            Bitmap combinedBitmap = new Bitmap(display.Width * 3, display.Height * 2);
+
+            using(Graphics g = Graphics.FromImage(combinedBitmap))
+            {
+                g.DrawImage(display, 0, 0);
+                g.DrawImage(back, display.Width, 0);
+                g.DrawImage(top, display.Width * 2, 0);
+                g.DrawImage(bottom, 0, display.Height);
+                g.DrawImage(left, display.Width, display.Height);
+                g.DrawImage(right, display.Width * 2, display.Height);
+            }
+
+            return combinedBitmap;
         }
 
         private void ModelSearchIndexSelected(ProgramObjs obj)
