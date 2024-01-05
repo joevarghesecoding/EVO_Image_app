@@ -148,7 +148,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                 if (lintLogicFlag)
                 {
                     outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ModelSearch\\" + date + "\\" + f.GetLintLogicResult()) + "\\" + f.GetModelAndColor();
-                   
+                    //Console.WriteLine(outDirPath);
                 }
                 f.SetOutputDirectoryPath(outDirPath);
                 

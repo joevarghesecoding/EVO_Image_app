@@ -163,7 +163,11 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
-                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    //Console.WriteLine(o.GetOutputDirectoryPath() + "\\" + o.GetModelAndColor() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    //if (type == 1)
+                                    //    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetModelAndColor() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    //else
+                                        programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     programDetails.ProgramObject = o;
                                     Common.DisplayData(programDetails.sides[side], dataGridView1);
                                     Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
@@ -179,7 +183,7 @@ namespace EVO_Image_app
                         //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                         pictureBox1.Image = combinedImage;
-                        side = 0;
+                        side = -1;
 
                     }
                     catch (NullReferenceException ex)
@@ -220,7 +224,12 @@ namespace EVO_Image_app
         //Previous button
         private void button3_Click_1(object sender, EventArgs e)
         {
-
+            if (side == 0)
+            {
+                previousBtn.Enabled = false;
+            }
+            else
+                previousBtn.Enabled = true;
             if (side > 0)
             {
                 side--;
@@ -500,6 +509,7 @@ namespace EVO_Image_app
         {
             ModelSearch ms = new ModelSearch();
             originalList = new List<ListViewItem>();
+            allLists.Clear();
             if (calendar.Visible)
                 calendar.Visible = false;
 
@@ -525,6 +535,7 @@ namespace EVO_Image_app
                     else if (models[index] == "ALL" && type == 1)
                     {
                         Console.WriteLine("INSIDE LINT LOGIC START");
+                       
                         if (date != null)
                         {
                             function.GetLintLogicImages(date);
@@ -533,6 +544,7 @@ namespace EVO_Image_app
                         {
                             function.GetLintLogicImages(today);
                         }
+
                     }
                     else
                     {
@@ -552,8 +564,11 @@ namespace EVO_Image_app
 
                        
                     }
-                    List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-
+                    List<ProgramObjs> modelSearch;
+                    if (type == 1)
+                        modelSearch = function.GetLintLogicCandidates();
+                    else
+                        modelSearch = function.GetFoundPrograms();
                     Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
                     AddToAllList(reorganizedModelSearch);
 
