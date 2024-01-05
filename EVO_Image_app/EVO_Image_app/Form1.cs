@@ -163,11 +163,7 @@ namespace EVO_Image_app
                             {
                                 if (o.GetSerialNum() == text[0])
                                 {
-                                    //Console.WriteLine(o.GetOutputDirectoryPath() + "\\" + o.GetModelAndColor() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
-                                    //if (type == 1)
-                                    //    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetModelAndColor() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
-                                    //else
-                                        programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
                                     programDetails.ProgramObject = o;
                                     Common.DisplayData(programDetails.sides[side], dataGridView1);
                                     Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
@@ -183,7 +179,7 @@ namespace EVO_Image_app
                         //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
 
                         pictureBox1.Image = combinedImage;
-                        side = -1;
+                        side = 0;
 
                     }
                     catch (NullReferenceException ex)
@@ -233,13 +229,14 @@ namespace EVO_Image_app
             if (side > 0)
             {
                 side--;
+
             }
 
             if (System.IO.File.Exists(programDetails.sides[side].Image))
             {
                 // Load and display the image
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-                Common.DisplayData( programDetails.sides[side], dataGridView1);
+                Common.DisplayData(programDetails.sides[side], dataGridView1);
             }
             else
             {
@@ -694,21 +691,21 @@ namespace EVO_Image_app
         private void passwordButton_Click(object sender, EventArgs e)
         {
             //DEV
-            modelsAndColorsBtn.Enabled = true;
-            modelSearch.Enabled = true;
-            manualSearchBtn.Enabled = true;
+            //modelsAndColorsBtn.Enabled = true;
+            //modelSearch.Enabled = true;
+            //manualSearchBtn.Enabled = true;
 
             //PROD
-            //if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
-            //{
-            //    modelsAndColorsBtn.Enabled = true;
-            //    modelSearch.Enabled = true;
-            //    manualSearchBtn.Enabled = true;
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Incorrect Password");
-            //}
+            if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            {
+                modelsAndColorsBtn.Enabled = true;
+                modelSearch.Enabled = true;
+                manualSearchBtn.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Incorrect Password");
+            }
         }
 
         private void passwordEnter_Click(object sender, KeyPressEventArgs e)
