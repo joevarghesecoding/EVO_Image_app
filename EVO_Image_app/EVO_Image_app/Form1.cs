@@ -20,13 +20,16 @@ namespace EVO_Image_app
         string today;
         string outDirPath;
         List<ListViewItem> originalList;
-        ListViewItem currentItem;
         ProgramDetails programDetails;
         string currentDirectory = Environment.CurrentDirectory;
         Functions function;
         string date;
         int? modelIndex;
+        int? typeIndex;
         int flag = 0;
+        int type = 0;
+        List<List<ListViewItem>> allLists;
+        List<string> dateList;
         public EVO_Image_App()
         {
             InitializeComponent();
@@ -40,15 +43,17 @@ namespace EVO_Image_app
             previousBtn.BackgroundImageLayout = ImageLayout.Center;
             findBtn.Enabled = false;
             modelDropDown.Enabled = false;
+            typeDropDown.Enabled = false;
             calendarBtn.Enabled = false;
             searchBtn.Enabled = false;
-            originalList = new List<ListViewItem>();
+            //originalList = new List<ListViewItem>();
+            //allLists = new List<List<ListViewItem>>();
             textBox1.Enabled = false;
             calendar.Visible = false;
             calendar.MaxDate = DateTime.Today;
             ComptiaBox.ReadOnly = true;
             regionsBox.ReadOnly = true;
-            this.Text = "EVO Image Viewer Tool v1.2";
+            this.Text = "EVO Image Viewer Tool v1.4";
             modelsAndColorsBtn.Enabled = false;
             modelSearch.Enabled = false;
             manualSearchBtn.Enabled = false;
@@ -66,6 +71,7 @@ namespace EVO_Image_app
             function = new AllLatestModels();
             function.GetLatestImages();
             originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
             textBox1.Enabled = true;
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
@@ -96,82 +102,141 @@ namespace EVO_Image_app
           
             foreach (ListViewItem item in program)
             {
-                try
+                if (!item.ToString().Contains('='))
                 {
-                    //Console.WriteLine(outDirPath + item.Text);
-                    programDetails = Common.GetProgramDetails(outDirPath + item.Text);
-                    
-                    if(flag == 1)
+                    try
                     {
-                        foreach (ProgramObjs o in objs)
+                        programDetails = new ProgramDetails();
+                        
+
+                        if (flag == 1)
                         {
-                           if(o.GetModelAndColor() == item.Text)
+                            foreach (ProgramObjs o in objs)
                             {
-                                programDetails.ProgramObject = o;
-                                break;
+                                if (o.GetModelAndColor() == item.Text)
+                                {
+                                    programDetails.GetProgramDetails(outDirPath + item.Text);
+                                    programDetails.ProgramObject = o;
+                                    Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                                    break;
+                                }
                             }
                         }
-                    }
-                    else if(flag == 2)
-                    {
-                        foreach (ProgramObjs o in objs)
+                        else if (flag == 2)
                         {
-                            if(o.GetSerialNum() == item.Text)
+                            Dictionary<string, List<ProgramObjs>> programs = function.GetManualSearchProgams();
+                            foreach(var kvp in programs)
                             {
-                                programDetails = Common.GetProgramDetails(outDirPath + o.GetSerialNum());
-                                programDetails.ProgramObject = o;
-                               // Console.WriteLine(programDetails.ProgramObject.GetSerialNum() + " " + programDetails.ProgramObject.GetLastTime());
-                                break;
-                            }   
+                                objs = kvp.Value;
+                                foreach (ProgramObjs o in objs)
+                                {
+                                    if (o.GetSerialNum() + " " + o.GetLastTime().Replace(':', '-') == item.Text)
+                                    {
+                                        programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + " " + o.GetLastTime().Replace(':', '-'));
+                                        programDetails.ProgramObject = o;
+                                        Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                        Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                                        if (o.GetResult().Contains("PASS")){
+                                            ComptiaBox.Text = o.GetResult();
+                                            regionsBox.Text = "N/A";
+                                        } else
+                                        {
+                                            ComptiaBox.Text = o.GetResult();
+                                            regionsBox.Text = o.GetComptia();
+                                        }
+                                        //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+                                        break;
+                                    }
+                                }
+                            }
+
                         }
-                    }
-                    else if (flag == 3)
-                    {
-                        string[] text = item.Text.Split(',');
-                        objs = function.GetFoundPrograms();
-                        foreach (ProgramObjs o in objs)
+                        else if (flag == 3)
                         {
-                            if (o.GetSerialNum() == text[0])
+                            string[] text = item.Text.Split(',');
+                            if (type == 1)
+                                objs = function.GetLintLogicCandidates();
+                            else
+                                objs = function.GetFoundPrograms();
+                            foreach (ProgramObjs o in objs)
                             {
-                                programDetails.ProgramObject = o;
-                                break;
+                                if (o.GetSerialNum() == text[0])
+                                {
+                                    programDetails.GetProgramDetails(o.GetOutputDirectoryPath() + "\\" + o.GetSerialNum() + "," + o.GetModelAndColor() + "," + o.GetResult());
+                                    programDetails.ProgramObject = o;
+                                    Common.DisplayData(programDetails.sides[side], dataGridView1);
+                                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
+                                    break;
+                                }
                             }
                         }
+
+
+                        Image combinedImage = CombineImages( Image.FromFile(programDetails.sides[0].Image), Image.FromFile(programDetails.sides[1].Image), Image.FromFile(programDetails.sides[2].Image),
+                            Image.FromFile(programDetails.sides[3].Image), Image.FromFile(programDetails.sides[4].Image), Image.FromFile(programDetails.sides[5].Image));
+
+                        //pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
+
+                        pictureBox1.Image = combinedImage;
+                        side = 0;
+
                     }
-                    
-                    pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-
-                    side = 0;
-
- 
-                    Common.DisplayData(programDetails.sides[side], dataGridView1);
-                    Common.DisplaySerialAndDate(objs, programDetails.ProgramObject, serialNum, lastDate, ComptiaBox, regionsBox);
-                
+                    catch (NullReferenceException ex)
+                    {
+                        MessageBox.Show("Program contents not found.");
+                        Console.WriteLine(ex);
+                    }
                 }
-                catch (NullReferenceException ex)
-                {
-                    MessageBox.Show("Program contents not found.");
-                    Console.WriteLine(ex);
-                }
-
-
             }
+        }
+
+        private Image CombineImages(Image display, Image back, Image top, Image bottom, Image left, Image right)
+        {
+            Bitmap combinedBitmap = new Bitmap(display.Width * 3, display.Height * 2);
+
+            using(Graphics g = Graphics.FromImage(combinedBitmap))
+            {
+                g.DrawImage(display, 0, 0);
+                g.DrawImage(back, display.Width, 0);
+                g.DrawImage(top, display.Width * 2, 0);
+                g.DrawImage(bottom, 0, display.Height);
+                g.DrawImage(left, display.Width, display.Height);
+                g.DrawImage(right, display.Width * 2, display.Height);
+            }
+
+            return combinedBitmap;
+        }
+
+        private void ModelSearchIndexSelected(ProgramObjs obj)
+        {
+            if (typeIndex == null)
+                typeIndex = 0;
+            int type = typeIndex ?? default(int);
+
+          
         }
 
         //Previous button
         private void button3_Click_1(object sender, EventArgs e)
         {
-
+            if (side == 0)
+            {
+                previousBtn.Enabled = false;
+            }
+            else
+                previousBtn.Enabled = true;
             if (side > 0)
             {
                 side--;
+
             }
 
             if (System.IO.File.Exists(programDetails.sides[side].Image))
             {
                 // Load and display the image
                 pictureBox1.Image = Image.FromFile(programDetails.sides[side].Image);
-                Common.DisplayData( programDetails.sides[side], dataGridView1);
+                Common.DisplayData(programDetails.sides[side], dataGridView1);
             }
             else
             {
@@ -271,6 +336,8 @@ namespace EVO_Image_app
             textBox1.Enabled = true;
             findBtn.Enabled = true;
             originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
+            
             listView1.Columns.Add("Current Programs", -2);
             listView1.Items.Clear();
         }
@@ -278,6 +345,7 @@ namespace EVO_Image_app
         //Find button next to manual search
         private void findBtn_Click(object sender, EventArgs e)
         {
+            originalList.Clear();
             Cursor.Current = Cursors.WaitCursor;
             string serial = textBox1.Text.ToUpper();
             if(serial.Length > 12)
@@ -287,22 +355,25 @@ namespace EVO_Image_app
 
             }
             string pattern = "[A-Z0-9]";
-
-            originalList.Clear();
-            if(Regex.IsMatch(serial, pattern))
+            dateList = new List<string>();
+            if (Regex.IsMatch(serial, pattern))
             {
                 function.GetImagesForSerial(serial);
+                Dictionary<string, List<ProgramObjs>> programs = function.GetManualSearchProgams();
                 
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-                DirectoryInfo folders = new DirectoryInfo(outDirPath);
-                DirectoryInfo[] eachFolder = folders.GetDirectories();
-                List<ProgramObjs> manualSearchObjs = function.GetProgramObjs();
-                foreach (DirectoryInfo directory in eachFolder)
+                foreach(var kvp in programs)
                 {
-                    ListViewItem item = new ListViewItem(directory.Name);
-                    originalList.Add(item);
-                }
-                              
+                    ListViewItem dateDivider = new ListViewItem("======" + kvp.Key + "======");
+                    dateDivider.BackColor = Color.Black;
+                    dateDivider.ForeColor = Color.Aqua;
+                    originalList.Add(dateDivider);
+                     List<ProgramObjs> objs = kvp.Value;
+                    foreach(ProgramObjs obj in objs)
+                    {
+                        ListViewItem item = new ListViewItem(obj.GetSerialNum() + " " + obj.GetLastTime().Replace(':', '-'));
+                        originalList.Add(item);
+                    }
+                }    
             }
             else
             {
@@ -319,26 +390,81 @@ namespace EVO_Image_app
             listView1.Columns.Add("Current Programs", -2);
             listView1.Items.Clear();
             Common.DeleteOnStart(currentDirectory, flag);
+            originalList = new List<ListViewItem>();
+            allLists = new List<List<ListViewItem>>();
             function = new ModelSearch();
             modelDropDown.Enabled = true;
+            typeDropDown.Enabled = true;
             calendarBtn.Enabled = true;
             searchBtn.Enabled = true;
-            string[] models = getModelSearchModels();
-            modelDropDown.Items.AddRange(models);
+            List<string> models = getModelSearchModels();
+            List<string> types = getModelSearchTypes();
+            modelDropDown.Items.AddRange(models.ToArray());
+            typeDropDown.Items.AddRange(types.ToArray());
+            dateList = new List<string>();
         }
 
-        private string[] getModelSearchModels()
+        private List<string> getModelSearchModels()
         {
-            List<ProgramObjs> modelSearch = function.GetProgramObjs();
-            string[] models = new string[modelSearch.Count];
-            int i = 0;
-            foreach (ProgramObjs obj in modelSearch)
+            List<ProgramObjs> allCurrentModels = function.GetCurrentPrograms();
+            string fullPathModels = Common.currentDirectory + "//Resources//models_type.txt";
+            List<string> models = new List<string>();
+            try
             {
-                models[i] = obj.GetModelAndColor();
-                i++;
+                using (StreamReader reader = new StreamReader(fullPathModels))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        models.Add(line);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("***** ERROR At getModelSearchModels() ******\n" + ex.Message);
+            }
+            
+            foreach (ProgramObjs obj in allCurrentModels)
+            {
+                models.Add(obj.GetModelAndColor());
+                
             }
 
             return models;
+        }
+
+        private List<string> getModelSearchTypes()
+        {
+            string fullPathAsIs = Common.currentDirectory + "//Resources//result_types_as_is.txt";
+            string fullPathMSS = Common.currentDirectory + "//Resources//result_types_mss.txt";
+
+            List<string> types = new List<string>();
+            try
+            {
+                using (StreamReader reader = new StreamReader(fullPathAsIs))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        types.Add(line);
+                    }
+                }
+                using (StreamReader reader = new StreamReader(fullPathMSS))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        types.Add(line);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("***** ERROR At getModelSearchTypes() ******\n" + ex.Message);
+            }
+            return types;
         }
 
         private void modelDropDown_SelectedIndexChanged(object sender, EventArgs e)
@@ -346,12 +472,22 @@ namespace EVO_Image_app
              modelIndex = modelDropDown.SelectedIndex;
         }
 
+        private void typeDropDown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            typeIndex = typeDropDown.SelectedIndex;
+        }
+
         private void calendarBtn_Click(object sender, EventArgs e)
         {
+            calendar.BringToFront();
             if (calendar.Visible)
                 calendar.Visible = false;
             else
+            {
+                calendar.BringToFront();
                 calendar.Visible = true;
+            }
+                
 
         }
 
@@ -365,47 +501,202 @@ namespace EVO_Image_app
 
         }
 
-
+        //Model search button
         private void searchBtn_Click(object sender, EventArgs e)
         {
+            ModelSearch ms = new ModelSearch();
+            originalList = new List<ListViewItem>();
+            allLists.Clear();
             if (calendar.Visible)
                 calendar.Visible = false;
-            outDirPath = currentDirectory + "\\Resources\\" + Common.CurrentFlag(flag) + "\\" + today + "\\";
-            if (modelIndex.HasValue)
+
+            if (typeIndex == null)
+                typeIndex = 0;
+            type = typeIndex ?? default(int);
+            Console.WriteLine(type);
+            Console.WriteLine(type.GetType());
+            if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
-                string[] models = getModelSearchModels();
-                
-                ProgramObjs program = new ProgramObjs(models[index]);
-                if (date != null)
-                    function.GetModelImages(program, date);
-                else
-                    function.GetModelImages(program, today);
-                List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+                string[] models = getModelSearchModels().ToArray();
 
-                originalList = new List<ListViewItem>();
-                foreach (ProgramObjs objs in modelSearch)
+                //ALL with comptia
+                if (models[index] == "ALL")
                 {
-                    //Console.WriteLine(objs.GetSerialNum());
-                    ListViewItem temp = new ListViewItem(objs.GetSerialNum() + "," + objs.GetModelAndColor());
-                    originalList.Add(temp);
+                    if (models[index] == "ALL" && type == 0)
+                    {
+                        MessageBox.Show("Find the results in the Daily Run Data");
+                        return;
+                    }
+                    //LINTLOGIC
+                    else if (models[index] == "ALL" && type == 1)
+                    {
+                        Console.WriteLine("INSIDE LINT LOGIC START");
+                       
+                        if (date != null)
+                        {
+                            function.GetLintLogicImages(date);
+                        }
+                        else
+                        {
+                            function.GetLintLogicImages(today);
+                        }
+
+                    }
+                    else
+                    {
+                        List<ProgramObjs> allCurrentModels = function.GetCurrentPrograms();
+                        foreach (ProgramObjs program in allCurrentModels)
+                        {
+                            if (date != null)
+                            {
+                                function.GetAllModelImages(program, date, type);
+                            }
+                            else
+                            {
+                                function.GetAllModelImages(program, today, type);
+                            }
+                        }
+
+
+                       
+                    }
+                    List<ProgramObjs> modelSearch;
+                    if (type == 1)
+                        modelSearch = function.GetLintLogicCandidates();
+                    else
+                        modelSearch = function.GetFoundPrograms();
+                    Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                    AddToAllList(reorganizedModelSearch);
+
+                }
+              
+                else
+                {
+                    ProgramObjs program = new ProgramObjs(models[index]);
+                    //COMPTIA
+                    if (type != 1)
+                    {
+                        if (date != null)
+                        {
+                            function.GetAllModelImages(program, date, type);
+                        }
+                        else
+                        {
+                            function.GetAllModelImages(program, today, type);
+                        }
+                        List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                        AddToAllList(reorganizedModelSearch);
+                    }
+                    
                 }
 
+                allLists.Add(originalList);
+                //originalList.Clear();
                 textBox1.Text = "Filter";
                 textBox1.Enabled = true;
                 textBox1.ForeColor = System.Drawing.Color.DimGray;
                 listView1.Items.Clear();
-                listView1.Items.AddRange(originalList.ToArray());
-
-  
+                foreach (List<ListViewItem> list in allLists)
+                {
+                    listView1.Items.AddRange(list.ToArray());
+                }
             }
-           
         }
 
+        private Dictionary<string, List<ProgramObjs>> ReorganizeFoundPrograms(List<ProgramObjs> programObjs, int type)
+        {
+            ModelSearch ms = new ModelSearch();   
+            Dictionary<string, List<ProgramObjs>> hashMap = new Dictionary<string, List<ProgramObjs>>();
+            //ALL
+            if (type != 1)
+            {
+                foreach (ProgramObjs program in programObjs)
+                {
+                    if (!hashMap.ContainsKey(program.GetModelAndColor()))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetModelAndColor(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetModelAndColor()].Add(program);
+                    }
+                }
+            }
+            //Lint logic
+            else if(type == 1)
+            {
+                foreach (ProgramObjs program in programObjs)
+                {
+                    if (!hashMap.ContainsKey(program.GetLintLogicResult()))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetLintLogicResult(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetLintLogicResult()].Add(program);
+                    }
+                }
+            }
+            //Individual comptias
+            else
+            {
+                string t = ms.getType(type);
+                foreach (ProgramObjs program in programObjs)
+                {
+                    if (!hashMap.ContainsKey(program.GetResult()) && program.GetResult().Contains(t))
+                    {
+                        List<ProgramObjs> temp = new List<ProgramObjs>();
+                        temp.Add(program);
+                        hashMap.Add(program.GetResult(), temp);
+                    }
+                    else
+                    {
+                        hashMap[program.GetResult()].Add(program);
+                    }
+                }
+            }
+           
+            return hashMap;
+        }
+
+        private void AddToAllList(Dictionary<string, List<ProgramObjs>> hashMap)
+        {
+            //allLists = new List<List<ListViewItem>>();
+
+            foreach (var kvp in hashMap)
+            {
+                ListViewItem dateDivider = new ListViewItem("==" + kvp.Key + "==");
+                dateDivider.BackColor = Color.Black;
+                dateDivider.ForeColor = Color.Aqua;
+                List<ProgramObjs> temp = kvp.Value;
+                List<ListViewItem> tempListView = new List<ListViewItem>();
+                tempListView.Add(dateDivider);
+                foreach(ProgramObjs programs in temp)
+                {
+                    //Console.WriteLine(programs.GetOutputDirectoryPath());
+                    tempListView.Add(new ListViewItem(programs.GetSerialNum() + "," + programs.GetResult()));
+                }
+
+                allLists.Add(tempListView);
+            }
+        }
+        
         //Password Code
         private void passwordButton_Click(object sender, EventArgs e)
         {
-            if(passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            //DEV
+            //modelsAndColorsBtn.Enabled = true;
+            //modelSearch.Enabled = true;
+            //manualSearchBtn.Enabled = true;
+
+            //PROD
+            if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
             {
                 modelsAndColorsBtn.Enabled = true;
                 modelSearch.Enabled = true;
@@ -417,5 +708,34 @@ namespace EVO_Image_app
             }
         }
 
+        private void passwordEnter_Click(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+                {
+                    modelsAndColorsBtn.Enabled = true;
+                    modelSearch.Enabled = true;
+                    manualSearchBtn.Enabled = true;
+                }
+                else
+                {
+                    MessageBox.Show("Incorrect Password");
+                }
+            }
+        }
+
+        private void textbox1Enter_Click(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                if(flag == 2)
+                {
+                    findBtn_Click(sender, e);
+                }
+            }
+        }
+
+        
     }
 }

@@ -69,9 +69,10 @@ namespace EVO_Image_app.EVO_BACK_END
             try
             {
                 DirectoryInfo sourceInfo = new DirectoryInfo(source);
+               
                 if(!sourceInfo.Exists)
                 {
-                    //Console.WriteLine(sourceInfo.FullName);
+                    Console.WriteLine(sourceInfo.FullName);
                     Console.WriteLine("***** Source Info missing COPY HELPER *****\n");
                     return;
                 }
@@ -84,11 +85,55 @@ namespace EVO_Image_app.EVO_BACK_END
                 }
 
                 FileInfo[] files = sourceInfo.GetFiles();
-
-                foreach(FileInfo file in files)
+                string newName = "";
+                foreach (FileInfo file in files)
                 {
-                    string desFilePath = Path.Combine(destinationInfo.FullName, file.Name);
-                    file.CopyTo(desFilePath, true);
+                   
+                    //Console.WriteLine(file.Name);
+                    
+                    if (file.Name.Contains("DSP"))
+                    {
+                        newName = "DSP.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("HSG"))
+                    {
+                        newName = "HSG.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("LFT"))
+                    {
+                        newName = "LFT.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("RHT"))
+                    {
+                        newName = "RHT.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("TOP"))
+                    {
+                        newName = "TOP.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else if (file.Name.Contains("BTM"))
+                    {
+                        newName = "BTM.jpg";
+                        string desFilePath = Path.Combine(destinationInfo.FullName, newName);
+                        file.CopyTo(desFilePath, true);
+                    }
+                    else
+                    {
+                        string desFilePath = Path.Combine(destinationInfo.FullName, file.Name);
+                        file.CopyTo(desFilePath, true);
+                    }
+
+                    
                 }
 
             } catch (Exception ex)
@@ -97,88 +142,7 @@ namespace EVO_Image_app.EVO_BACK_END
             }
         }
 
-        ///<summary>
-        ///Gets Images and file names for the specific file.
-        /// </summary>
-        /// <param name="path">The path to the directory where the results are</param>
-        /// 
-        public static ProgramDetails GetProgramDetails(string path)
-        {
-            ProgramDetails programDetails = new ProgramDetails();
-            try
-            {
-                DirectoryInfo sourceInfo = new DirectoryInfo(path);
-                //Console.WriteLine(sourceInfo.FullName);
-                if (!sourceInfo.Exists)
-                {
-                    //Console.WriteLine(sourceInfo.FullName);
-                    Console.WriteLine("***** GetProgramDetails missing File *****\n");
-                    
-                }
-                else
-                {
-                        FileInfo[] files = sourceInfo.GetFiles();
-                        ProgramObjs temp2 = new ProgramObjs(sourceInfo.Name);
-                        programDetails.ProgramObject = temp2;
-                        string frontImage, frontFile, backImage, backFile, leftImage, leftFile, 
-                        rightImage, rightFile, bottomImage, bottomFile, topImage, topFile;
-                        frontImage = frontFile = backImage = backFile = leftImage = leftFile =
-                        rightImage = rightFile = bottomImage = bottomFile = topImage = topFile = "";
-                    foreach (FileInfo file in files)
-                        {
-                        if (file.Name.Contains("DSP") ||  file.Name == "Display.jpg")
-                                frontImage = file.FullName;
-                            else if (file.Name.Contains("HSG") || file.Name == "Housing.jpg")
-                                backImage = file.FullName;
-                            else if (file.Name.Contains("LFT") || file.Name == "Left.jpg")
-                                leftImage = file.FullName;
-                            else if (file.Name.Contains("RHT") || file.Name == "Right.jpg")
-                                rightImage = file.FullName;
-                            else if (file.Name.Contains("TOP") || file.Name == "Top.jpg")
-                                topImage = file.FullName;
-                            else if (file.Name.Contains("BTM") || file.Name == "Bottom.jpg")
-                                bottomImage = file.FullName;
-                            else if (file.Name == "Back.csv")
-                                backFile = file.FullName;
-                            else if (file.Name == "Front.csv")
-                                frontFile = file.FullName;
-                            else if (file.Name == "Long.csv")
-                            {
-                                leftFile = file.FullName;
-                                rightFile = file.FullName;
-                            }
-                            else if (file.Name == "Short.csv")
-                            {
-                                topFile = file.FullName;
-                                bottomFile = file.FullName;
-                            }
-                        }
-
-                        Front front = new Front(frontImage, frontFile);
-                        Back back = new Back(backImage, backFile);
-                        Top top = new Top(topImage, topFile);
-                        Bottom bottom = new Bottom(bottomImage, bottomFile);
-                        Left left = new Left(leftImage, leftFile);
-                        Right right = new Right(rightImage, rightFile);
-
-                    programDetails.sides[0] = front;
-                    programDetails.sides[1] = back;
-                    programDetails.sides[2] = top;
-                    programDetails.sides[3] = bottom;
-                    programDetails.sides[4] = left;
-                    programDetails.sides[5] = right;
-                   
-                }
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("****** CopyResultsToDirectoryHelper ERROR ******\n " + ex.Message);
-            }
-
-            return programDetails;
-        }
-
+      
         ///<summary>
         ///Reads the CSV file and displays data to the correct
         /// </summary>
@@ -212,7 +176,7 @@ namespace EVO_Image_app.EVO_BACK_END
         {
             foreach(ProgramObjs obj in objs)
             {
-                if(obj.GetSerialNum() == programObjs.GetSerialNum() && obj.GetLastDate() == programObjs.GetLastDate() && obj.GetLastTime() == programObjs.GetLastTime())
+                if(obj.GetSerialNum() == programObjs.GetSerialNum() && obj.GetLastDate() == programObjs.GetLastDate() && obj.GetLastTime().Replace(':', '-') == programObjs.GetLastTime().Replace(':', '-'))
                 {
                     serialNum.Text = programObjs.GetSerialNum();
                     lastDate.Text = programObjs.GetLastDate() + " " + programObjs.GetLastTime();
@@ -257,136 +221,6 @@ namespace EVO_Image_app.EVO_BACK_END
            
         }
 
-        /// <summary>
-        /// Gets a list of all current programs from the colors_program.xml file
-        /// </summary>
-        /// <returns></returns>
-        public static List<ProgramObjs> GetCurrentPrograms()
-        {
-            List<ProgramObjs> objs = new List<ProgramObjs>();
-            string cpPath = "c:\\EVO-3\\Parameters\\color_programs.xml";
-            //string cpPath = currentDirectory + "\\Resources\\color_programs.xml";
-            try
-            {
-                using (XmlReader reader = XmlReader.Create(cpPath))
-                {
-                    reader.ReadToFollowing("ModelPrograms");
-                    string currentModel = "";
-                    while (reader.Read())
-                    {
-
-                        string currentModelAndColor = "";
-
-                        if (reader.NodeType == XmlNodeType.Element || reader.NodeType == XmlNodeType.Text)
-                        {
-                            if (reader.Value.Contains("iPhone"))
-                            {
-                                currentModel = reader.Value;
-                            }
-                            if (!reader.Name.Contains("ModelPrograms") && !reader.Name.Contains("audit") && !reader.Name.Contains("model") && !string.IsNullOrWhiteSpace(reader.Name)
-                                    && !reader.Name.Contains("large") && !reader.Name.Contains("small"))
-                            {
-                                char[] color = reader.Name.ToCharArray();
-                                color[0] = char.ToUpper(color[0]);
-                                string colorUpper = new string(color);
-                                if (colorUpper.Equals("Gray"))
-                                {
-                                    colorUpper = "Space Gray";
-                                }
-                                currentModelAndColor = currentModel + "," + colorUpper;
-                                objs.Add(new ProgramObjs(currentModelAndColor));
-                            }
-
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(" ***** ERROR At GetCurrentProgram *****\n " + ex.Message);
-            }
-
-            return objs;
-        }
-
-        /// <summary>
-        /// Finds all file names of FAT-SAT files
-        /// </summary>
-        /// <returns>List of FAT SAT files</returns>
-        public static List<FileInfo> GetAllFatSatFiles()
-        {
-
-            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
-            //string path = currentDirectory + "\\Resources\\FAT-SAT\\";
-
-            DirectoryInfo dir = new DirectoryInfo(path);
-            FileInfo[] files = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToArray();
-            List<FileInfo> result = files.ToList<FileInfo>();
-
-            string auditPath = "C:\\EVO-3\\Save Data\\Logs\\Audit_FAT-SAT\\";
-            DirectoryInfo auditDir = new DirectoryInfo(auditPath);
-            List<FileInfo> auditFiles = dir.GetFiles().OrderByDescending(f => f.LastWriteTime).ToList();
-            foreach(FileInfo fileInfo in auditFiles)
-            {
-                result.Add(fileInfo);
-            }
-            return result;
-        }
-
-        ///<summary>
-        ///Gets FAT-SAT files for the specific date
-        /// </summary>
-        /// <returns>The FAT-SAT file for the specific date</returns>
-        public static FileInfo GetFatSatFile(string date)
-        {
-            //string path = currentDirectory + "\\Resources\\FAT-SAT\\";
-            string path = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\";
-            DirectoryInfo dir = new DirectoryInfo(path);
-            foreach(FileInfo file in dir.GetFiles().OrderByDescending(f => f.LastWriteTime))
-            {
-                if(file.Name.Contains(date))
-                {
-                    return file;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Finds individual serial numbers based on last run program (color and model) within a fat-sat file.
-        /// </summary>
-        /// <param name="programObjs">list of program objects that gets configured</param>
-        /// <param name="path">FAT-SAT file path</param>
-        public static void FindSerials(List<ProgramObjs> programObjs, FileInfo path)
-        {
-
-            string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
-
-            //string fullPath = currentDirectory + "\\Resources\\FAT-SAT\\" + path.Name;
-            //Change Full Path when in prod
-            var lines = File.ReadAllLines(fullPath).Reverse();
-            foreach (ProgramObjs program in programObjs)
-            {
-                foreach (string line in lines)
-                {
-                    if (line.Contains(program.GetModelAndColor())){
-                        if (program.GetSerialNum() == "")
-                        {
-                            string[] splitted = line.Split(',');
-                            program.SetSerialNum(splitted[3]);
-                            string[] dateSplit = splitted[0].Split(' ');
-                            program.SetLastDate(dateSplit[0].Replace("/", "-"));
-                            program.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
-                            program.SetLastTime(dateSplit[1] + " " + dateSplit[2]);
-                        }
-                    }
-                }
-            }
-            
-          
-        }
-
 
         ///<summary>
         /// Sets the path of the out directory based on the currently running function
@@ -410,27 +244,6 @@ namespace EVO_Image_app.EVO_BACK_END
             return null;
         }
 
-
-        //public static void DisplayComptiaAndRegions(ProgramObjs current, System.Windows.Forms.TextBox comptia, System.Windows.Forms.TextBox regions)
-        //{
-           
-        //    string[] splitted = current.GetComptia().Split(',');
-        //    foreach(string split in splitted)
-        //    {
-        //        Console.WriteLine(split);
-        //    }
-        //    if (splitted[0] == "PASS")
-        //    {
-        //        comptia.Text = "PASS";
-        //        regions.Text = "N/A";
-        //    }
-        //    else if (splitted[0] == "FAIL")
-        //    {
-        //        comptia.Text = splitted[0] + ":" + splitted[1];
-        //        regions.Text = splitted[2];
-        //    }
-              
-        //}
     }
 
 }

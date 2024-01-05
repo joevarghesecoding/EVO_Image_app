@@ -11,7 +11,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
     class AllLatestModels : Functions
     {
         string today = Common.GetDate();
-        
+
         public AllLatestModels() : base() { }
 
 
@@ -25,7 +25,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
             //string dailyRunData = Common.currentDirectory + "\\Resources";
-            programObjs = Common.GetCurrentPrograms();
+            programObjs = GetCurrentPrograms();
             GetLatestSerials(programObjs);
             string today = Common.GetDate();
 
@@ -45,7 +45,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             }
         }
 
-        public override void GetModelImages(ProgramObjs program, string date)
+        public override void GetModelImages(ProgramObjs program, string date, int type)
         {
             throw new NotImplementedException();
         }
@@ -58,14 +58,56 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 
         private void GetLatestSerials(List<ProgramObjs> programObjs)
         {
-            List<FileInfo> fatSatFiles = Common.GetAllFatSatFiles();
-            
+            List<FileInfo> fatSatFiles = GetAllFatSatFiles();
+
             foreach (FileInfo file in fatSatFiles)
             {
-                Common.FindSerials(programObjs, file);
+                FindSerials(programObjs, file);
             }
-           
-            
+
+
+        }
+
+        /// <summary>
+        /// Finds individual serial numbers based on last run program (color and model) within a fat-sat file.
+        /// </summary>
+        /// <param name="programObjs">list of program objects that gets configured</param>
+        /// <param name="path">FAT-SAT file path</param>
+        private void FindSerials(List<ProgramObjs> programObjs, FileInfo path)
+        {
+
+            string fullPath = "C:\\EVO-3\\Save Data\\Logs\\FAT-SAT\\" + path.Name;
+            var lines = File.ReadAllLines(fullPath).Reverse();
+            foreach (ProgramObjs program in programObjs)
+            {
+                foreach (string line in lines)
+                {
+                    if (line.Contains(program.GetModelAndColor()))
+                    {
+                        if (program.GetSerialNum() == "")
+                        {
+                            string[] splitted = line.Split(',');
+                            program.SetSerialNum(splitted[3]);
+                            string[] dateSplit = splitted[0].Split(' ');
+                            string date = dateSplit[0].Replace("/", "-");
+                            program.SetLastDate(date);
+                            program.SetComptia(splitted[4] + "," + splitted[5] + "," + splitted[6]);
+                            program.SetLastTime(dateSplit[1] + " " + dateSplit[2]);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        public override void GetAllModelImages(ProgramObjs program, string date, int type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetLintLogicImages(string date)
+        {
+            throw new NotImplementedException();
         }
     }
 }

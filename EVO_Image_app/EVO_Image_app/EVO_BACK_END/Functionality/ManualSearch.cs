@@ -9,9 +9,15 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
 {
     class ManualSearch : Functions
     {
+        
 
-        public ManualSearch() : base() { }
+        public ManualSearch() : base() 
+        {
+            programObjs = new List<ProgramObjs>();
+            manualSearchProgams = new Dictionary<string, List<ProgramObjs>>();
+        }
 
+      
         /// <summary>
         /// Gets images for the serial number and creates a folder for it.
         /// </summary>
@@ -22,7 +28,7 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
 
             // string dailyRunData = Common.currentDirectory + "\\Resources";
-            List<FileInfo> fatSatPaths = Common.GetAllFatSatFiles();
+            List<FileInfo> fatSatPaths = GetAllFatSatFiles();
 
             foreach (FileInfo fileInfo in fatSatPaths)
             {
@@ -36,88 +42,92 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
                         {
                             if (line.Contains(serial))
                             {
-                                //Console.WriteLine(line);
                                 string[] splitted = line.Split(',');
                                 string[] dateSplit = splitted[0].Split(' ');
-                                ProgramObjs program = new ProgramObjs(splitted[1] + ',' + splitted[2], splitted[3], dateSplit[0].Replace("/", "-"), splitted[4] + "," + splitted[5] + "," + splitted[6], dateSplit[1] + " " + dateSplit[2]);
-                                programObjs.Add(program);
+                                string modelAndColor = splitted[1] + ',' + splitted[2];
+                                string lastDate = dateSplit[0].Replace("/", "-");
+                                string result = splitted[4] + "," + splitted[5];
+                                string lastTime = dateSplit[1] + " " + dateSplit[2];
+                                string comptia = splitted[6];
+                                ProgramObjs program = new ProgramObjs(modelAndColor, serial, lastDate, result, comptia, lastTime.Replace(':', '-'));
+                                string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
+                                program.SetOutputDirectoryPath(outDirPath);
+                                //programObjs.Add(program);
+                               
+                                if (manualSearchProgams.ContainsKey(lastDate))
+                                {
+                                    manualSearchProgams[lastDate].Add(program);
+                                }
+                                else
+                                {
+                                    List<ProgramObjs> newDateList = new List<ProgramObjs>();
+                                    newDateList.Add(program);
+                                    manualSearchProgams.Add(lastDate, newDateList);
+                                }
+
+                                
                             }
                         }
                     }
 
-                   
+
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("***** ERROR At FindProgramData ******\n" + ex.Message);
                 }
             }
-
-            GetImagesForSerialHelper();
+            RenameSerials(manualSearchProgams, serial);
+            SendData(manualSearchProgams);
 
         }
 
+        private void RenameSerials(Dictionary<string, List<ProgramObjs>> dictionary, string serial)
+        {
+            foreach (var kvp in dictionary)
+            {
+                List<ProgramObjs> temp = kvp.Value;
+                List<string> duplicates = new List<string>();
+                HashSet<string> unique = new HashSet<string>();
+                foreach (ProgramObjs p in temp)
+                {
+                    if (!unique.Add(p.GetSerialNum()))
+                    {
+                        duplicates.Add(p.GetSerialNum());
+                        var count = duplicates.Count(s => s == p.GetSerialNum());
+                        if(count == 1)
+                        {
+                            p.SetSerialNum(p.GetSerialNum() + " - 0");
+                        }
+                        if(count > 1)
+                        {
+                            p.SetSerialNum(p.GetSerialNum() + " - " + (count - 1).ToString());
+                        }
+                    }
+                }
+            }
+        }
 
-        private void GetImagesForSerialHelper()
+
+        private void SendData(Dictionary<string, List<ProgramObjs>> manualSearchProgams)
         {
             string dailyRunData = "C:\\EVO-3\\Save Data\\Daily Run Data";
-            string today = Common.GetDate();
-            HashSet<string> unique = new HashSet<string>();
-            List<ProgramObjs> uniqueObjs = new List<ProgramObjs>();
-            List<ProgramObjs> duplicates = new List<ProgramObjs>();
-            List<ProgramObjs> finalList = new List<ProgramObjs>();
-            foreach (ProgramObjs p in programObjs)
+
+            foreach(var kvp in manualSearchProgams)
             {
-                if (!unique.Add(p.GetSerialNum()))
+                List<ProgramObjs> programs = kvp.Value;
+                foreach(ProgramObjs f in programs)
                 {
-                    duplicates.Add(p);
+                    string serial = f.GetSerialNum();
+                    string lastDate = f.GetLastDate();
+                    string inDirPath = dailyRunData + "\\" + lastDate;
+                    string outDirPath = Path.GetFullPath(Common.currentDirectory + "\\Resources\\ManualSearch\\" + lastDate);
+                    string fileName = f.GetSerialNum() + " " + f.GetLastTime().Replace(':', '-');
+                    if (lastDate != "" && lastDate != "iPhone")
+                    {
+                        Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
+                    }
                 }
-                else
-                {
-                    uniqueObjs.Add(p);
-                }
-            }
-
-            int count = 0;
-            foreach (ProgramObjs d in duplicates)
-            {
-                string currentSerial = d.GetSerialNum();
-
-                string current = currentSerial;
-                if (!currentSerial.Equals(current))
-                    count = 0;
-                while (currentSerial.Equals(current))
-                {
-                    d.SetSerialNum(currentSerial + " - " + count.ToString());
-                    count++;
-
-                    current = d.GetSerialNum();
-                }
-            }
-
-            foreach (ProgramObjs obj in uniqueObjs)
-            {
-                finalList.Add(obj);
-            }
-
-            foreach (ProgramObjs duplicate in duplicates)
-            {
-                finalList.Add(duplicate);
-            }
-
-            foreach (ProgramObjs f in finalList)
-            {
-                string serial = f.GetSerialNum();
-                string lastDate = f.GetLastDate();
-                string inDirPath = dailyRunData + "\\" + lastDate;
-                string outDirPath = Common.currentDirectory + "\\Resources\\ManualSearch\\" + today;
-
-                string fileName = f.GetSerialNum();
-                if (lastDate != "" && lastDate != "iPhone")
-                {
-                    Common.CopyResultsToDirectory(serial, inDirPath, outDirPath, fileName);
-                }
-
             }
         }
 
@@ -127,7 +137,17 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
 
-        public override void GetModelImages(ProgramObjs program, string date)
+        public override void GetModelImages(ProgramObjs program, string date, int type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetAllModelImages(ProgramObjs program, string date, int type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetLintLogicImages(string date)
         {
             throw new NotImplementedException();
         }
