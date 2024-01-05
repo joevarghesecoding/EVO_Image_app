@@ -288,5 +288,40 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
             throw new NotImplementedException();
         }
 
+        public override void GetAllModelImages(ProgramObjs program, string date)
+        {
+            try
+            {
+                FileInfo file = GetFatSatFile(date);
+                if (file != null)
+                {
+                    using (StreamReader reader = new StreamReader(file.FullName))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            string[] splitted = line.Split(',');
+                            string modelAndColor = splitted[1] + "," + splitted[2];
+                            string serial = splitted[3];
+                            string comptia = splitted[4] + "," + splitted[5] + "," + splitted[6];
+                            string[] dateSplit = splitted[0].Split(' ');
+                            if (modelAndColor.Contains(program.GetModelAndColor()))
+                            {
+                                ProgramObjs temp = new ProgramObjs(modelAndColor, serial, date, splitted[4] + " " + splitted[5], comptia, dateSplit[1] + " " + dateSplit[2]);
+                                foundPrograms.Add(temp);
+                            }
+
+                        }
+                    }
+                }
+
+                SendToDirectory(foundPrograms, date, false);
+            }
+            catch (NullReferenceException ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Incorrect Date");
+                Console.WriteLine("******* ERROR AT GetAllModelImages ******\n" + ex.Message);
+            }
+        }
     }
 }

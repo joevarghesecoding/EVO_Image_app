@@ -220,12 +220,6 @@ namespace EVO_Image_app
         //Previous button
         private void button3_Click_1(object sender, EventArgs e)
         {
-            if (side == 0)
-            {
-                previousBtn.Enabled = false;
-            }
-            else
-                previousBtn.Enabled = true;
             if (side > 0)
             {
                 side--;
@@ -513,8 +507,7 @@ namespace EVO_Image_app
             if (typeIndex == null)
                 typeIndex = 0;
             type = typeIndex ?? default(int);
-            Console.WriteLine(type);
-            Console.WriteLine(type.GetType());
+
             if (modelIndex.HasValue && typeIndex != null)
             {
                 int index = modelIndex.Value;
@@ -559,7 +552,6 @@ namespace EVO_Image_app
                         }
 
 
-                       
                     }
                     List<ProgramObjs> modelSearch;
                     if (type == 1)
@@ -574,8 +566,22 @@ namespace EVO_Image_app
                 else
                 {
                     ProgramObjs program = new ProgramObjs(models[index]);
+                    
                     //COMPTIA
-                    if (type != 1)
+                    if(type == 0)
+                    {
+                        Console.WriteLine("INSIDE");
+                        if (date != null)
+                        {
+                            function.GetAllModelImages(program, date);
+                        }
+                        else
+                        {
+                            function.GetAllModelImages(program, today);
+                        }
+
+                    }
+                    else if (type != 1)
                     {
                         if (date != null)
                         {
@@ -585,11 +591,11 @@ namespace EVO_Image_app
                         {
                             function.GetAllModelImages(program, today, type);
                         }
-                        List<ProgramObjs> modelSearch = function.GetFoundPrograms();
-                        Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
-                        AddToAllList(reorganizedModelSearch);
+                        
                     }
-                    
+                    List<ProgramObjs> modelSearch = function.GetFoundPrograms();
+                    Dictionary<string, List<ProgramObjs>> reorganizedModelSearch = ReorganizeFoundPrograms(modelSearch, type);
+                    AddToAllList(reorganizedModelSearch);
                 }
 
                 allLists.Add(originalList);
@@ -647,6 +653,7 @@ namespace EVO_Image_app
             else
             {
                 string t = ms.getType(type);
+                Console.WriteLine(t);
                 foreach (ProgramObjs program in programObjs)
                 {
                     if (!hashMap.ContainsKey(program.GetResult()) && program.GetResult().Contains(t))
@@ -691,21 +698,21 @@ namespace EVO_Image_app
         private void passwordButton_Click(object sender, EventArgs e)
         {
             //DEV
-            //modelsAndColorsBtn.Enabled = true;
-            //modelSearch.Enabled = true;
-            //manualSearchBtn.Enabled = true;
+            modelsAndColorsBtn.Enabled = true;
+            modelSearch.Enabled = true;
+            manualSearchBtn.Enabled = true;
 
             //PROD
-            if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
-            {
-                modelsAndColorsBtn.Enabled = true;
-                modelSearch.Enabled = true;
-                manualSearchBtn.Enabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Incorrect Password");
-            }
+            //if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            //{
+            //    modelsAndColorsBtn.Enabled = true;
+            //    modelSearch.Enabled = true;
+            //    manualSearchBtn.Enabled = true;
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Incorrect Password");
+            //}
         }
 
         private void passwordEnter_Click(object sender, KeyPressEventArgs e)

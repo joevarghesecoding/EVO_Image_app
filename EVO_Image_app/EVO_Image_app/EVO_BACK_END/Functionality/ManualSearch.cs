@@ -151,6 +151,11 @@ namespace EVO_Image_app.EVO_BACK_END.Functionality
         {
             throw new NotImplementedException();
         }
+
+        public override void GetAllModelImages(ProgramObjs program, string date)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

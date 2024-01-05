@@ -48,3 +48,13 @@ C:\Users\Administrator\Desktop\v1.4.1\EVO_Image_app\EVO_Image_app\EVO_Image_app\
 C:\Users\Administrator\Desktop\v1.4.1\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.csproj.CoreCompileInputs.cache
 C:\Users\Administrator\Desktop\v1.4.1\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.exe
 C:\Users\Administrator\Desktop\v1.4.1\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.pdb
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\Image Viewer Tool.exe.config
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\Image Viewer Tool.exe
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\bin\Debug\Image Viewer Tool.pdb
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\EVO_Image_app.EVO_Image_App.resources
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image_Viewer_Tool.Properties.Resources.resources
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.csproj.GenerateResource.cache
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.exe
+C:\Users\Administrator\Desktop\EVO_Image_App_v1.4\EVO_Image_app\EVO_Image_app\EVO_Image_app\obj\Debug\Image Viewer Tool.pdb
