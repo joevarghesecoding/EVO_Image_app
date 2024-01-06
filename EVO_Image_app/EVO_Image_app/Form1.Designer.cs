@@ -60,7 +60,6 @@ namespace EVO_Image_app
             this.modelDropDown = new System.Windows.Forms.ComboBox();
             this.calendarBtn = new System.Windows.Forms.Button();
             this.modelSearch = new System.Windows.Forms.Button();
-            this.Zip = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -289,7 +288,6 @@ namespace EVO_Image_app
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.Controls.Add(this.typeDropDown);
-            this.panel4.Controls.Add(this.Zip);
             this.panel4.Controls.Add(this.passwordButton);
             this.panel4.Controls.Add(this.passwordTextBox);
             this.panel4.Controls.Add(this.label3);
@@ -386,16 +384,6 @@ namespace EVO_Image_app
             this.modelSearch.UseVisualStyleBackColor = true;
             this.modelSearch.Click += new System.EventHandler(this.modelSearch_Click);
             // 
-            // Zip
-            // 
-            this.Zip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.Zip.Location = new System.Drawing.Point(1260, 0);
-            this.Zip.Name = "Zip";
-            this.Zip.Size = new System.Drawing.Size(40, 23);
-            this.Zip.TabIndex = 12;
-            this.Zip.Text = "Zip";
-            this.Zip.UseVisualStyleBackColor = true;
-            // 
             // EVO_Image_App
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,7 +442,6 @@ namespace EVO_Image_app
         private System.Windows.Forms.Button passwordButton;
         private System.Windows.Forms.ComboBox typeDropDown;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button Zip;
     }
 }
 

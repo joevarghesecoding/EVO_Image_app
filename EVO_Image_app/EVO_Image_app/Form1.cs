@@ -73,6 +73,7 @@ namespace EVO_Image_app
             originalList = new List<ListViewItem>();
             allLists = new List<List<ListViewItem>>();
             textBox1.Enabled = true;
+            listView1.Items.Clear();
             //ListView controls
             listView1.Columns.Add("Current Programs", -2);
             List<ProgramObjs> allLatestModelsObjs = function.GetProgramObjs();
@@ -383,6 +384,8 @@ namespace EVO_Image_app
             flag = 3;
             listView1.Columns.Add("Current Programs", -2);
             listView1.Items.Clear();
+            modelDropDown.Items.Clear();
+            typeDropDown.Items.Clear();
             Common.DeleteOnStart(currentDirectory, flag);
             originalList = new List<ListViewItem>();
             allLists = new List<List<ListViewItem>>();
@@ -698,21 +701,21 @@ namespace EVO_Image_app
         private void passwordButton_Click(object sender, EventArgs e)
         {
             //DEV
-            modelsAndColorsBtn.Enabled = true;
-            modelSearch.Enabled = true;
-            manualSearchBtn.Enabled = true;
+            //modelsAndColorsBtn.Enabled = true;
+            //modelSearch.Enabled = true;
+            //manualSearchBtn.Enabled = true;
 
             //PROD
-            //if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
-            //{
-            //    modelsAndColorsBtn.Enabled = true;
-            //    modelSearch.Enabled = true;
-            //    manualSearchBtn.Enabled = true;
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Incorrect Password");
-            //}
+            if (passwordTextBox.Text.ToString().ToLower().Equals("ctdievo"))
+            {
+                modelsAndColorsBtn.Enabled = true;
+                modelSearch.Enabled = true;
+                manualSearchBtn.Enabled = true;
+            }
+            else
+            {
+                MessageBox.Show("Incorrect Password");
+            }
         }
 
         private void passwordEnter_Click(object sender, KeyPressEventArgs e)
