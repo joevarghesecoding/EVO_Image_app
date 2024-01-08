@@ -65,6 +65,7 @@ namespace EVO_Image_app
         //All Models And Colors button
         private void button1_Click_1(object sender, EventArgs e)
         {
+            searchBtn.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
             flag = 1;
             Common.DeleteOnStart(currentDirectory, flag);
@@ -279,7 +280,7 @@ namespace EVO_Image_app
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             string keyword = textBox1.Text;
-            if(flag == 1 || flag == 3)
+            if(flag == 1)
             {
                 ClearFilter(keyword);
             }
@@ -324,6 +325,7 @@ namespace EVO_Image_app
         private void manualSearchBtn_Click(object sender, EventArgs e)
         {
             flag = 2;
+            searchBtn.Enabled = false;
             Common.DeleteOnStart(currentDirectory, flag);
             function = new ManualSearch();
             textBox1.Text = "Enter Serial and click Search";
